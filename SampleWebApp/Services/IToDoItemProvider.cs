@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SampleWebApp.Services
 {
-    interface ITodoItemProvider
+    public interface ITodoItemProvider
     {
         List<ToDoItem> GetAll();
 

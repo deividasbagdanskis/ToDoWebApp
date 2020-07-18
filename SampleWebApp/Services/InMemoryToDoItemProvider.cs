@@ -1,12 +1,13 @@
 ﻿using SampleWebApp.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SampleWebApp.Services
 {
     public class InMemoryToDoItemProvider : ITodoItemProvider
     {
-        private List<ToDoItem> _toDoItems = new List<ToDoItem>()
+        static private List<ToDoItem> _toDoItems = new List<ToDoItem>()
         {
             new ToDoItem(1, "Read a book", "", 3),
             new ToDoItem(2, "Alna task", "Make some progress on Alna software coding camp task", 4),
@@ -15,17 +16,18 @@ namespace SampleWebApp.Services
 
         public void Add(ToDoItem toDoItem)
         {
+            toDoItem.Id = _toDoItems.Count + 1;
             _toDoItems.Add(toDoItem);
         }
 
         public void Delete(int id)
         {
-            _toDoItems.RemoveAt(id);
+            _toDoItems.RemoveAll(todo => todo.Id == id);
         }
 
         public ToDoItem Get(int id)
         {
-            return _toDoItems[id];
+            return _toDoItems.FirstOrDefault(todo => todo.Id == id);
         }
 
         public List<ToDoItem> GetAll()

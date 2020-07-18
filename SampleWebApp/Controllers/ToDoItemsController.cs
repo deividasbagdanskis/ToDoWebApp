@@ -4,30 +4,31 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SampleWebApp.Models;
 using SampleWebApp.Services;
 
 namespace SampleWebApp.Controllers
 {
     public class ToDoItemsController : Controller
     {
-        private readonly ITodoItemProvider todoItemProvider;
+        private readonly ITodoItemProvider _todoItemProvider;
 
         public ToDoItemsController(ITodoItemProvider todoItemProvider)
         {
-            this.todoItemProvider = todoItemProvider;
+            this._todoItemProvider = todoItemProvider;
         }
 
 
         // GET: TodoItemsController
         public ActionResult Index()
         {
-            return View(todoItemProvider.GetAll());
+            return View(_todoItemProvider.GetAll());
         }
 
         // GET: TodoItemsController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            return View(_todoItemProvider.Get(id));
         }
 
         // GET: TodoItemsController/Create
@@ -39,10 +40,11 @@ namespace SampleWebApp.Controllers
         // POST: TodoItemsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(ToDoItem toDoItem)
         {
             try
             {
+                _todoItemProvider.Add(toDoItem);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -54,16 +56,17 @@ namespace SampleWebApp.Controllers
         // GET: TodoItemsController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            return View(_todoItemProvider.Get(id));
         }
 
         // POST: TodoItemsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, ToDoItem toDoItem)
         {
             try
             {
+                _todoItemProvider.Update(toDoItem);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -75,7 +78,7 @@ namespace SampleWebApp.Controllers
         // GET: TodoItemsController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            return View(_todoItemProvider.Get(id));
         }
 
         // POST: TodoItemsController/Delete/5
@@ -85,6 +88,7 @@ namespace SampleWebApp.Controllers
         {
             try
             {
+                _todoItemProvider.Delete(id);
                 return RedirectToAction(nameof(Index));
             }
             catch

@@ -52,7 +52,7 @@ namespace SampleWebApp
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=ToDoItems}/{action=Index}/{id?}");
             });
         }
     }

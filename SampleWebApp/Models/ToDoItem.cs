@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 namespace SampleWebApp.Models
 {
 	public class ToDoItem
@@ -22,6 +21,11 @@ namespace SampleWebApp.Models
 				else
 					_priority = 3;
 			}
+		}
+
+		public ToDoItem()
+		{
+
 		}
 
 		public ToDoItem(int id, string name, string description, int priority)
