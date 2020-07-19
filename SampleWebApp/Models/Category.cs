@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace SampleWebApp.Models
+﻿namespace SampleWebApp.Models
 {
     public class Category
     {

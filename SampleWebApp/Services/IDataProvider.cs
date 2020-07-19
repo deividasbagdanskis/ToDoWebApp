@@ -1,20 +1,16 @@
-﻿using SampleWebApp.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace SampleWebApp.Services
 {
-    public interface IDataProvider
+    public interface IDataProvider<T>
     {
-        List<ToDoItem> GetAll();
+        List<T> GetAll();
 
-        ToDoItem Get(int id);
+        T Get(int id);
 
-        void Add(ToDoItem toDoItem);
+        void Add(T item);
 
-        void Update(ToDoItem toDoItem);
+        void Update(T item);
 
         void Delete(int id);
     }

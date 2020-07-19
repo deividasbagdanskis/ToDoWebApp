@@ -1,46 +1,49 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SampleWebApp.Models;
 using SampleWebApp.Services;
 
 namespace SampleWebApp.Controllers
 {
-    public class ToDoItemsController : Controller
+    public class CategoriesController : Controller
     {
-        private readonly IDataProvider<ToDoItem> _todoItemProvider;
+        private readonly IDataProvider<Category> _categoryProvider;
 
-        public ToDoItemsController(IDataProvider<ToDoItem> todoItemProvider)
+        public CategoriesController(IDataProvider<Category> categoryProvider)
         {
-            _todoItemProvider = todoItemProvider;
+            _categoryProvider = categoryProvider;
         }
 
 
-        // GET: TodoItemsController
+        // GET: CategoriesController
         public ActionResult Index()
         {
-            return View(_todoItemProvider.GetAll());
+            return View();
         }
 
-        // GET: TodoItemsController/Details/5
+        // GET: CategoriesController/Details/5
         public ActionResult Details(int id)
         {
-            return View(_todoItemProvider.Get(id));
+            return View();
         }
 
-        // GET: TodoItemsController/Create
+        // GET: CategoriesController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: TodoItemsController/Create
+        // POST: CategoriesController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(ToDoItem toDoItem)
+        public ActionResult Create(IFormCollection collection)
         {
             try
             {
-                _todoItemProvider.Add(toDoItem);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -49,20 +52,19 @@ namespace SampleWebApp.Controllers
             }
         }
 
-        // GET: TodoItemsController/Edit/5
+        // GET: CategoriesController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View(_todoItemProvider.Get(id));
+            return View();
         }
 
-        // POST: TodoItemsController/Edit/5
+        // POST: CategoriesController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, ToDoItem toDoItem)
+        public ActionResult Edit(int id, IFormCollection collection)
         {
             try
             {
-                _todoItemProvider.Update(toDoItem);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -71,20 +73,19 @@ namespace SampleWebApp.Controllers
             }
         }
 
-        // GET: TodoItemsController/Delete/5
+        // GET: CategoriesController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View(_todoItemProvider.Get(id));
+            return View();
         }
 
-        // POST: TodoItemsController/Delete/5
+        // POST: CategoriesController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)
         {
             try
             {
-                _todoItemProvider.Delete(id);
                 return RedirectToAction(nameof(Index));
             }
             catch

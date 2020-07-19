@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace SampleWebApp.Services
 {
-    public class InMemoryToDoItemProvider : IDataProvider
+    public class InMemoryToDoItemProvider : IDataProvider<ToDoItem>
     {
         static private List<ToDoItem> _toDoItems = new List<ToDoItem>()
         {
