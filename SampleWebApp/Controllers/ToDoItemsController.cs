@@ -11,9 +11,9 @@ namespace SampleWebApp.Controllers
 {
     public class ToDoItemsController : Controller
     {
-        private readonly ITodoItemProvider _todoItemProvider;
+        private readonly IDataProvider _todoItemProvider;
 
-        public ToDoItemsController(ITodoItemProvider todoItemProvider)
+        public ToDoItemsController(IDataProvider todoItemProvider)
         {
             this._todoItemProvider = todoItemProvider;
         }

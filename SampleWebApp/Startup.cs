@@ -25,7 +25,7 @@ namespace SampleWebApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddSingleton<ITodoItemProvider, InMemoryToDoItemProvider>();
+            services.AddSingleton<IDataProvider, InMemoryToDoItemProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

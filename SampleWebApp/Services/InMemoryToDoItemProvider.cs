@@ -5,12 +5,12 @@ using System.Linq;
 
 namespace SampleWebApp.Services
 {
-    public class InMemoryToDoItemProvider : ITodoItemProvider
+    public class InMemoryToDoItemProvider : IDataProvider
     {
         static private List<ToDoItem> _toDoItems = new List<ToDoItem>()
         {
             new ToDoItem(1, "Read a book", "", 3),
-            new ToDoItem(2, "Alna task", "Make some progress on Alna software coding camp task", 4),
+            new ToDoItem(2, "Alna task", "Make progress on Alna software coding camp task", 4),
             new ToDoItem(3, "Go to the gym", "", 3)
         };
 
