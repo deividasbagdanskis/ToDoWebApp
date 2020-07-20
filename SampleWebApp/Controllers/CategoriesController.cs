@@ -22,13 +22,13 @@ namespace SampleWebApp.Controllers
         // GET: CategoriesController
         public ActionResult Index()
         {
-            return View();
+            return View(_categoryProvider.GetAll());
         }
 
         // GET: CategoriesController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            return View(_categoryProvider.Get(id));
         }
 
         // GET: CategoriesController/Create
@@ -40,10 +40,11 @@ namespace SampleWebApp.Controllers
         // POST: CategoriesController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Category category)
         {
             try
             {
+                _categoryProvider.Add(category);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -55,16 +56,17 @@ namespace SampleWebApp.Controllers
         // GET: CategoriesController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            return View(_categoryProvider.Get(id));
         }
 
         // POST: CategoriesController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Category category)
         {
             try
             {
+                _categoryProvider.Update(category);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -76,7 +78,7 @@ namespace SampleWebApp.Controllers
         // GET: CategoriesController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            return View(_categoryProvider.Get(id));
         }
 
         // POST: CategoriesController/Delete/5
@@ -86,6 +88,7 @@ namespace SampleWebApp.Controllers
         {
             try
             {
+                _categoryProvider.Delete(id);
                 return RedirectToAction(nameof(Index));
             }
             catch
