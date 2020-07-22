@@ -11,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using SampleWebApp.Models;
 using SampleWebApp.Services;
 using SampleWebApp.Services.InFileProviders;
+using SampleWebApp.Services.InMemoryProviders;
 
 namespace SampleWebApp
 {
@@ -39,7 +40,6 @@ namespace SampleWebApp
                     services.AddSingleton<IDataProvider<ToDoItem>, InFileToDoItemProvider>();
                     services.AddSingleton<IDataProvider<Category>, InFileCategoryProvider>();
                     break;
-
             }
         }
 

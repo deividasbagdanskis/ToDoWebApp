@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SampleWebApp.Models;
 using SampleWebApp.Services;
 
@@ -49,7 +44,7 @@ namespace SampleWebApp.Controllers
             }
             catch
             {
-                return View();
+                return View(category);
             }
         }
 
@@ -71,7 +66,7 @@ namespace SampleWebApp.Controllers
             }
             catch
             {
-                return View();
+                return View(category);
             }
         }
 
@@ -84,7 +79,7 @@ namespace SampleWebApp.Controllers
         // POST: CategoriesController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, Category category)
         {
             try
             {
@@ -93,7 +88,7 @@ namespace SampleWebApp.Controllers
             }
             catch
             {
-                return View();
+                return View(category);
             }
         }
     }

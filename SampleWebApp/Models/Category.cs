@@ -1,6 +1,8 @@
-﻿namespace SampleWebApp.Models
+﻿using SampleWebApp.Services;
+
+namespace SampleWebApp.Models
 {
-    public class Category
+    public class Category : IHasId
     {
         public int Id { get; set; }
 

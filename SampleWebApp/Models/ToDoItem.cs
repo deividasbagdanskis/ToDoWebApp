@@ -1,7 +1,8 @@
-﻿
+﻿using SampleWebApp.Services;
+
 namespace SampleWebApp.Models
 {
-	public class ToDoItem
+	public class ToDoItem : IHasId
 	{
 		public int Id { get; set; }
 
@@ -9,17 +10,17 @@ namespace SampleWebApp.Models
 
 		public string Description { get; set; }
 		
-		private int _priority;
+		private int _priority = 3;
 		
 		public int Priority
 		{
 			get { return _priority; }
 			set
 			{
-				if (value > 0 && value < 6)
+				if (value > 5)
+					_priority = 5;
+				else if (value > 0 && value < 6)
 					_priority = value;
-				else
-					_priority = 3;
 			}
 		}
 
