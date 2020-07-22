@@ -8,6 +8,10 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SampleWebApp.Models;
+using SampleWebApp.Services;
+using SampleWebApp.Services.InFileProviders;
+using SampleWebApp.Services.InMemoryProviders;
 
 namespace SampleWebApp
 {
@@ -24,6 +28,19 @@ namespace SampleWebApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            switch (Configuration.GetValue<string>("ProviderType"))
+            {
+                case "InMemory":
+                    services.AddSingleton<IDataProvider<ToDoItem>, InMemoryToDoItemProvider>();
+                    services.AddSingleton<IDataProvider<Category>, InMemoryCategoryProvider>();
+                    break;
+                case "InFile":
+                default:
+                    services.AddSingleton<IDataProvider<ToDoItem>, InFileToDoItemProvider>();
+                    services.AddSingleton<IDataProvider<Category>, InFileCategoryProvider>();
+                    break;
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,7 +67,7 @@ namespace SampleWebApp
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=ToDoItems}/{action=Index}/{id?}");
             });
         }
     }
