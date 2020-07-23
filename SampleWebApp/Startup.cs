@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using SampleWebApp.Data;
 using SampleWebApp.Models;
 using SampleWebApp.Services;
+using SampleWebApp.Services.InDbProviders;
 using SampleWebApp.Services.InFileProviders;
 using SampleWebApp.Services.InMemoryProviders;
 
@@ -37,6 +38,8 @@ namespace SampleWebApp
                     services.AddSingleton<IDataProvider<Category>, InFileCategoryProvider>();
                     break;
                 case "InDatabase":
+                    services.AddScoped<IAsyncDataProvider<Category>, InDbCategoryProvider>();
+                    break;
                 default:
                     break;
             }
@@ -69,7 +72,7 @@ namespace SampleWebApp
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=ToDoItems}/{action=Index}/{id?}");
+                    pattern: "{controller=CategoriesEF}/{action=Index}/{id?}");
             });
         }
     }
