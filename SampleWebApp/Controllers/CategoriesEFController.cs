@@ -1,9 +1,9 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SampleWebApp.Data;
 using SampleWebApp.Models;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SampleWebApp.Controllers
 {
@@ -19,7 +19,7 @@ namespace SampleWebApp.Controllers
         // GET: CategoriesEF
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Categories.ToListAsync());
+            return View(await _context.Category.ToListAsync());
         }
 
         // GET: CategoriesEF/Details/5
@@ -30,7 +30,7 @@ namespace SampleWebApp.Controllers
                 return NotFound();
             }
 
-            var category = await _context.Categories.FirstOrDefaultAsync(m => m.Id == id);
+            var category = await _context.Category.FirstOrDefaultAsync(m => m.Id == id);
 
             if (category == null)
             {
@@ -70,7 +70,7 @@ namespace SampleWebApp.Controllers
                 return NotFound();
             }
 
-            var category = await _context.Categories.FindAsync(id);
+            var category = await _context.Category.FindAsync(id);
             if (category == null)
             {
                 return NotFound();
@@ -121,7 +121,7 @@ namespace SampleWebApp.Controllers
                 return NotFound();
             }
 
-            var category = await _context.Categories
+            var category = await _context.Category
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (category == null)
             {
@@ -136,15 +136,15 @@ namespace SampleWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var category = await _context.Categories.FindAsync(id);
-            _context.Categories.Remove(category);
+            var category = await _context.Category.FindAsync(id);
+            _context.Category.Remove(category);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool CategoryExists(int id)
         {
-            return _context.Categories.Any(e => e.Id == id);
+            return _context.Category.Any(e => e.Id == id);
         }
     }
 }

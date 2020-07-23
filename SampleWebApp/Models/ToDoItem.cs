@@ -2,7 +2,7 @@
 
 namespace SampleWebApp.Models
 {
-	public class ToDoItem : IHasId
+    public class ToDoItem : IHasId
 	{
 		public int Id { get; set; }
 

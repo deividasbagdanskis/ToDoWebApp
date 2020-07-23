@@ -1,19 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SampleWebApp.Data;
 using SampleWebApp.Models;
 using SampleWebApp.Services;
 using SampleWebApp.Services.InFileProviders;
 using SampleWebApp.Services.InMemoryProviders;
-using Microsoft.EntityFrameworkCore;
-using SampleWebApp.Data;
 
 namespace SampleWebApp
 {
@@ -38,9 +33,11 @@ namespace SampleWebApp
                     services.AddSingleton<IDataProvider<Category>, InMemoryCategoryProvider>();
                     break;
                 case "InFile":
-                default:
                     services.AddSingleton<IDataProvider<ToDoItem>, InFileToDoItemProvider>();
                     services.AddSingleton<IDataProvider<Category>, InFileCategoryProvider>();
+                    break;
+                case "InDatabase":
+                default:
                     break;
             }
 

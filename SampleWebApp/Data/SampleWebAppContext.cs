@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SampleWebApp.Models;
 
 namespace SampleWebApp.Data
@@ -14,6 +10,6 @@ namespace SampleWebApp.Data
         {
         }
 
-        public DbSet<Category> Categories { get; set; }
+        public DbSet<Category> Category { get; set; }
     }
 }
