@@ -12,6 +12,8 @@ using SampleWebApp.Models;
 using SampleWebApp.Services;
 using SampleWebApp.Services.InFileProviders;
 using SampleWebApp.Services.InMemoryProviders;
+using Microsoft.EntityFrameworkCore;
+using SampleWebApp.Data;
 
 namespace SampleWebApp
 {
@@ -41,6 +43,9 @@ namespace SampleWebApp
                     services.AddSingleton<IDataProvider<Category>, InFileCategoryProvider>();
                     break;
             }
+
+            services.AddDbContext<SampleWebAppContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("SampleWebAppContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
