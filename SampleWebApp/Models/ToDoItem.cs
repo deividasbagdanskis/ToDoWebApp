@@ -1,17 +1,28 @@
 ﻿using SampleWebApp.Services;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace SampleWebApp.Models
 {
-    public class ToDoItem : IHasId
+	public class ToDoItem : IHasId
 	{
 		public int Id { get; set; }
 
+		[Required]
 		public string Name { get; set; }
 
 		public string Description { get; set; }
-		
+
+		[Required]
+		[DataType(DataType.Date)]
+		public DateTime CreationDate { get; set; }
+
+		[DataType(DataType.Date)]
+		public DateTime DeadlineDate { get; set; }
+
 		private int _priority = 3;
 		
+		[Required]
 		public int Priority
 		{
 			get { return _priority; }
@@ -23,6 +34,8 @@ namespace SampleWebApp.Models
 					_priority = value;
 			}
 		}
+
+		public StatusEnum Status { get; set; } = StatusEnum.Backlog;
 
 		public ToDoItem()
 		{
