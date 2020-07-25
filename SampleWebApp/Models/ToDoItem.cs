@@ -11,18 +11,19 @@ namespace SampleWebApp.Models
 		[Required]
 		public string Name { get; set; }
 
-		public string Description { get; set; }
+		public string? Description { get; set; }
 
 		[Required]
 		[DataType(DataType.Date)]
 		public DateTime CreationDate { get; set; }
 
 		[DataType(DataType.Date)]
-		public DateTime DeadlineDate { get; set; }
+		public DateTime? DeadlineDate { get; set; }
 
 		private int _priority = 3;
 		
 		[Required]
+		[Range(1, 5)]
 		public int Priority
 		{
 			get { return _priority; }

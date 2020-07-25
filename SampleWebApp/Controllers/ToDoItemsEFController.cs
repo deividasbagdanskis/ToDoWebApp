@@ -54,8 +54,9 @@ namespace SampleWebApp.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,CreationDate,DeadlineDate,Priority,Status")] ToDoItem toDoItem)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,DeadlineDate,Priority,Status")] ToDoItem toDoItem)
         {
+            toDoItem.CreationDate = DateTime.Today;
             if (ModelState.IsValid)
             {
                 _context.Add(toDoItem);
@@ -86,7 +87,8 @@ namespace SampleWebApp.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,CreationDate,DeadlineDate,Priority,Status")] ToDoItem toDoItem)
+        public async Task<IActionResult> Edit(int id, 
+            [Bind("Id,Name,Description,DeadlineDate,Priority,Status")] ToDoItem toDoItem)
         {
             if (id != toDoItem.Id)
             {
@@ -98,6 +100,7 @@ namespace SampleWebApp.Controllers
                 try
                 {
                     _context.Update(toDoItem);
+                    _context.Entry(toDoItem).Property("CreationDate").IsModified = false;
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
