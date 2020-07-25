@@ -39,6 +39,7 @@ namespace SampleWebApp
                     break;
                 case "InDatabase":
                     services.AddScoped<IAsyncDataProvider<Category>, InDbCategoryProvider>();
+                    services.AddScoped<IAsyncDataProvider<ToDoItem>, InDbToDoItemProvider>();
                     break;
                 default:
                     break;

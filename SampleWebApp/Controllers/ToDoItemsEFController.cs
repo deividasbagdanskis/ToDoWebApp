@@ -1,28 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using SampleWebApp.Data;
 using SampleWebApp.Models;
+using SampleWebApp.Services.InDbProviders;
 
 namespace SampleWebApp.Controllers
 {
     public class ToDoItemsEFController : Controller
     {
-        private readonly SampleWebAppContext _context;
+        private IAsyncDataProvider<ToDoItem> _provider;
 
-        public ToDoItemsEFController(SampleWebAppContext context)
+        public ToDoItemsEFController(IAsyncDataProvider<ToDoItem> provider)
         {
-            _context = context;
+            _provider = provider;
         }
 
         // GET: ToDoItemsEF
         public async Task<IActionResult> Index()
         {
-            return View(await _context.ToDoItem.ToListAsync());
+            return View(await _provider.GetAll());
         }
 
         // GET: ToDoItemsEF/Details/5
@@ -33,8 +30,8 @@ namespace SampleWebApp.Controllers
                 return NotFound();
             }
 
-            var toDoItem = await _context.ToDoItem
-                .FirstOrDefaultAsync(m => m.Id == id);
+            ToDoItem toDoItem = await _provider.Get(id);
+
             if (toDoItem == null)
             {
                 return NotFound();
@@ -59,8 +56,7 @@ namespace SampleWebApp.Controllers
             toDoItem.CreationDate = DateTime.Today;
             if (ModelState.IsValid)
             {
-                _context.Add(toDoItem);
-                await _context.SaveChangesAsync();
+                await _provider.Add(toDoItem);
                 return RedirectToAction(nameof(Index));
             }
             return View(toDoItem);
@@ -74,7 +70,8 @@ namespace SampleWebApp.Controllers
                 return NotFound();
             }
 
-            var toDoItem = await _context.ToDoItem.FindAsync(id);
+            ToDoItem toDoItem = await _provider.Get(id);
+
             if (toDoItem == null)
             {
                 return NotFound();
@@ -99,13 +96,11 @@ namespace SampleWebApp.Controllers
             {
                 try
                 {
-                    _context.Update(toDoItem);
-                    _context.Entry(toDoItem).Property("CreationDate").IsModified = false;
-                    await _context.SaveChangesAsync();
+                    await _provider.Update(toDoItem);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ToDoItemExists(toDoItem.Id))
+                    if (!_provider.ItemExits(toDoItem.Id))
                     {
                         return NotFound();
                     }
@@ -127,8 +122,8 @@ namespace SampleWebApp.Controllers
                 return NotFound();
             }
 
-            var toDoItem = await _context.ToDoItem
-                .FirstOrDefaultAsync(m => m.Id == id);
+            ToDoItem toDoItem = await _provider.Get(id);
+
             if (toDoItem == null)
             {
                 return NotFound();
@@ -142,15 +137,9 @@ namespace SampleWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var toDoItem = await _context.ToDoItem.FindAsync(id);
-            _context.ToDoItem.Remove(toDoItem);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+            await _provider.Delete(id);
 
-        private bool ToDoItemExists(int id)
-        {
-            return _context.ToDoItem.Any(e => e.Id == id);
+            return RedirectToAction(nameof(Index));
         }
     }
 }
