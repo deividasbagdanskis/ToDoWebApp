@@ -11,5 +11,7 @@ namespace SampleWebApp.Data
         }
 
         public DbSet<Category> Category { get; set; }
+
+        public DbSet<ToDoItem> ToDoItem { get; set; }
     }
 }
