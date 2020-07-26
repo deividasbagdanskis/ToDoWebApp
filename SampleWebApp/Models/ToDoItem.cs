@@ -38,7 +38,7 @@ namespace SampleWebApp.Models
 
 		public StatusEnum Status { get; set; } = StatusEnum.Backlog;
 
-		public int CategoryId { get; set; }
+		public int? CategoryId { get; set; }
 
 		public Category Category { get; set; }
 
