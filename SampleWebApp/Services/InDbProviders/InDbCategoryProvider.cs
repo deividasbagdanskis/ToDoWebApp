@@ -7,9 +7,11 @@ using System.Threading.Tasks;
 
 namespace SampleWebApp.Services.InDbProviders
 {
-    public class InDbCategoryProvider : IAsyncDataProvider<Category>
+    public class InDbCategoryProvider : IAsyncDbDataProvider<Category>
     {
         private SampleWebAppContext _context;
+
+        public SampleWebAppContext Context { get; }
 
         public InDbCategoryProvider(SampleWebAppContext context)
         {

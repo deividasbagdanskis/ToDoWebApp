@@ -7,48 +7,48 @@ using System.Threading.Tasks;
 
 namespace SampleWebApp.Services.InDbProviders
 {
-    public class InDbToDoItemProvider : IAsyncDataProvider<ToDoItem>
+    public class InDbToDoItemProvider : IAsyncDbDataProvider<ToDoItem>
     {
-        private SampleWebAppContext _context;
+        public SampleWebAppContext Context { get; }
 
         public InDbToDoItemProvider(SampleWebAppContext context)
         {
-            _context = context;
+            Context = context;
         }
 
         public async Task Add(ToDoItem toDoItem)
         {
-            _context.Add(toDoItem);
-            await _context.SaveChangesAsync();
+            Context.Add(toDoItem);
+            await Context.SaveChangesAsync();
         }
 
         public async Task Delete(int id)
         {
-            var toDoItem = await _context.ToDoItem.FindAsync(id);
-            _context.ToDoItem.Remove(toDoItem);
-            await _context.SaveChangesAsync();
+            var toDoItem = await Context.ToDoItem.FindAsync(id);
+            Context.ToDoItem.Remove(toDoItem);
+            await Context.SaveChangesAsync();
         }
 
         public async Task<ToDoItem> Get(int? id)
         {
-            var foundToDoItem = await _context.ToDoItem.FindAsync(id);
+            var foundToDoItem = await Context.ToDoItem.FindAsync(id);
             return foundToDoItem;
         }
 
         public async Task<List<ToDoItem>> GetAll()
         {
-            return await _context.ToDoItem.ToListAsync();
+            return await Context.ToDoItem.ToListAsync();
         }
 
         public async Task Update(ToDoItem toDoItem)
         {
-            _context.Update(toDoItem);
-            _context.Entry(toDoItem).Property("CreationDate").IsModified = false;
-            await _context.SaveChangesAsync();
+            Context.Update(toDoItem);
+            Context.Entry(toDoItem).Property("CreationDate").IsModified = false;
+            await Context.SaveChangesAsync();
         }
         public bool ItemExits(int id)
         {
-            return _context.ToDoItem.Any(e => e.Id == id);
+            return Context.ToDoItem.Any(e => e.Id == id);
         }
     }
 }

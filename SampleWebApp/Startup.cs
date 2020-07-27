@@ -38,8 +38,8 @@ namespace SampleWebApp
                     services.AddSingleton<IDataProvider<Category>, InFileCategoryProvider>();
                     break;
                 case "InDatabase":
-                    services.AddScoped<IAsyncDataProvider<Category>, InDbCategoryProvider>();
-                    services.AddScoped<IAsyncDataProvider<ToDoItem>, InDbToDoItemProvider>();
+                    services.AddScoped<IAsyncDbDataProvider<Category>, InDbCategoryProvider>();
+                    services.AddScoped<IAsyncDbDataProvider<ToDoItem>, InDbToDoItemProvider>();
                     break;
                 default:
                     break;

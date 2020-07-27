@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using SampleWebApp.Data;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SampleWebApp.Services.InDbProviders
 {
-    public interface IAsyncDataProvider<T>
+    public interface IAsyncDbDataProvider<T>
     {
+        public SampleWebAppContext Context { get; }
+
         Task<List<T>> GetAll();
 
         Task<T> Get(int? id);

@@ -40,7 +40,23 @@ namespace SampleWebApp.Models
 
 		public int? CategoryId { get; set; }
 
-		public Category Category { get; set; }
+		private Category _category;
+		public Category Category
+		{
+			get
+			{
+				if (_category == null)
+				{
+					return new Category() { Name = "Uncategorized" };
+				}
+
+				return _category;
+			}
+			set
+			{
+				_category = value;
+			}
+		}
 
 		public ToDoItem()
 		{

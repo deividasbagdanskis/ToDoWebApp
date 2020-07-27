@@ -4,14 +4,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SampleWebApp.Models;
 using SampleWebApp.Services.InDbProviders;
+using SampleWebApp.ViewModels;
 
 namespace SampleWebApp.Controllers
 {
     public class ToDoItemsEFController : Controller
     {
-        private IAsyncDataProvider<ToDoItem> _provider;
+        private IAsyncDbDataProvider<ToDoItem> _provider;
 
-        public ToDoItemsEFController(IAsyncDataProvider<ToDoItem> provider)
+        public ToDoItemsEFController(IAsyncDbDataProvider<ToDoItem> provider)
         {
             _provider = provider;
         }
@@ -51,8 +52,10 @@ namespace SampleWebApp.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,DeadlineDate,Priority,Status")] ToDoItem toDoItem)
+        public async Task<IActionResult> Create(ToDoItemViewModel toDoItemViewModel)
         {
+            ToDoItem toDoItem = toDoItemViewModel.ToDoItem;
+
             toDoItem.CreationDate = DateTime.Today;
             if (ModelState.IsValid)
             {
@@ -76,7 +79,15 @@ namespace SampleWebApp.Controllers
             {
                 return NotFound();
             }
-            return View(toDoItem);
+
+            ToDoItemViewModel toDoItemViewModel = new ToDoItemViewModel(_provider.Context)
+            {
+                ToDoItem = toDoItem
+            };
+
+            await toDoItemViewModel.SetCategoriesSelectList();
+
+            return View(toDoItemViewModel);
         }
 
         // POST: ToDoItemsEF/Edit/5
@@ -84,9 +95,10 @@ namespace SampleWebApp.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, 
-            [Bind("Id,Name,Description,DeadlineDate,Priority,Status")] ToDoItem toDoItem)
+        public async Task<IActionResult> Edit(int id, ToDoItemViewModel toDoItemViewModel)
         {
+            ToDoItem toDoItem = toDoItemViewModel.ToDoItem;
+
             if (id != toDoItem.Id)
             {
                 return NotFound();
@@ -111,7 +123,7 @@ namespace SampleWebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(toDoItem);
+            return View(toDoItemViewModel);
         }
 
         // GET: ToDoItemsEF/Delete/5

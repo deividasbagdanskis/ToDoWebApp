@@ -8,9 +8,9 @@ namespace SampleWebApp.Controllers
 {
     public class CategoriesEFController : Controller
     {
-        private IAsyncDataProvider<Category> _provider;
+        private IAsyncDbDataProvider<Category> _provider;
 
-        public CategoriesEFController(IAsyncDataProvider<Category> provider)
+        public CategoriesEFController(IAsyncDbDataProvider<Category> provider)
         {
             _provider = provider;
         }
