@@ -62,6 +62,11 @@ namespace SampleWebApp.Controllers
             toDoItem.CreationDate = DateTime.Today;
             if (ModelState.IsValid)
             {
+                if (toDoItem.CategoryId == 0)
+                {
+                    toDoItem.CategoryId = null;
+                }
+
                 await _provider.Add(toDoItem);
                 return RedirectToAction(nameof(Index));
             }
