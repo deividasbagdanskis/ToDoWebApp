@@ -42,9 +42,12 @@ namespace SampleWebApp.Controllers
         }
 
         // GET: ToDoItemsEF/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            IToDoItemViewModel toDoItemViewModel = new ToDoItemViewModel(_provider.Context);
+            await toDoItemViewModel.SetCategoriesSelectList();
+
+            return View(toDoItemViewModel);
         }
 
         // POST: ToDoItemsEF/Create
@@ -80,7 +83,7 @@ namespace SampleWebApp.Controllers
                 return NotFound();
             }
 
-            ToDoItemViewModel toDoItemViewModel = new ToDoItemViewModel(_provider.Context)
+            IToDoItemViewModel toDoItemViewModel = new ToDoItemViewModel(_provider.Context)
             {
                 ToDoItem = toDoItem
             };
@@ -108,6 +111,11 @@ namespace SampleWebApp.Controllers
             {
                 try
                 {
+                    if (toDoItem.CategoryId == 0)
+                    {
+                        toDoItem.CategoryId = null;
+                    }
+
                     await _provider.Update(toDoItem);
                 }
                 catch (DbUpdateConcurrencyException)
@@ -123,6 +131,9 @@ namespace SampleWebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
+            toDoItemViewModel = new ToDoItemViewModel(_provider.Context);
+            await toDoItemViewModel.SetCategoriesSelectList();
             return View(toDoItemViewModel);
         }
 

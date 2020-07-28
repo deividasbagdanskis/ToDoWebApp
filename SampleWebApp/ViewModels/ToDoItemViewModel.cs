@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SampleWebApp.ViewModels
 {
-    public class ToDoItemViewModel
+    public class ToDoItemViewModel : IToDoItemViewModel
     {
         private IAsyncDbDataProvider<Category> _categoryProvider;
 
@@ -32,7 +32,7 @@ namespace SampleWebApp.ViewModels
 
             CategoriesSelectList = new List<SelectListItem>();
 
-            CategoriesSelectList.Add(new SelectListItem() { Text = "Uncategorized", Value = null });
+            CategoriesSelectList.Add(new SelectListItem() { Text = "Uncategorized", Value = "0" });
 
             foreach (Category category in _categories)
             {
@@ -43,6 +43,6 @@ namespace SampleWebApp.ViewModels
         private async Task RetrieveCategories()
         {
             _categories = await _categoryProvider.GetAll();
-        } 
+        }
     }
 }
