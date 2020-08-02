@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace SampleWebApp.Models
 {
@@ -8,6 +9,8 @@ namespace SampleWebApp.Models
 
         [Required]
         public string Name { get; set; }
+
+        public List<ToDoItemTag> ToDoItemTags { get; set; }
 
         public Tag()
         {
