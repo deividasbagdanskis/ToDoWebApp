@@ -1,15 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SampleWebApp.Data;
 using SampleWebApp.Models;
 using SampleWebApp.Services;
+using SampleWebApp.Services.InDbProviders;
 using SampleWebApp.Services.InFileProviders;
 using SampleWebApp.Services.InMemoryProviders;
 
@@ -36,11 +34,19 @@ namespace SampleWebApp
                     services.AddSingleton<IDataProvider<Category>, InMemoryCategoryProvider>();
                     break;
                 case "InFile":
-                default:
                     services.AddSingleton<IDataProvider<ToDoItem>, InFileToDoItemProvider>();
                     services.AddSingleton<IDataProvider<Category>, InFileCategoryProvider>();
                     break;
+                case "InDatabase":
+                    services.AddScoped<IAsyncDbDataProvider<Category>, InDbCategoryProvider>();
+                    services.AddScoped<IAsyncDbDataProvider<ToDoItem>, InDbToDoItemProvider>();
+                    break;
+                default:
+                    break;
             }
+
+            services.AddDbContext<SampleWebAppContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("SampleWebAppContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -67,7 +73,7 @@ namespace SampleWebApp
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=ToDoItems}/{action=Index}/{id?}");
+                    pattern: "{controller=CategoriesEF}/{action=Index}/{id?}");
             });
         }
     }
