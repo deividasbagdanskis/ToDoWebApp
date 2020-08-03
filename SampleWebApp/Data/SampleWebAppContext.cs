@@ -32,5 +32,7 @@ namespace SampleWebApp.Data
         public DbSet<ToDoItem> ToDoItem { get; set; }
 
         public DbSet<ToDoItemTag> ToDoItemTag { get; set; }
+
+        public DbSet<Tag> Tag { get; set; }
     }
 }
