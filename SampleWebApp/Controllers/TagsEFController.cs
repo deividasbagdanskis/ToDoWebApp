@@ -1,25 +1,24 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using SampleWebApp.Data;
 using SampleWebApp.Models;
+using SampleWebApp.Services.InDbProviders;
 
 namespace SampleWebApp.Controllers
 {
     public class TagsEFController : Controller
     {
-        private readonly SampleWebAppContext _context;
+        private readonly IAsyncDbDataProvider<Tag> _provider;
 
-        public TagsEFController(SampleWebAppContext context)
+        public TagsEFController(IAsyncDbDataProvider<Tag> provider)
         {
-            _context = context;
+            _provider = provider;
         }
 
         // GET: TagsEF
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Tag.ToListAsync());
+            return View(await _provider.GetAll());
         }
 
         // GET: TagsEF/Details/5
@@ -30,8 +29,8 @@ namespace SampleWebApp.Controllers
                 return NotFound();
             }
 
-            var tag = await _context.Tag
-                .FirstOrDefaultAsync(m => m.Id == id);
+            Tag tag = await _provider.Get(id);
+
             if (tag == null)
             {
                 return NotFound();
@@ -55,8 +54,7 @@ namespace SampleWebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(tag);
-                await _context.SaveChangesAsync();
+                await _provider.Add(tag);
                 return RedirectToAction(nameof(Index));
             }
             return View(tag);
@@ -70,7 +68,8 @@ namespace SampleWebApp.Controllers
                 return NotFound();
             }
 
-            var tag = await _context.Tag.FindAsync(id);
+            Tag tag = await _provider.Get(id);
+
             if (tag == null)
             {
                 return NotFound();
@@ -94,12 +93,11 @@ namespace SampleWebApp.Controllers
             {
                 try
                 {
-                    _context.Update(tag);
-                    await _context.SaveChangesAsync();
+                    await _provider.Update(tag);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TagExists(tag.Id))
+                    if (!_provider.ItemExits(tag.Id))
                     {
                         return NotFound();
                     }
@@ -121,8 +119,8 @@ namespace SampleWebApp.Controllers
                 return NotFound();
             }
 
-            var tag = await _context.Tag
-                .FirstOrDefaultAsync(m => m.Id == id);
+            Tag tag = await _provider.Get(id);
+
             if (tag == null)
             {
                 return NotFound();
@@ -136,15 +134,8 @@ namespace SampleWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var tag = await _context.Tag.FindAsync(id);
-            _context.Tag.Remove(tag);
-            await _context.SaveChangesAsync();
+            await _provider.Delete(id);
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool TagExists(int id)
-        {
-            return _context.Tag.Any(e => e.Id == id);
         }
     }
 }
