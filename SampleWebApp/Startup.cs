@@ -41,6 +41,7 @@ namespace SampleWebApp
                     services.AddScoped<IAsyncDbDataProvider<Category>, InDbCategoryProvider>();
                     services.AddScoped<IAsyncDbDataProvider<ToDoItem>, InDbToDoItemProvider>();
                     services.AddScoped<IAsyncDbDataProvider<Tag>, InDbTagProvider>();
+                    services.AddScoped<IInDbToDoItemTagProvider, InDbToDoItemTagProvider>();
                     break;
                 default:
                     break;

@@ -5,23 +5,24 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SampleWebApp.Data;
 using SampleWebApp.Models;
+using SampleWebApp.Services.InDbProviders;
 
 namespace SampleWebApp.Controllers
 {
     public class ToDoItemTagsController : Controller
     {
-        private readonly SampleWebAppContext _context;
+        private readonly IInDbToDoItemTagProvider _provider;
 
-        public ToDoItemTagsController(SampleWebAppContext context)
+        public ToDoItemTagsController(IInDbToDoItemTagProvider provider)
         {
-            _context = context;
+            _provider = provider;
         }
 
         // GET: ToDoItemTags
         public async Task<IActionResult> Index()
         {
-            var sampleWebAppContext = _context.ToDoItemTag.Include(t => t.Tag).Include(t => t.ToDoItem);
-            return View(await sampleWebAppContext.ToListAsync());
+            
+            return View(await _provider.GetAll());
         }
 
         // GET: ToDoItemTags/Details/5
@@ -32,10 +33,8 @@ namespace SampleWebApp.Controllers
                 return NotFound();
             }
 
-            var toDoItemTag = await _context.ToDoItemTag
-                .Include(t => t.Tag)
-                .Include(t => t.ToDoItem)
-                .FirstOrDefaultAsync(m => m.ToDoItemId == toDoItemId && m.TagId == tagId);
+            var toDoItemTag = await _provider.Get(toDoItemId, tagId);
+
             if (toDoItemTag == null)
             {
                 return NotFound();
@@ -47,8 +46,8 @@ namespace SampleWebApp.Controllers
         // GET: ToDoItemTags/Create
         public IActionResult Create()
         {
-            ViewData["TagId"] = new SelectList(_context.Tag, "Id", "Name");
-            ViewData["ToDoItemId"] = new SelectList(_context.ToDoItem, "Id", "Name");
+            ViewData["TagId"] = new SelectList(_provider.Context.Tag, "Id", "Name");
+            ViewData["ToDoItemId"] = new SelectList(_provider.Context.ToDoItem, "Id", "Name");
             return View();
         }
 
@@ -59,19 +58,18 @@ namespace SampleWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ToDoItemId,TagId")] ToDoItemTag toDoItemTag)
         {
-            bool isUnique = await _context.ToDoItemTag.FindAsync(toDoItemTag.ToDoItemId, toDoItemTag.TagId) == null;
+            bool isUnique = await _provider.Get(toDoItemTag.ToDoItemId, toDoItemTag.TagId) == null;
 
             if (ModelState.IsValid)
             {
                 if (isUnique)
                 {
-                    _context.Add(toDoItemTag);
-                    await _context.SaveChangesAsync();
+                    await _provider.Add(toDoItemTag);
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TagId"] = new SelectList(_context.Tag, "Id", "Name", toDoItemTag.TagId);
-            ViewData["ToDoItemId"] = new SelectList(_context.ToDoItem, "Id", "Name", toDoItemTag.ToDoItemId);
+            ViewData["TagId"] = new SelectList(_provider.Context.Tag, "Id", "Name", toDoItemTag.TagId);
+            ViewData["ToDoItemId"] = new SelectList(_provider.Context.ToDoItem, "Id", "Name", toDoItemTag.ToDoItemId);
             return View(toDoItemTag);
         }
 
@@ -83,13 +81,13 @@ namespace SampleWebApp.Controllers
                 return NotFound();
             }
 
-            var toDoItemTag = await _context.ToDoItemTag.FindAsync(toDoItemId, tagId);
+            var toDoItemTag = await _provider.Get(toDoItemId, tagId);
             if (toDoItemTag == null)
             {
                 return NotFound();
             }
-            ViewData["TagId"] = new SelectList(_context.Tag, "Id", "Name", toDoItemTag.TagId);
-            ViewData["ToDoItemId"] = new SelectList(_context.ToDoItem, "Id", "Name", toDoItemTag.ToDoItemId);
+            ViewData["TagId"] = new SelectList(_provider.Context.Tag, "Id", "Name", toDoItemTag.TagId);
+            ViewData["ToDoItemId"] = new SelectList(_provider.Context.ToDoItem, "Id", "Name", toDoItemTag.ToDoItemId);
             return View(toDoItemTag);
         }
 
@@ -109,12 +107,11 @@ namespace SampleWebApp.Controllers
             {
                 try
                 {
-                    _context.Update(toDoItemTag);
-                    await _context.SaveChangesAsync();
+                    await _provider.Update(toDoItemTag);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ToDoItemTagExists(toDoItemTag.ToDoItemId))
+                    if (!_provider.ItemExits(toDoItemTag.ToDoItemId, toDoItemTag.TagId))
                     {
                         return NotFound();
                     }
@@ -125,8 +122,8 @@ namespace SampleWebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TagId"] = new SelectList(_context.Tag, "Id", "Name", toDoItemTag.TagId);
-            ViewData["ToDoItemId"] = new SelectList(_context.ToDoItem, "Id", "Name", toDoItemTag.ToDoItemId);
+            ViewData["TagId"] = new SelectList(_provider.Context.Tag, "Id", "Name", toDoItemTag.TagId);
+            ViewData["ToDoItemId"] = new SelectList(_provider.Context.ToDoItem, "Id", "Name", toDoItemTag.ToDoItemId);
             return View(toDoItemTag);
         }
 
@@ -138,10 +135,8 @@ namespace SampleWebApp.Controllers
                 return NotFound();
             }
 
-            var toDoItemTag = await _context.ToDoItemTag
-                .Include(t => t.Tag)
-                .Include(t => t.ToDoItem)
-                .FirstOrDefaultAsync(m => m.ToDoItemId == toDoItemId && m.TagId == tagId);
+            var toDoItemTag = await _provider.Get(toDoItemId, tagId);
+
             if (toDoItemTag == null)
             {
                 return NotFound();
@@ -155,15 +150,8 @@ namespace SampleWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int toDoItemId, int tagId)
         {
-            var toDoItemTag = await _context.ToDoItemTag.FindAsync(toDoItemId, tagId);
-            _context.ToDoItemTag.Remove(toDoItemTag);
-            await _context.SaveChangesAsync();
+            await _provider.Delete(toDoItemId, tagId);
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool ToDoItemTagExists(int id)
-        {
-            return _context.ToDoItemTag.Any(e => e.ToDoItemId == id);
         }
     }
 }
