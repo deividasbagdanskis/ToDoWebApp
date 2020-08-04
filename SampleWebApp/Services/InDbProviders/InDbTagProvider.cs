@@ -35,12 +35,21 @@ namespace SampleWebApp.Services.InDbProviders
         {
             var foundTag = await _context.Tag.FirstOrDefaultAsync(t => t.Id == id);
 
+            foundTag.ToDoItemNumber = _context.ToDoItemTag.Where(t => t.TagId == foundTag.Id).Count();
+
             return foundTag;
         }
 
         public async Task<List<Tag>> GetAll()
         {
-            return await _context.Tag.ToListAsync();
+            List<Tag> tags = await _context.Tag.ToListAsync();
+
+            foreach (Tag tag in tags)
+            {
+                tag.ToDoItemNumber = _context.ToDoItemTag.Where(t => t.TagId == tag.Id).Count();
+            }
+
+            return tags;
         }
 
         public async Task Update(Tag tag)

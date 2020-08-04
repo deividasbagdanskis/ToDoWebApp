@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SampleWebApp.Models
 {
@@ -11,6 +13,10 @@ namespace SampleWebApp.Models
         public string Name { get; set; }
 
         public List<ToDoItemTag> ToDoItemTags { get; set; }
+
+        [NotMapped]
+        [DisplayName("ToDo items")]
+        public int ToDoItemNumber { get; set; }
 
         public Tag()
         {
