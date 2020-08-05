@@ -88,6 +88,8 @@ namespace SampleWebApp.Controllers
             }
             ViewData["TagId"] = new SelectList(_provider.Context.Tag, "Id", "Name", toDoItemTag.TagId);
             ViewData["ToDoItemId"] = new SelectList(_provider.Context.ToDoItem, "Id", "Name", toDoItemTag.ToDoItemId);
+            ViewData["OldToDoItemId"] = toDoItemId;
+            ViewData["OldTagId"] = tagId;
             return View(toDoItemTag);
         }
 
@@ -96,9 +98,17 @@ namespace SampleWebApp.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ToDoItemId,TagId")] ToDoItemTag toDoItemTag)
+        public async Task<IActionResult> Edit(int? oldToDoItemId, int? oldTagId,
+            [Bind("ToDoItemId,TagId")] ToDoItemTag toDoItemTag)
         {
-            if (id != toDoItemTag.ToDoItemId)
+            if (toDoItemTag == null)
+            {
+                return NotFound();
+            }
+
+            ToDoItemTag oldToDoItemTag = await _provider.Get(oldToDoItemId, oldTagId);
+            
+            if (oldToDoItemTag == null)
             {
                 return NotFound();
             }
@@ -107,7 +117,8 @@ namespace SampleWebApp.Controllers
             {
                 try
                 {
-                    await _provider.Update(toDoItemTag);
+                    await _provider.Delete(oldToDoItemId, oldTagId);
+                    await _provider.Add(toDoItemTag);
                 }
                 catch (DbUpdateConcurrencyException)
                 {

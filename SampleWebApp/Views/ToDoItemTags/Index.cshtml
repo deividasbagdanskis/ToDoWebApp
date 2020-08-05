@@ -31,6 +31,8 @@
                 @Html.DisplayFor(modelItem => item.Tag.Name)
             </td>
             <td>
+                @Html.ActionLink("Edit", "Edit", new { ToDoItemId = item.ToDoItemId, TagId = item.TagId }) |
+                @Html.ActionLink("Details", "Details", new { ToDoItemId = item.ToDoItemId, TagId = item.TagId }) |
                 @Html.ActionLink("Delete", "Delete", new { ToDoItemId = item.ToDoItemId, TagId = item.TagId })
             </td>
         </tr>
