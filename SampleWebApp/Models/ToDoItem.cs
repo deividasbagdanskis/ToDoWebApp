@@ -1,5 +1,6 @@
 ﻿using SampleWebApp.Services;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace SampleWebApp.Models
@@ -57,6 +58,8 @@ namespace SampleWebApp.Models
 				_category = value;
 			}
 		}
+
+		public List<ToDoItemTag> ToDoItemTags { get; set; }
 
 		public ToDoItem()
 		{

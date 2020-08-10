@@ -11,11 +11,15 @@ namespace SampleWebApp.ViewModels
     {
         private IAsyncDbDataProvider<Category> _categoryProvider;
 
+        private IAsyncDbDataProvider<Tag> _tagProvider;
+
         private List<Category> _categories = new List<Category>();
 
         public ToDoItem ToDoItem { get; set; }
 
         public List<SelectListItem> CategoriesSelectList { get; private set; }
+
+        public List<Tag> Tags { get; set; }
 
         public ToDoItemViewModel()
         {
@@ -24,6 +28,7 @@ namespace SampleWebApp.ViewModels
         public ToDoItemViewModel(SampleWebAppContext context)
         {
             _categoryProvider = new InDbCategoryProvider(context);
+            _tagProvider = new InDbTagProvider(context);
         }
 
         public async Task SetCategoriesSelectList()
@@ -43,6 +48,11 @@ namespace SampleWebApp.ViewModels
         private async Task RetrieveCategories()
         {
             _categories = await _categoryProvider.GetAll();
+        }
+
+        public async Task RetrieveTags()
+        {
+            Tags = await _tagProvider.GetAll();
         }
     }
 }

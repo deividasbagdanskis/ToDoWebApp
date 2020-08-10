@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -46,6 +47,7 @@ namespace SampleWebApp.Controllers
         {
             IToDoItemViewModel toDoItemViewModel = new ToDoItemViewModel(_provider.Context);
             await toDoItemViewModel.SetCategoriesSelectList();
+            await toDoItemViewModel.RetrieveTags();
 
             return View(toDoItemViewModel);
         }
@@ -60,6 +62,7 @@ namespace SampleWebApp.Controllers
             ToDoItem toDoItem = toDoItemViewModel.ToDoItem;
 
             toDoItem.CreationDate = DateTime.Today;
+
             if (ModelState.IsValid)
             {
                 if (toDoItem.CategoryId == 0)
