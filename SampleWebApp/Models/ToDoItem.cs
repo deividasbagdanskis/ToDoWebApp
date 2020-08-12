@@ -12,7 +12,7 @@ namespace SampleWebApp.Models
 		[Required]
 		public string Name { get; set; }
 
-		public string? Description { get; set; }
+		public string Description { get; set; }
 
 		[Required]
 		[DataType(DataType.Date)]
@@ -41,23 +41,7 @@ namespace SampleWebApp.Models
 
 		public int? CategoryId { get; set; }
 
-		private Category _category;
-		public Category Category
-		{
-			get
-			{
-				if (_category == null)
-				{
-					return new Category() { Name = "Uncategorized" };
-				}
-
-				return _category;
-			}
-			set
-			{
-				_category = value;
-			}
-		}
+		public Category Category { get; set; }
 
 		public List<ToDoItemTag> ToDoItemTags { get; set; }
 
