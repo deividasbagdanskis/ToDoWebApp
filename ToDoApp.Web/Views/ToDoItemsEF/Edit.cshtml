@@ -1,0 +1,59 @@
+﻿@model ToDoApp.Web.ViewModels.ToDoItemViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>ToDoItem</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ToDoItem.Id" />
+            <div class="form-group">
+                <label asp-for="ToDoItem.Name" class="control-label"></label>
+                <input asp-for="ToDoItem.Name" class="form-control" />
+                <span asp-validation-for="ToDoItem.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ToDoItem.Description" class="control-label"></label>
+                <input asp-for="ToDoItem.Description" class="form-control" />
+                <span asp-validation-for="ToDoItem.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ToDoItem.DeadlineDate" class="control-label"></label>
+                <input asp-for="ToDoItem.DeadlineDate" class="form-control" />
+                <span asp-validation-for="ToDoItem.DeadlineDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ToDoItem.Priority" class="control-label"></label>
+                <input asp-for="ToDoItem.Priority" class="form-control" />
+                <span asp-validation-for="ToDoItem.Priority" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ToDoItem.Status" class="control-label"></label>
+                <select asp-for="ToDoItem.Status" class="form-control" asp-items="Html.GetEnumSelectList<StatusEnum>()"></select>
+                <span asp-validation-for="ToDoItem.Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ToDoItem.CategoryId" class="control-label">Category</label>
+                <select asp-for="ToDoItem.CategoryId" class="form-control" asp-items="Model.CategoriesSelectList"></select>
+                <span asp-validation-for="ToDoItem.Category.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

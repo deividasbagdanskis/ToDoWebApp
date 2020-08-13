@@ -1,0 +1,70 @@
+﻿@model ToDoApp.Web.ViewModels.ToDoItemViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>ToDoItem</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ToDoItem.Name" class="control-label"></label>
+                <input asp-for="ToDoItem.Name" class="form-control" />
+                <span asp-validation-for="ToDoItem.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ToDoItem.Description" class="control-label"></label>
+                <input asp-for="ToDoItem.Description" class="form-control" />
+                <span asp-validation-for="ToDoItem.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ToDoItem.DeadlineDate" class="control-label"></label>
+                <input asp-for="ToDoItem.DeadlineDate" class="form-control" />
+                <span asp-validation-for="ToDoItem.DeadlineDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ToDoItem.Priority" class="control-label"></label>
+                <input asp-for="ToDoItem.Priority" class="form-control" />
+                <span asp-validation-for="ToDoItem.Priority" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ToDoItem.Status" class="control-label"></label>
+                <select asp-for="ToDoItem.Status" class="form-control" asp-items="Html.GetEnumSelectList<StatusEnum>()"></select>
+                <span asp-validation-for="ToDoItem.Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ToDoItem.CategoryId" class="control-label">Category</label>
+                <select asp-for="ToDoItem.CategoryId" class="form-control" asp-items="Model.CategoriesSelectList"></select>
+                <span asp-validation-for="ToDoItem.Category" class="text-danger"></span>
+            </div>
+            @*<div class="form-group">
+                <label asp-for="ToDoItem.ToDoItemTags" class="control-label">Tags</label>
+                @foreach (Tag tag in Model.Tags)
+                {
+                <div class="form-check">
+                    <input asp-for="@tag.Selected" class="form-check-input" type="checkbox" value="@tag.Id" id="@tag.Name"/>
+                    <label class="form-check-label" for="@tag.Name">@tag.Name</label>
+                    <input asp-for="@tag.Id" type="hidden" />
+                    <input asp-for="@tag.Name" type="hidden" />
+                </div>;
+                }
+            </div>*@
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

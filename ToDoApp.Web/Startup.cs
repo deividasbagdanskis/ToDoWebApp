@@ -1,0 +1,82 @@
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using ToDoApp.Web.Data;
+using ToDoApp.Web.Models;
+using ToDoApp.Web.Services;
+using ToDoApp.Web.Services.InDbProviders;
+using ToDoApp.Web.Services.InFileProviders;
+using ToDoApp.Web.Services.InMemoryProviders;
+
+namespace ToDoApp
+{
+    public class Startup
+    {
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
+        public IConfiguration Configuration { get; }
+
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddControllersWithViews();
+
+            switch (Configuration.GetValue<string>("ProviderType"))
+            {
+                case "InMemory":
+                    services.AddSingleton<IDataProvider<ToDoItem>, InMemoryToDoItemProvider>();
+                    services.AddSingleton<IDataProvider<Category>, InMemoryCategoryProvider>();
+                    break;
+                case "InFile":
+                    services.AddSingleton<IDataProvider<ToDoItem>, InFileToDoItemProvider>();
+                    services.AddSingleton<IDataProvider<Category>, InFileCategoryProvider>();
+                    break;
+                case "InDatabase":
+                    services.AddScoped<IAsyncDbDataProvider<Category>, InDbCategoryProvider>();
+                    services.AddScoped<IAsyncDbDataProvider<ToDoItem>, InDbToDoItemProvider>();
+                    services.AddScoped<IAsyncDbDataProvider<Tag>, InDbTagProvider>();
+                    services.AddScoped<IInDbToDoItemTagProvider, InDbToDoItemTagProvider>();
+                    break;
+                default:
+                    break;
+            }
+
+            services.AddDbContext<SampleWebAppContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("SampleWebAppContext")));
+        }
+
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Home/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
+            }
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+
+            app.UseRouting();
+
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=CategoriesEF}/{action=Index}/{id?}");
+            });
+        }
+    }
+}
