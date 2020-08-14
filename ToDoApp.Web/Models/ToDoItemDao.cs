@@ -2,10 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using ToDoApp.Commons.Enums;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ToDoApp.Web.Models
 {
-	public class ToDoItem : IHasId
+	[Table("ToDoItem")]
+	public class ToDoItemDao : IHasId
 	{
 		public int Id { get; set; }
 
@@ -41,16 +44,16 @@ namespace ToDoApp.Web.Models
 
 		public int? CategoryId { get; set; }
 
-		public Category Category { get; set; }
+		public CategoryDao Category { get; set; }
 
-		public List<ToDoItemTag> ToDoItemTags { get; set; }
+		public List<ToDoItemTagDao> ToDoItemTags { get; set; }
 
-		public ToDoItem()
+		public ToDoItemDao()
 		{
 
 		}
 
-		public ToDoItem(int id, string name, string description, int priority)
+		public ToDoItemDao(int id, string name, string description, int priority)
 		{
 			Id = id;
 			Name = name;

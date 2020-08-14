@@ -9,11 +9,11 @@ namespace ToDoApp.Web.Services.InDbProviders
     {
         SampleWebAppContext Context { get; }
 
-        Task Add(ToDoItemTag toDoItemTag);
+        Task Add(ToDoItemTagDao toDoItemTag);
         Task Delete(int? toDoItemId, int? tagId);
-        Task<ToDoItemTag> Get(int? toDoItemId, int? tagId);
-        Task<List<ToDoItemTag>> GetAll();
-        Task Update(ToDoItemTag toDoItemTag);
+        Task<ToDoItemTagDao> Get(int? toDoItemId, int? tagId);
+        Task<List<ToDoItemTagDao>> GetAll();
+        Task Update(ToDoItemTagDao toDoItemTag);
         bool ItemExits(int toDoItemId, int tagId);
     }
 }

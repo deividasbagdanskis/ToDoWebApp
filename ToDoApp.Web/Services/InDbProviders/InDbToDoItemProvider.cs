@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ToDoApp.Web.Services.InDbProviders
 {
-    public class InDbToDoItemProvider : IAsyncDbDataProvider<ToDoItem>
+    public class InDbToDoItemProvider : IAsyncDbDataProvider<ToDoItemDao>
     {
         public SampleWebAppContext Context { get; }
 
@@ -17,7 +17,7 @@ namespace ToDoApp.Web.Services.InDbProviders
             Context = context;
         }
 
-        public async Task Add(ToDoItem toDoItem)
+        public async Task Add(ToDoItemDao toDoItem)
         {
             Context.Add(toDoItem);
             await Context.SaveChangesAsync();
@@ -30,7 +30,7 @@ namespace ToDoApp.Web.Services.InDbProviders
             await Context.SaveChangesAsync();
         }
 
-        public async Task<ToDoItem> Get(int? id)
+        public async Task<ToDoItemDao> Get(int? id)
         {
             var foundToDoItem = await Context.ToDoItem.FindAsync(id);
 
@@ -45,12 +45,12 @@ namespace ToDoApp.Web.Services.InDbProviders
             return foundToDoItem;
         }
 
-        public async Task<List<ToDoItem>> GetAll()
+        public async Task<List<ToDoItemDao>> GetAll()
         {
             return await Context.ToDoItem.Include(t => t.Category).ToListAsync();
         }
 
-        public async Task Update(ToDoItem toDoItem)
+        public async Task Update(ToDoItemDao toDoItem)
         {
             Context.Update(toDoItem);
             Context.Entry(toDoItem).Property("CreationDate").IsModified = false;

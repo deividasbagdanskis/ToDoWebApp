@@ -8,9 +8,9 @@ namespace ToDoApp.Web.Controllers
 {
     public class CategoriesEFController : Controller
     {
-        private IAsyncDbDataProvider<Category> _provider;
+        private IAsyncDbDataProvider<CategoryDao> _provider;
 
-        public CategoriesEFController(IAsyncDbDataProvider<Category> provider)
+        public CategoriesEFController(IAsyncDbDataProvider<CategoryDao> provider)
         {
             _provider = provider;
         }
@@ -29,7 +29,7 @@ namespace ToDoApp.Web.Controllers
                 return NotFound();
             }
 
-            Category category = await _provider.Get(id);
+            CategoryDao category = await _provider.Get(id);
 
             if (category == null)
             {
@@ -50,7 +50,7 @@ namespace ToDoApp.Web.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] Category category)
+        public async Task<IActionResult> Create([Bind("Id,Name")] CategoryDao category)
         {
             if (ModelState.IsValid)
             {
@@ -68,7 +68,7 @@ namespace ToDoApp.Web.Controllers
                 return NotFound();
             }
 
-            Category category = await _provider.Get(id);
+            CategoryDao category = await _provider.Get(id);
 
             if (category == null)
             {
@@ -82,7 +82,7 @@ namespace ToDoApp.Web.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Category category)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] CategoryDao category)
         {
             if (id != category.Id)
             {

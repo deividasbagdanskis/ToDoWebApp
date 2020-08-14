@@ -16,7 +16,7 @@ namespace ToDoApp.Web.Services.InDbProviders
             Context = context;
         }
 
-        public async Task Add(ToDoItemTag toDoItemTag)
+        public async Task Add(ToDoItemTagDao toDoItemTag)
         {
             Context.Add(toDoItemTag);
             await Context.SaveChangesAsync();
@@ -24,14 +24,14 @@ namespace ToDoApp.Web.Services.InDbProviders
 
         public async Task Delete(int? toDoItemId, int? tagId)
         {
-            ToDoItemTag toDoItemTag = await Context.ToDoItemTag.FindAsync(toDoItemId, tagId);
+            ToDoItemTagDao toDoItemTag = await Context.ToDoItemTag.FindAsync(toDoItemId, tagId);
             Context.ToDoItemTag.Remove(toDoItemTag);
             await Context.SaveChangesAsync();
         }
 
-        public async Task<ToDoItemTag> Get(int? toDoItemId, int? tagId)
+        public async Task<ToDoItemTagDao> Get(int? toDoItemId, int? tagId)
         {
-            ToDoItemTag foundToDoItemTag = await Context.ToDoItemTag
+            ToDoItemTagDao foundToDoItemTag = await Context.ToDoItemTag
                 .Include(t => t.Tag)
                 .Include(t => t.ToDoItem)
                 .FirstOrDefaultAsync(m => m.ToDoItemId == toDoItemId && m.TagId == tagId);
@@ -39,13 +39,13 @@ namespace ToDoApp.Web.Services.InDbProviders
             return foundToDoItemTag;
         }
 
-        public async Task<List<ToDoItemTag>> GetAll()
+        public async Task<List<ToDoItemTagDao>> GetAll()
         {
             var sampleWebAppContext = Context.ToDoItemTag.Include(t => t.Tag).Include(t => t.ToDoItem);
             return await sampleWebAppContext.ToListAsync();
         }
 
-        public async Task Update(ToDoItemTag toDoItemTag)
+        public async Task Update(ToDoItemTagDao toDoItemTag)
         {
             Context.Update(toDoItemTag);
             await Context.SaveChangesAsync();

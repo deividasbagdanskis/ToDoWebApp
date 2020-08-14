@@ -54,7 +54,7 @@ namespace ToDoApp.Web.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ToDoItemId,TagId")] ToDoItemTag toDoItemTag)
+        public async Task<IActionResult> Create([Bind("ToDoItemId,TagId")] ToDoItemTagDao toDoItemTag)
         {
             bool isUnique = await _provider.Get(toDoItemTag.ToDoItemId, toDoItemTag.TagId) == null;
 
@@ -97,14 +97,14 @@ namespace ToDoApp.Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int? oldToDoItemId, int? oldTagId,
-            [Bind("ToDoItemId,TagId")] ToDoItemTag toDoItemTag)
+            [Bind("ToDoItemId,TagId")] ToDoItemTagDao toDoItemTag)
         {
             if (toDoItemTag == null)
             {
                 return NotFound();
             }
 
-            ToDoItemTag oldToDoItemTag = await _provider.Get(oldToDoItemId, oldTagId);
+            ToDoItemTagDao oldToDoItemTag = await _provider.Get(oldToDoItemId, oldTagId);
             
             if (oldToDoItemTag == null)
             {

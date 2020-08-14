@@ -6,9 +6,9 @@ namespace ToDoApp.Web.Controllers
 {
     public class CategoriesController : Controller
     {
-        private readonly IDataProvider<Category> _categoryProvider;
+        private readonly IDataProvider<CategoryDao> _categoryProvider;
 
-        public CategoriesController(IDataProvider<Category> categoryProvider)
+        public CategoriesController(IDataProvider<CategoryDao> categoryProvider)
         {
             _categoryProvider = categoryProvider;
         }
@@ -35,7 +35,7 @@ namespace ToDoApp.Web.Controllers
         // POST: CategoriesController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Category category)
+        public ActionResult Create(CategoryDao category)
         {
             try
             {
@@ -57,7 +57,7 @@ namespace ToDoApp.Web.Controllers
         // POST: CategoriesController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, Category category)
+        public ActionResult Edit(int id, CategoryDao category)
         {
             try
             {
@@ -79,7 +79,7 @@ namespace ToDoApp.Web.Controllers
         // POST: CategoriesController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, Category category)
+        public ActionResult Delete(int id, CategoryDao category)
         {
             try
             {

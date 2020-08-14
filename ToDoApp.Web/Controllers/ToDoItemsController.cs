@@ -6,9 +6,9 @@ namespace ToDoApp.Web.Controllers
 {
     public class ToDoItemsController : Controller
     {
-        private readonly IDataProvider<ToDoItem> _todoItemProvider;
+        private readonly IDataProvider<ToDoItemDao> _todoItemProvider;
 
-        public ToDoItemsController(IDataProvider<ToDoItem> todoItemProvider)
+        public ToDoItemsController(IDataProvider<ToDoItemDao> todoItemProvider)
         {
             _todoItemProvider = todoItemProvider;
         }
@@ -35,7 +35,7 @@ namespace ToDoApp.Web.Controllers
         // POST: TodoItemsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(ToDoItem toDoItem)
+        public ActionResult Create(ToDoItemDao toDoItem)
         {
             try
             {
@@ -57,7 +57,7 @@ namespace ToDoApp.Web.Controllers
         // POST: TodoItemsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, ToDoItem toDoItem)
+        public ActionResult Edit(int id, ToDoItemDao toDoItem)
         {
             try
             {
@@ -79,7 +79,7 @@ namespace ToDoApp.Web.Controllers
         // POST: TodoItemsController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, ToDoItem toDoItem)
+        public ActionResult Delete(int id, ToDoItemDao toDoItem)
         {
             try
             {

@@ -12,27 +12,27 @@ namespace ToDoApp.Web.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ToDoItemTag>().HasKey(tt => new { tt.ToDoItemId, tt.TagId });
+            modelBuilder.Entity<ToDoItemTagDao>().HasKey(tt => new { tt.ToDoItemId, tt.TagId });
 
-            modelBuilder.Entity<ToDoItemTag>()
-                .HasOne<ToDoItem>(tt => tt.ToDoItem)
+            modelBuilder.Entity<ToDoItemTagDao>()
+                .HasOne<ToDoItemDao>(tt => tt.ToDoItem)
                 .WithMany(t => t.ToDoItemTags)
                 .HasForeignKey(tt => tt.ToDoItemId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<ToDoItemTag>()
-                .HasOne<Tag>(tt => tt.Tag)
+            modelBuilder.Entity<ToDoItemTagDao>()
+                .HasOne<TagDao>(tt => tt.Tag)
                 .WithMany(t => t.ToDoItemTags)
                 .HasForeignKey(tt => tt.TagId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
 
-        public DbSet<Category> Category { get; set; }
+        public DbSet<CategoryDao> Category { get; set; }
 
-        public DbSet<ToDoItem> ToDoItem { get; set; }
+        public DbSet<ToDoItemDao> ToDoItem { get; set; }
 
-        public DbSet<ToDoItemTag> ToDoItemTag { get; set; }
+        public DbSet<ToDoItemTagDao> ToDoItemTag { get; set; }
 
-        public DbSet<Tag> Tag { get; set; }
+        public DbSet<TagDao> Tag { get; set; }
     }
 }

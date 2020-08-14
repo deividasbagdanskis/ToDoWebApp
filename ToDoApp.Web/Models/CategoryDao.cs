@@ -1,22 +1,24 @@
 ﻿using ToDoApp.Web.Services;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ToDoApp.Web.Models
 {
-    public class Category : IHasId
+    [Table("Category")]
+    public class CategoryDao : IHasId
     {
         public int Id { get; set; }
 
         public string Name { get; set; }
 
-        public List<ToDoItem> ToDoItems { get; set; }
+        public List<ToDoItemDao> ToDoItems { get; set; }
 
-        public Category()
+        public CategoryDao()
         {
 
         }
 
-        public Category(int id, string name)
+        public CategoryDao(int id, string name)
         {
             Id = id;
             Name = name;

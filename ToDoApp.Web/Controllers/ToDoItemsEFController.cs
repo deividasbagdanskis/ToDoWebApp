@@ -10,9 +10,9 @@ namespace ToDoApp.Web.Controllers
 {
     public class ToDoItemsEFController : Controller
     {
-        private IAsyncDbDataProvider<ToDoItem> _provider;
+        private IAsyncDbDataProvider<ToDoItemDao> _provider;
 
-        public ToDoItemsEFController(IAsyncDbDataProvider<ToDoItem> provider)
+        public ToDoItemsEFController(IAsyncDbDataProvider<ToDoItemDao> provider)
         {
             _provider = provider;
         }
@@ -31,7 +31,7 @@ namespace ToDoApp.Web.Controllers
                 return NotFound();
             }
 
-            ToDoItem toDoItem = await _provider.Get(id);
+            ToDoItemDao toDoItem = await _provider.Get(id);
 
             if (toDoItem == null)
             {
@@ -58,7 +58,7 @@ namespace ToDoApp.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ToDoItemViewModel toDoItemViewModel)
         {
-            ToDoItem toDoItem = toDoItemViewModel.ToDoItem;
+            ToDoItemDao toDoItem = toDoItemViewModel.ToDoItem;
 
             toDoItem.CreationDate = DateTime.Today;
 
@@ -83,7 +83,7 @@ namespace ToDoApp.Web.Controllers
                 return NotFound();
             }
 
-            ToDoItem toDoItem = await _provider.Get(id);
+            ToDoItemDao toDoItem = await _provider.Get(id);
 
             if (toDoItem == null)
             {
@@ -107,7 +107,7 @@ namespace ToDoApp.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, ToDoItemViewModel toDoItemViewModel)
         {
-            ToDoItem toDoItem = toDoItemViewModel.ToDoItem;
+            ToDoItemDao toDoItem = toDoItemViewModel.ToDoItem;
 
             if (id != toDoItem.Id)
             {
@@ -152,7 +152,7 @@ namespace ToDoApp.Web.Controllers
                 return NotFound();
             }
 
-            ToDoItem toDoItem = await _provider.Get(id);
+            ToDoItemDao toDoItem = await _provider.Get(id);
 
             if (toDoItem == null)
             {

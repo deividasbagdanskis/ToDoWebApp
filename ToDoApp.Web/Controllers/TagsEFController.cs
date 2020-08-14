@@ -8,9 +8,9 @@ namespace ToDoApp.Web.Controllers
 {
     public class TagsEFController : Controller
     {
-        private readonly IAsyncDbDataProvider<Tag> _provider;
+        private readonly IAsyncDbDataProvider<TagDao> _provider;
 
-        public TagsEFController(IAsyncDbDataProvider<Tag> provider)
+        public TagsEFController(IAsyncDbDataProvider<TagDao> provider)
         {
             _provider = provider;
         }
@@ -29,7 +29,7 @@ namespace ToDoApp.Web.Controllers
                 return NotFound();
             }
 
-            Tag tag = await _provider.Get(id);
+            TagDao tag = await _provider.Get(id);
 
             if (tag == null)
             {
@@ -50,7 +50,7 @@ namespace ToDoApp.Web.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] Tag tag)
+        public async Task<IActionResult> Create([Bind("Id,Name")] TagDao tag)
         {
             if (ModelState.IsValid)
             {
@@ -68,7 +68,7 @@ namespace ToDoApp.Web.Controllers
                 return NotFound();
             }
 
-            Tag tag = await _provider.Get(id);
+            TagDao tag = await _provider.Get(id);
 
             if (tag == null)
             {
@@ -82,7 +82,7 @@ namespace ToDoApp.Web.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Tag tag)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] TagDao tag)
         {
             if (id != tag.Id)
             {
@@ -119,7 +119,7 @@ namespace ToDoApp.Web.Controllers
                 return NotFound();
             }
 
-            Tag tag = await _provider.Get(id);
+            TagDao tag = await _provider.Get(id);
 
             if (tag == null)
             {

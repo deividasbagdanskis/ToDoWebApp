@@ -9,17 +9,17 @@ namespace ToDoApp.Web.ViewModels
 {
     public class ToDoItemViewModel : IToDoItemViewModel
     {
-        private IAsyncDbDataProvider<Category> _categoryProvider;
+        private IAsyncDbDataProvider<CategoryDao> _categoryProvider;
 
-        private IAsyncDbDataProvider<Tag> _tagProvider;
+        private IAsyncDbDataProvider<TagDao> _tagProvider;
 
-        private List<Category> _categories = new List<Category>();
+        private List<CategoryDao> _categories = new List<CategoryDao>();
 
-        public ToDoItem ToDoItem { get; set; }
+        public ToDoItemDao ToDoItem { get; set; }
 
         public List<SelectListItem> CategoriesSelectList { get; private set; }
 
-        public List<Tag> Tags { get; set; }
+        public List<TagDao> Tags { get; set; }
 
         public ToDoItemViewModel()
         {
@@ -39,7 +39,7 @@ namespace ToDoApp.Web.ViewModels
 
             CategoriesSelectList.Add(new SelectListItem() { Text = "Uncategorized", Value = "0" });
 
-            foreach (Category category in _categories)
+            foreach (CategoryDao category in _categories)
             {
                 CategoriesSelectList.Add(new SelectListItem() { Text = category.Name, Value = category.Id.ToString() });
             }

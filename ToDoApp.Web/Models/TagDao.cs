@@ -5,20 +5,21 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ToDoApp.Web.Models
 {
-    public class Tag
+    [Table("Tag")]
+    public class TagDao
     {
         public int Id { get; set; }
 
         [Required]
         public string Name { get; set; }
 
-        public List<ToDoItemTag> ToDoItemTags { get; set; }
+        public List<ToDoItemTagDao> ToDoItemTags { get; set; }
 
         [NotMapped]
         [DisplayName("ToDo items")]
         public int ToDoItemNumber { get; set; }
 
-        public Tag()
+        public TagDao()
         {
 
         }

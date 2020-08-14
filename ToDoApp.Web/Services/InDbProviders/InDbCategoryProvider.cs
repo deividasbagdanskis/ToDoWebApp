@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ToDoApp.Web.Services.InDbProviders
 {
-    public class InDbCategoryProvider : IAsyncDbDataProvider<Category>
+    public class InDbCategoryProvider : IAsyncDbDataProvider<CategoryDao>
     {
         private SampleWebAppContext _context;
 
@@ -18,7 +18,7 @@ namespace ToDoApp.Web.Services.InDbProviders
             _context = context;
         }
 
-        public async Task Add(Category category)
+        public async Task Add(CategoryDao category)
         {
             _context.Add(category);
             await _context.SaveChangesAsync();
@@ -31,19 +31,19 @@ namespace ToDoApp.Web.Services.InDbProviders
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Category> Get(int? id)
+        public async Task<CategoryDao> Get(int? id)
         {
             var foundCategory = await _context.Category.FirstOrDefaultAsync(m => m.Id == id);
 
             return foundCategory;
         }
 
-        public async Task<List<Category>> GetAll()
+        public async Task<List<CategoryDao>> GetAll()
         {
             return await _context.Category.ToListAsync();
         }
 
-        public async Task Update(Category category)
+        public async Task Update(CategoryDao category)
         {
             _context.Update(category);
             await _context.SaveChangesAsync();
