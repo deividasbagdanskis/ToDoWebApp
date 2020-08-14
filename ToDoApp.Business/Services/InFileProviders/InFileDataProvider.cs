@@ -2,9 +2,10 @@
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using ToDoApp.Commons.Interfaces;
 using ToDoApp.Commons.Exceptions;
 
-namespace ToDoApp.Web.Services.InFileProviders
+namespace ToDoApp.Business.Services.InFileProviders
 {
     public class InFileDataProvider<T> : IDataProvider<T> where T : IHasId
     {

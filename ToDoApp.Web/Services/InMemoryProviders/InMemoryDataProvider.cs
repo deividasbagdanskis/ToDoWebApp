@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ToDoApp.Web.Exceptions;
+using ToDoApp.Commons.Exceptions;
 
 namespace ToDoApp.Web.Services.InMemoryProviders
 {

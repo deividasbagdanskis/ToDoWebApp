@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using ToDoApp.Web.Models;
 using ToDoApp.Web.Services.InDbProviders;
 
-namespace SampleWebApp.Web.Controllers
+namespace ToDoApp.Web.Controllers
 {
     public class ToDoItemTagsController : Controller
     {

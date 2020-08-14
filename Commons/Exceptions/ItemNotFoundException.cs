@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ToDoApp.Business.Exceptions
+namespace ToDoApp.Commons.Exceptions
 {
     public class ItemNotFoundException : Exception
     {
