@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,10 +11,12 @@ namespace ToDoApp.Web.Controllers
     public class ToDoItemTagsController : Controller
     {
         private readonly IInDbToDoItemTagProvider _provider;
+        private readonly IMapper _mapper;
 
-        public ToDoItemTagsController(IInDbToDoItemTagProvider provider)
+        public ToDoItemTagsController(IInDbToDoItemTagProvider provider, IMapper mapper)
         {
             _provider = provider;
+            _mapper = mapper;
         }
 
         // GET: ToDoItemTags

@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ToDoApp.Web.Models;
@@ -9,10 +10,12 @@ namespace ToDoApp.Web.Controllers
     public class TagsEFController : Controller
     {
         private readonly IAsyncDbDataProvider<TagDao> _provider;
+        private readonly IMapper _mapper;
 
-        public TagsEFController(IAsyncDbDataProvider<TagDao> provider)
+        public TagsEFController(IAsyncDbDataProvider<TagDao> provider, IMapper mapper)
         {
             _provider = provider;
+            _mapper = mapper;
         }
 
         // GET: TagsEF

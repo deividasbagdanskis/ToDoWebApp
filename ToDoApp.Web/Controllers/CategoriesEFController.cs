@@ -3,16 +3,19 @@ using Microsoft.EntityFrameworkCore;
 using ToDoApp.Web.Models;
 using ToDoApp.Web.Services.InDbProviders;
 using System.Threading.Tasks;
+using AutoMapper;
 
 namespace ToDoApp.Web.Controllers
 {
     public class CategoriesEFController : Controller
     {
         private IAsyncDbDataProvider<CategoryDao> _provider;
+        private readonly IMapper _mapper;
 
-        public CategoriesEFController(IAsyncDbDataProvider<CategoryDao> provider)
+        public CategoriesEFController(IAsyncDbDataProvider<CategoryDao> provider, IMapper mapper)
         {
             _provider = provider;
+            _mapper = mapper;
         }
 
         // GET: CategoriesEF

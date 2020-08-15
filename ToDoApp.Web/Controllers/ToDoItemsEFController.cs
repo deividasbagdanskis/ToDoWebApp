@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ToDoApp.Web.Models;
@@ -11,10 +12,12 @@ namespace ToDoApp.Web.Controllers
     public class ToDoItemsEFController : Controller
     {
         private IAsyncDbDataProvider<ToDoItemDao> _provider;
+        private readonly IMapper _mapper;
 
-        public ToDoItemsEFController(IAsyncDbDataProvider<ToDoItemDao> provider)
+        public ToDoItemsEFController(IAsyncDbDataProvider<ToDoItemDao> provider, IMapper mapper)
         {
             _provider = provider;
+            _mapper = mapper;
         }
 
         // GET: ToDoItemsEF
