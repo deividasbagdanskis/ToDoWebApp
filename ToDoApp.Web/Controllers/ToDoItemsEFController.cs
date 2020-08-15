@@ -46,7 +46,7 @@ namespace ToDoApp.Web.Controllers
         {
             IToDoItemViewModel toDoItemViewModel = new ToDoItemViewModel(_provider.Context);
             await toDoItemViewModel.SetCategoriesSelectList();
-            await toDoItemViewModel.RetrieveTags();
+            //ViewData["CategoryId"] = new SelectList(_provider.Context.Category, "Id", "Name");
 
             return View(toDoItemViewModel);
         }
