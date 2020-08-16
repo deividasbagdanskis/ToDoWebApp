@@ -1,5 +1,4 @@
-﻿using ToDoApp.Web.Data;
-using ToDoApp.Web.Models;
+﻿using ToDoApp.Web.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -7,8 +6,6 @@ namespace ToDoApp.Web.Services.InDbProviders
 {
     public interface IInDbToDoItemTagProvider
     {
-        SampleWebAppContext Context { get; }
-
         Task Add(ToDoItemTagDao toDoItemTag);
         Task Delete(int? toDoItemId, int? tagId);
         Task<ToDoItemTagDao> Get(int? toDoItemId, int? tagId);

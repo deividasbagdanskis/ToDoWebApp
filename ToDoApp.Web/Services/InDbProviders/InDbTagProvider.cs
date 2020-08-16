@@ -11,8 +11,6 @@ namespace ToDoApp.Web.Services.InDbProviders
     {
         private SampleWebAppContext _context;
 
-        public SampleWebAppContext Context { get; }
-
         public InDbTagProvider(SampleWebAppContext context)
         {
             _context = context;

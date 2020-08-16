@@ -9,29 +9,29 @@ namespace ToDoApp.Web.Services.InDbProviders
 {
     public class InDbToDoItemTagProvider : IInDbToDoItemTagProvider
     {
-        public SampleWebAppContext Context { get; private set; }
+        private SampleWebAppContext _context;
 
         public InDbToDoItemTagProvider(SampleWebAppContext context)
         {
-            Context = context;
+            _context = context;
         }
 
         public async Task Add(ToDoItemTagDao toDoItemTag)
         {
-            Context.Add(toDoItemTag);
-            await Context.SaveChangesAsync();
+            _context.Add(toDoItemTag);
+            await _context.SaveChangesAsync();
         }
 
         public async Task Delete(int? toDoItemId, int? tagId)
         {
-            ToDoItemTagDao toDoItemTag = await Context.ToDoItemTag.FindAsync(toDoItemId, tagId);
-            Context.ToDoItemTag.Remove(toDoItemTag);
-            await Context.SaveChangesAsync();
+            ToDoItemTagDao toDoItemTag = await _context.ToDoItemTag.FindAsync(toDoItemId, tagId);
+            _context.ToDoItemTag.Remove(toDoItemTag);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<ToDoItemTagDao> Get(int? toDoItemId, int? tagId)
         {
-            ToDoItemTagDao foundToDoItemTag = await Context.ToDoItemTag
+            ToDoItemTagDao foundToDoItemTag = await _context.ToDoItemTag
                 .Include(t => t.Tag)
                 .Include(t => t.ToDoItem)
                 .FirstOrDefaultAsync(m => m.ToDoItemId == toDoItemId && m.TagId == tagId);
@@ -41,19 +41,19 @@ namespace ToDoApp.Web.Services.InDbProviders
 
         public async Task<List<ToDoItemTagDao>> GetAll()
         {
-            var sampleWebAppContext = Context.ToDoItemTag.Include(t => t.Tag).Include(t => t.ToDoItem);
-            return await sampleWebAppContext.ToListAsync();
+            var toDoItemTags = _context.ToDoItemTag.Include(t => t.Tag).Include(t => t.ToDoItem);
+            return await toDoItemTags.ToListAsync();
         }
 
         public async Task Update(ToDoItemTagDao toDoItemTag)
         {
-            Context.Update(toDoItemTag);
-            await Context.SaveChangesAsync();
+            _context.Update(toDoItemTag);
+            await _context.SaveChangesAsync();
         }
 
         public bool ItemExits(int toDoItemId, int tagId)
         {
-            return Context.ToDoItemTag.Any(e => e.ToDoItemId == toDoItemId && e.TagId == tagId);
+            return _context.ToDoItemTag.Any(e => e.ToDoItemId == toDoItemId && e.TagId == tagId);
         }
     }
 }
