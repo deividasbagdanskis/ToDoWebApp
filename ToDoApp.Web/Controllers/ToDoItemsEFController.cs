@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ToDoApp.Web.Models;
 using ToDoApp.Web.Services.InDbProviders;
@@ -11,19 +13,24 @@ namespace ToDoApp.Web.Controllers
 {
     public class ToDoItemsEFController : Controller
     {
-        private IAsyncDbDataProvider<ToDoItemDao> _provider;
+        private readonly IAsyncDbDataProvider<ToDoItemDao> _toDoItemProvider;
+        private readonly IAsyncDbDataProvider<CategoryDao> _categoryProvider;
         private readonly IMapper _mapper;
 
-        public ToDoItemsEFController(IAsyncDbDataProvider<ToDoItemDao> provider, IMapper mapper)
+        public ToDoItemsEFController(IAsyncDbDataProvider<ToDoItemDao> provider, IMapper mapper, 
+            IAsyncDbDataProvider<CategoryDao> categoryProvider)
         {
-            _provider = provider;
+            _toDoItemProvider = provider;
             _mapper = mapper;
+            _categoryProvider = categoryProvider;
         }
 
         // GET: ToDoItemsEF
         public async Task<IActionResult> Index()
         {
-            return View(await _provider.GetAll());
+            IEnumerable<ToDoItemDao> toDoItems = await _toDoItemProvider.GetAll();
+
+            return View(_mapper.Map<IEnumerable<ToDoItemViewModel>>(toDoItems));
         }
 
         // GET: ToDoItemsEF/Details/5
@@ -34,24 +41,22 @@ namespace ToDoApp.Web.Controllers
                 return NotFound();
             }
 
-            ToDoItemDao toDoItem = await _provider.Get(id);
+            ToDoItemDao toDoItem = await _toDoItemProvider.Get(id);
 
             if (toDoItem == null)
             {
                 return NotFound();
             }
 
-            return View(toDoItem);
+            return View(_mapper.Map<ToDoItemViewModel>(toDoItem));
         }
 
         // GET: ToDoItemsEF/Create
         public async Task<IActionResult> Create()
         {
-            IToDoItemViewModel toDoItemViewModel = new ToDoItemViewModel(_provider.Context);
-            await toDoItemViewModel.SetCategoriesSelectList();
-            //ViewData["CategoryId"] = new SelectList(_provider.Context.Category, "Id", "Name");
+            ViewData["CategoryId"] = new SelectList(await GetCategoriesForView(), "Id", "Name");
 
-            return View(toDoItemViewModel);
+            return View();
         }
 
         // POST: ToDoItemsEF/Create
@@ -61,7 +66,7 @@ namespace ToDoApp.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ToDoItemViewModel toDoItemViewModel)
         {
-            ToDoItemDao toDoItem = toDoItemViewModel.ToDoItem;
+            ToDoItemDao toDoItem = _mapper.Map<ToDoItemDao>(toDoItemViewModel);
 
             toDoItem.CreationDate = DateTime.Today;
 
@@ -72,7 +77,8 @@ namespace ToDoApp.Web.Controllers
                     toDoItem.CategoryId = null;
                 }
 
-                await _provider.Add(toDoItem);
+                await _toDoItemProvider.Add(toDoItem);
+
                 return RedirectToAction(nameof(Index));
             }
             return View(toDoItem);
@@ -86,21 +92,16 @@ namespace ToDoApp.Web.Controllers
                 return NotFound();
             }
 
-            ToDoItemDao toDoItem = await _provider.Get(id);
+            ToDoItemDao toDoItem = await _toDoItemProvider.Get(id);
 
             if (toDoItem == null)
             {
                 return NotFound();
             }
 
-            IToDoItemViewModel toDoItemViewModel = new ToDoItemViewModel(_provider.Context)
-            {
-                ToDoItem = toDoItem
-            };
+            ViewData["CategoryId"] = new SelectList(await GetCategoriesForView(), "Id", "Name");
 
-            await toDoItemViewModel.SetCategoriesSelectList();
-
-            return View(toDoItemViewModel);
+            return View(_mapper.Map<ToDoItemViewModel>(toDoItem));
         }
 
         // POST: ToDoItemsEF/Edit/5
@@ -110,7 +111,7 @@ namespace ToDoApp.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, ToDoItemViewModel toDoItemViewModel)
         {
-            ToDoItemDao toDoItem = toDoItemViewModel.ToDoItem;
+            ToDoItemDao toDoItem = _mapper.Map<ToDoItemDao>(toDoItemViewModel);
 
             if (id != toDoItem.Id)
             {
@@ -126,11 +127,11 @@ namespace ToDoApp.Web.Controllers
                         toDoItem.CategoryId = null;
                     }
 
-                    await _provider.Update(toDoItem);
+                    await _toDoItemProvider.Update(toDoItem);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!_provider.ItemExits(toDoItem.Id))
+                    if (!_toDoItemProvider.ItemExits(toDoItem.Id))
                     {
                         return NotFound();
                     }
@@ -142,8 +143,8 @@ namespace ToDoApp.Web.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            toDoItemViewModel = new ToDoItemViewModel(_provider.Context);
-            await toDoItemViewModel.SetCategoriesSelectList();
+            ViewData["CategoryId"] = new SelectList(await GetCategoriesForView(), "Id", "Name");
+
             return View(toDoItemViewModel);
         }
 
@@ -155,14 +156,14 @@ namespace ToDoApp.Web.Controllers
                 return NotFound();
             }
 
-            ToDoItemDao toDoItem = await _provider.Get(id);
+            ToDoItemDao toDoItem = await _toDoItemProvider.Get(id);
 
             if (toDoItem == null)
             {
                 return NotFound();
             }
 
-            return View(toDoItem);
+            return View(_mapper.Map<ToDoItemViewModel>(toDoItem));
         }
 
         // POST: ToDoItemsEF/Delete/5
@@ -170,9 +171,17 @@ namespace ToDoApp.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _provider.Delete(id);
+            await _toDoItemProvider.Delete(id);
 
             return RedirectToAction(nameof(Index));
+        }
+
+        private async Task<List<CategoryDao>> GetCategoriesForView()
+        {
+            List<CategoryDao> categories = await _categoryProvider.GetAll();
+            categories.Insert(0, new CategoryDao(0, "Uncategorized"));
+
+            return categories;
         }
     }
 }

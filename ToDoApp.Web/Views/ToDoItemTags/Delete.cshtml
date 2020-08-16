@@ -1,4 +1,4 @@
-﻿@model ToDoApp.Web.Models.ToDoItemTagDao
+﻿@model ToDoApp.Web.ViewModels.ToDoItemTagViewModel
 
 @{
     ViewData["Title"] = "Delete";
@@ -12,16 +12,16 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ToDoItem)
+            @Html.DisplayName("To-Do item")
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ToDoItem.Name)
+            @Html.DisplayFor(model => model.ToDoItemName)
         </dd class>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Tag)
+            @Html.DisplayName("Tag")
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Tag.Name)
+            @Html.DisplayFor(model => model.TagName)
         </dd class>
     </dl>
     

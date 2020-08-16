@@ -18,10 +18,5 @@ namespace ToDoApp.Web.Models
         [NotMapped]
         [DisplayName("ToDo items")]
         public int ToDoItemNumber { get; set; }
-
-        public TagDao()
-        {
-
-        }
     }
 }

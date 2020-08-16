@@ -4,12 +4,14 @@ using ToDoApp.Web.Models;
 using ToDoApp.Web.Services.InDbProviders;
 using System.Threading.Tasks;
 using AutoMapper;
+using System.Collections.Generic;
+using ToDoApp.Web.ViewModels;
 
 namespace ToDoApp.Web.Controllers
 {
     public class CategoriesEFController : Controller
     {
-        private IAsyncDbDataProvider<CategoryDao> _provider;
+        private readonly IAsyncDbDataProvider<CategoryDao> _provider;
         private readonly IMapper _mapper;
 
         public CategoriesEFController(IAsyncDbDataProvider<CategoryDao> provider, IMapper mapper)
@@ -21,7 +23,9 @@ namespace ToDoApp.Web.Controllers
         // GET: CategoriesEF
         public async Task<IActionResult> Index()
         {
-            return View(await _provider.GetAll());
+            IEnumerable<CategoryDao> categories = await _provider.GetAll();
+
+            return View(_mapper.Map<IEnumerable<CategoryViewModel>>(categories));
         }
 
         // GET: CategoriesEF/Details/5
@@ -39,7 +43,7 @@ namespace ToDoApp.Web.Controllers
                 return NotFound();
             }
 
-            return View(category);
+            return View(_mapper.Map<CategoryViewModel>(category));
         }
 
         // GET: CategoriesEF/Create
@@ -53,14 +57,14 @@ namespace ToDoApp.Web.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] CategoryDao category)
+        public async Task<IActionResult> Create([Bind("Name")] CategoryViewModel categoryViewModel)
         {
             if (ModelState.IsValid)
             {
-                await _provider.Add(category);
+                await _provider.Add(_mapper.Map<CategoryDao>(categoryViewModel));
                 return RedirectToAction(nameof(Index));
             }
-            return View(category);
+            return View(categoryViewModel);
         }
 
         // GET: CategoriesEF/Edit/5
@@ -77,7 +81,7 @@ namespace ToDoApp.Web.Controllers
             {
                 return NotFound();
             }
-            return View(category);
+            return View(_mapper.Map<CategoryViewModel>(category));
         }
 
         // POST: CategoriesEF/Edit/5
@@ -85,9 +89,9 @@ namespace ToDoApp.Web.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] CategoryDao category)
+        public async Task<IActionResult> Edit(int id, [Bind("Name")] CategoryViewModel categoryViewModel)
         {
-            if (id != category.Id)
+            if (id != categoryViewModel.Id)
             {
                 return NotFound();
             }
@@ -96,7 +100,7 @@ namespace ToDoApp.Web.Controllers
             {
                 try
                 {
-                    await _provider.Update(category);
+                    await _provider.Update(_mapper.Map<CategoryDao>(categoryViewModel));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -111,7 +115,7 @@ namespace ToDoApp.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(category);
+            return View(categoryViewModel);
         }
 
         // GET: CategoriesEF/Delete/5
@@ -129,7 +133,7 @@ namespace ToDoApp.Web.Controllers
                 return NotFound();
             }
 
-            return View(category);
+            return View(_mapper.Map<CategoryViewModel>(category));
         }
 
         // POST: CategoriesEF/Delete/5

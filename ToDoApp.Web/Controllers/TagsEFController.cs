@@ -1,9 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ToDoApp.Web.Models;
 using ToDoApp.Web.Services.InDbProviders;
+using ToDoApp.Web.ViewModels;
 
 namespace ToDoApp.Web.Controllers
 {
@@ -21,7 +23,9 @@ namespace ToDoApp.Web.Controllers
         // GET: TagsEF
         public async Task<IActionResult> Index()
         {
-            return View(await _provider.GetAll());
+            IEnumerable<TagDao> tags = await _provider.GetAll();
+
+            return View(_mapper.Map<IEnumerable<TagViewModel>>(tags));
         }
 
         // GET: TagsEF/Details/5
@@ -39,7 +43,7 @@ namespace ToDoApp.Web.Controllers
                 return NotFound();
             }
 
-            return View(tag);
+            return View(_mapper.Map<TagViewModel>(tag));
         }
 
         // GET: TagsEF/Create
@@ -53,14 +57,14 @@ namespace ToDoApp.Web.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] TagDao tag)
+        public async Task<IActionResult> Create([Bind("Name")] TagViewModel tagViewModel)
         {
             if (ModelState.IsValid)
             {
-                await _provider.Add(tag);
+                await _provider.Add(_mapper.Map<TagDao>(tagViewModel));
                 return RedirectToAction(nameof(Index));
             }
-            return View(tag);
+            return View(tagViewModel);
         }
 
         // GET: TagsEF/Edit/5
@@ -77,7 +81,7 @@ namespace ToDoApp.Web.Controllers
             {
                 return NotFound();
             }
-            return View(tag);
+            return View(_mapper.Map<TagViewModel>(tag));
         }
 
         // POST: TagsEF/Edit/5
@@ -85,9 +89,9 @@ namespace ToDoApp.Web.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] TagDao tag)
+        public async Task<IActionResult> Edit(int id, [Bind("Id, Name")] TagViewModel tagViewModel)
         {
-            if (id != tag.Id)
+            if (id != tagViewModel.Id)
             {
                 return NotFound();
             }
@@ -96,11 +100,11 @@ namespace ToDoApp.Web.Controllers
             {
                 try
                 {
-                    await _provider.Update(tag);
+                    await _provider.Update(_mapper.Map<TagDao>(tagViewModel));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!_provider.ItemExits(tag.Id))
+                    if (!_provider.ItemExits(tagViewModel.Id))
                     {
                         return NotFound();
                     }
@@ -111,7 +115,7 @@ namespace ToDoApp.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(tag);
+            return View(tagViewModel);
         }
 
         // GET: TagsEF/Delete/5
@@ -129,7 +133,7 @@ namespace ToDoApp.Web.Controllers
                 return NotFound();
             }
 
-            return View(tag);
+            return View(_mapper.Map<TagViewModel>(tag));
         }
 
         // POST: TagsEF/Delete/5

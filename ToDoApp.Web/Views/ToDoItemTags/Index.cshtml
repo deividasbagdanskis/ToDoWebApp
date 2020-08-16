@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ToDoApp.Web.Models.ToDoItemTagDao>
+﻿@model IEnumerable<ToDoApp.Web.ViewModels.ToDoItemTagViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,10 +13,10 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.ToDoItem)
+                @Html.DisplayName("To-Do item")
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Tag)
+                @Html.DisplayName("Tag")
             </th>
             <th></th>
         </tr>
@@ -25,10 +25,10 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.ToDoItem.Name)
+                @Html.DisplayFor(modelItem => item.ToDoItemName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Tag.Name)
+                @Html.DisplayFor(modelItem => item.TagName)
             </td>
             <td>
                 @Html.ActionLink("Edit", "Edit", new { ToDoItemId = item.ToDoItemId, TagId = item.TagId }) |

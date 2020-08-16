@@ -1,29 +1,37 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ToDoApp.Web.Models;
 using ToDoApp.Web.Services.InDbProviders;
+using ToDoApp.Web.ViewModels;
 
 namespace ToDoApp.Web.Controllers
 {
     public class ToDoItemTagsController : Controller
     {
-        private readonly IInDbToDoItemTagProvider _provider;
+        private readonly IInDbToDoItemTagProvider _toDoItemTagProvider;
+        private readonly IAsyncDbDataProvider<TagDao> _tagProvider;
+        private readonly IAsyncDbDataProvider<ToDoItemDao> _toDoItemProvider;
         private readonly IMapper _mapper;
 
-        public ToDoItemTagsController(IInDbToDoItemTagProvider provider, IMapper mapper)
+        public ToDoItemTagsController(IInDbToDoItemTagProvider provider, IMapper mapper, 
+            IAsyncDbDataProvider<TagDao> tagProvider, IAsyncDbDataProvider<ToDoItemDao> toDoItemProvider)
         {
-            _provider = provider;
+            _toDoItemTagProvider = provider;
             _mapper = mapper;
+            _tagProvider = tagProvider;
+            _toDoItemProvider = toDoItemProvider;
         }
 
         // GET: ToDoItemTags
         public async Task<IActionResult> Index()
         {
-            
-            return View(await _provider.GetAll());
+            IEnumerable<ToDoItemTagDao> toDoItemTags = await _toDoItemTagProvider.GetAll();
+
+            return View(_mapper.Map<IEnumerable<ToDoItemTagViewModel>>(toDoItemTags));
         }
 
         // GET: ToDoItemTags/Details/5
@@ -34,21 +42,22 @@ namespace ToDoApp.Web.Controllers
                 return NotFound();
             }
 
-            var toDoItemTag = await _provider.Get(toDoItemId, tagId);
+            var toDoItemTag = await _toDoItemTagProvider.Get(toDoItemId, tagId);
 
             if (toDoItemTag == null)
             {
                 return NotFound();
             }
 
-            return View(toDoItemTag);
+            return View(_mapper.Map<ToDoItemTagViewModel>(toDoItemTag));
         }
 
         // GET: ToDoItemTags/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["TagId"] = new SelectList(_provider.Context.Tag, "Id", "Name");
-            ViewData["ToDoItemId"] = new SelectList(_provider.Context.ToDoItem, "Id", "Name");
+            ViewData["TagId"] = new SelectList(await _tagProvider.GetAll(), "Id", "Name");
+            ViewData["ToDoItemId"] = new SelectList(await _toDoItemProvider.GetAll(), "Id", "Name");
+
             return View();
         }
 
@@ -57,21 +66,26 @@ namespace ToDoApp.Web.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ToDoItemId,TagId")] ToDoItemTagDao toDoItemTag)
+        public async Task<IActionResult> Create([Bind("ToDoItemId,TagId")] ToDoItemTagViewModel toDoItemTagViewModel)
         {
-            bool isUnique = await _provider.Get(toDoItemTag.ToDoItemId, toDoItemTag.TagId) == null;
+            bool isUnique = await _toDoItemTagProvider.Get(toDoItemTagViewModel.ToDoItemId, toDoItemTagViewModel.TagId) == null;
 
             if (ModelState.IsValid)
             {
                 if (isUnique)
                 {
-                    await _provider.Add(toDoItemTag);
+                    ToDoItemTagDao toDoItemTag = await MapCreatedToDoItemTag(toDoItemTagViewModel);
+
+                    await _toDoItemTagProvider.Add(toDoItemTag);
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TagId"] = new SelectList(_provider.Context.Tag, "Id", "Name", toDoItemTag.TagId);
-            ViewData["ToDoItemId"] = new SelectList(_provider.Context.ToDoItem, "Id", "Name", toDoItemTag.ToDoItemId);
-            return View(toDoItemTag);
+
+            ViewData["TagId"] = new SelectList(await _tagProvider.GetAll(), "Id", "Name", toDoItemTagViewModel.TagId);
+            ViewData["ToDoItemId"] = new SelectList(await _toDoItemProvider.GetAll(), "Id", "Name",
+                toDoItemTagViewModel.ToDoItemId);
+
+            return View(toDoItemTagViewModel);
         }
 
         // GET: ToDoItemTags/Edit/5
@@ -82,16 +96,20 @@ namespace ToDoApp.Web.Controllers
                 return NotFound();
             }
 
-            var toDoItemTag = await _provider.Get(toDoItemId, tagId);
+            var toDoItemTag = await _toDoItemTagProvider.Get(toDoItemId, tagId);
+
             if (toDoItemTag == null)
             {
                 return NotFound();
             }
-            ViewData["TagId"] = new SelectList(_provider.Context.Tag, "Id", "Name", toDoItemTag.TagId);
-            ViewData["ToDoItemId"] = new SelectList(_provider.Context.ToDoItem, "Id", "Name", toDoItemTag.ToDoItemId);
+
+            ViewData["TagId"] = new SelectList(await _tagProvider.GetAll(), "Id", "Name", toDoItemTag.TagId);
+            ViewData["ToDoItemId"] = new SelectList(await _toDoItemProvider.GetAll(), "Id", "Name", 
+                toDoItemTag.ToDoItemId);
             ViewData["OldToDoItemId"] = toDoItemId;
             ViewData["OldTagId"] = tagId;
-            return View(toDoItemTag);
+
+            return View(_mapper.Map<ToDoItemTagViewModel>(toDoItemTag));
         }
 
         // POST: ToDoItemTags/Edit/5
@@ -100,14 +118,14 @@ namespace ToDoApp.Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int? oldToDoItemId, int? oldTagId,
-            [Bind("ToDoItemId,TagId")] ToDoItemTagDao toDoItemTag)
+            [Bind("ToDoItemId,TagId")] ToDoItemTagViewModel toDoItemTagViewModel)
         {
-            if (toDoItemTag == null)
+            if (toDoItemTagViewModel == null)
             {
                 return NotFound();
             }
 
-            ToDoItemTagDao oldToDoItemTag = await _provider.Get(oldToDoItemId, oldTagId);
+            ToDoItemTagDao oldToDoItemTag = await _toDoItemTagProvider.Get(oldToDoItemId, oldTagId);
             
             if (oldToDoItemTag == null)
             {
@@ -118,12 +136,15 @@ namespace ToDoApp.Web.Controllers
             {
                 try
                 {
-                    await _provider.Delete(oldToDoItemId, oldTagId);
-                    await _provider.Add(toDoItemTag);
+                    await _toDoItemTagProvider.Delete(oldToDoItemId, oldTagId);
+                    
+                    ToDoItemTagDao toDoItemTag = await MapCreatedToDoItemTag(toDoItemTagViewModel);
+                    
+                    await _toDoItemTagProvider.Add(toDoItemTag);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!_provider.ItemExits(toDoItemTag.ToDoItemId, toDoItemTag.TagId))
+                    if (!_toDoItemTagProvider.ItemExits(toDoItemTagViewModel.ToDoItemId, toDoItemTagViewModel.TagId))
                     {
                         return NotFound();
                     }
@@ -134,9 +155,12 @@ namespace ToDoApp.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TagId"] = new SelectList(_provider.Context.Tag, "Id", "Name", toDoItemTag.TagId);
-            ViewData["ToDoItemId"] = new SelectList(_provider.Context.ToDoItem, "Id", "Name", toDoItemTag.ToDoItemId);
-            return View(toDoItemTag);
+
+            ViewData["TagId"] = new SelectList(await _tagProvider.GetAll(), "Id", "Name", toDoItemTagViewModel.TagId);
+            ViewData["ToDoItemId"] = new SelectList(await _toDoItemProvider.GetAll(), "Id", "Name",
+                toDoItemTagViewModel.ToDoItemId);
+
+            return View(toDoItemTagViewModel);
         }
 
         // GET: ToDoItemTags/Delete/5
@@ -147,14 +171,14 @@ namespace ToDoApp.Web.Controllers
                 return NotFound();
             }
 
-            var toDoItemTag = await _provider.Get(toDoItemId, tagId);
+            var toDoItemTag = await _toDoItemTagProvider.Get(toDoItemId, tagId);
 
             if (toDoItemTag == null)
             {
                 return NotFound();
             }
 
-            return View(toDoItemTag);
+            return View(_mapper.Map<ToDoItemTagViewModel>(toDoItemTag));
         }
 
         // POST: ToDoItemTags/Delete/5
@@ -162,8 +186,18 @@ namespace ToDoApp.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int toDoItemId, int tagId)
         {
-            await _provider.Delete(toDoItemId, tagId);
+            await _toDoItemTagProvider.Delete(toDoItemId, tagId);
+
             return RedirectToAction(nameof(Index));
+        }
+
+        private async Task<ToDoItemTagDao> MapCreatedToDoItemTag(ToDoItemTagViewModel toDoItemTagViewModel)
+        {
+            ToDoItemTagDao toDoItemTag = _mapper.Map<ToDoItemTagDao>(toDoItemTagViewModel);
+            toDoItemTag.Tag = await _tagProvider.Get(toDoItemTag.TagId);
+            toDoItemTag.ToDoItem = await _toDoItemProvider.Get(toDoItemTag.ToDoItemId);
+
+            return toDoItemTag;
         }
     }
 }
