@@ -5,12 +5,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using ToDoApp.Web.Data;
-using ToDoApp.Web.Models;
-using ToDoApp.Web.Services;
-using ToDoApp.Web.Services.InDbProviders;
-using ToDoApp.Web.Services.InFileProviders;
-using ToDoApp.Web.Services.InMemoryProviders;
+using ToDoApp.Data.Data;
+using ToDoApp.Business.Models;
+using ToDoApp.Business.Services;
+using ToDoApp.Business.Services.InDbProviders;
+using ToDoApp.Business.Services.InFileProviders;
+using ToDoApp.Business.Services.InMemoryProviders;
 
 namespace ToDoApp
 {

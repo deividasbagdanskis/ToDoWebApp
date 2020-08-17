@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using ToDoApp.Web.Models;
+using ToDoApp.Business.Models;
 using ToDoApp.Web.ViewModels;
 
 namespace ToDoApp.Web.Profiles

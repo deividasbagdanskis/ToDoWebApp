@@ -4,10 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using ToDoApp.Web.Data;
+using ToDoApp.Data.Data;
 
-namespace ToDoApp.Web.Migrations
+namespace ToDoApp.Data.Migrations
 {
     [DbContext(typeof(SampleWebAppContext))]
     [Migration("20200726142035_CreateToDoItemCategoryRelationship")]

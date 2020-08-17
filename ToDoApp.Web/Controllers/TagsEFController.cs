@@ -3,11 +3,11 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ToDoApp.Web.Models;
-using ToDoApp.Web.Services.InDbProviders;
+using ToDoApp.Business.Models;
+using ToDoApp.Business.Services.InDbProviders;
 using ToDoApp.Web.ViewModels;
 
-namespace ToDoApp.Web.Controllers
+namespace ToDoApp.Business.Controllers
 {
     public class TagsEFController : Controller
     {

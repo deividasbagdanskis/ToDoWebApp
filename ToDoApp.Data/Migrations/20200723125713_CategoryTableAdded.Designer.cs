@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using ToDoApp.Web.Data;
+using ToDoApp.Data.Data;
 
-namespace ToDoApp.Web.Migrations
+namespace ToDoApp.Data.Migrations
 {
     [DbContext(typeof(SampleWebAppContext))]
     [Migration("20200723125713_CategoryTableAdded")]

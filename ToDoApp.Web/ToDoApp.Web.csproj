@@ -5,15 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20200725171751_ToDoItemTableAdded.cs" />
-    <Compile Remove="Migrations\20200725171751_ToDoItemTableAdded.Designer.cs" />
-    <Compile Remove="Migrations\20200725172135_ToDoItemTableAdded.cs" />
-    <Compile Remove="Migrations\20200725172135_ToDoItemTableAdded.Designer.cs" />
-    <Compile Remove="Migrations\20200726140239_CreateToDoItemCategoryRelationship.cs" />
-    <Compile Remove="Migrations\20200726140239_CreateToDoItemCategoryRelationship.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.6" />

@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using ToDoApp.Web.Models;
-using ToDoApp.Web.Services;
+using ToDoApp.Business.Models;
+using ToDoApp.Business.Services;
 using ToDoApp.Web.ViewModels;
 
-namespace ToDoApp.Web.Controllers
+namespace ToDoApp.Business.Controllers
 {
     public class ToDoItemsController : Controller
     {

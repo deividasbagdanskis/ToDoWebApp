@@ -1,4 +1,4 @@
-﻿using ToDoApp.Web.Models;
+﻿using ToDoApp.Business.Models;
 using System.ComponentModel.DataAnnotations;
 using System;
 using ToDoApp.Commons.Enums;

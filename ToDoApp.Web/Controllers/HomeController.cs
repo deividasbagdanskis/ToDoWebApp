@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using ToDoApp.Web.Models;
 using System.Diagnostics;
+using ToDoApp.Web.ViewModels;
 
-namespace ToDoApp.Web.Controllers
+namespace ToDoApp.Business.Controllers
 {
     public class HomeController : Controller
     {
