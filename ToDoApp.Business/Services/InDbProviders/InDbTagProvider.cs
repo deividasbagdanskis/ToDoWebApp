@@ -1,23 +1,22 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ToDoApp.Business.Models;
+using ToDoApp.Data.Data;
+using ToDoApp.Data.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace ToDoApp.Business.Services.InDbProviders
 {
-    public class InDbTagProvider : IAsyncDbDataProvider<Tag>
+    public class InDbTagProvider : IAsyncDbDataProvider<TagDao>
     {
         private SampleWebAppContext _context;
-
-        public SampleWebAppContext Context { get; }
 
         public InDbTagProvider(SampleWebAppContext context)
         {
             _context = context;
         }
 
-        public async Task Add(Tag tag)
+        public async Task Add(TagDao tag)
         {
             _context.Add(tag);
             await _context.SaveChangesAsync();
@@ -30,7 +29,7 @@ namespace ToDoApp.Business.Services.InDbProviders
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Tag> Get(int? id)
+        public async Task<TagDao> Get(int? id)
         {
             var foundTag = await _context.Tag.FirstOrDefaultAsync(t => t.Id == id);
 
@@ -39,11 +38,11 @@ namespace ToDoApp.Business.Services.InDbProviders
             return foundTag;
         }
 
-        public async Task<List<Tag>> GetAll()
+        public async Task<List<TagDao>> GetAll()
         {
-            List<Tag> tags = await _context.Tag.ToListAsync();
+            List<TagDao> tags = await _context.Tag.ToListAsync();
 
-            foreach (Tag tag in tags)
+            foreach (TagDao tag in tags)
             {
                 tag.ToDoItemNumber = _context.ToDoItemTag.Where(t => t.TagId == tag.Id).Count();
             }
@@ -51,7 +50,7 @@ namespace ToDoApp.Business.Services.InDbProviders
             return tags;
         }
 
-        public async Task Update(Tag tag)
+        public async Task Update(TagDao tag)
         {
             _context.Update(tag);
             await _context.SaveChangesAsync();

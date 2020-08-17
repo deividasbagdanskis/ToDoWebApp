@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ToDoApp.Business.Data;
-using ToDoApp.Business.Models;
+using ToDoApp.Data.Data;
+using ToDoApp.Data.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,29 +9,29 @@ namespace ToDoApp.Business.Services.InDbProviders
 {
     public class InDbToDoItemTagProvider : IInDbToDoItemTagProvider
     {
-        public SampleWebAppContext Context { get; private set; }
+        private SampleWebAppContext _context;
 
         public InDbToDoItemTagProvider(SampleWebAppContext context)
         {
-            Context = context;
+            _context = context;
         }
 
-        public async Task Add(ToDoItemTag toDoItemTag)
+        public async Task Add(ToDoItemTagDao toDoItemTag)
         {
-            Context.Add(toDoItemTag);
-            await Context.SaveChangesAsync();
+            _context.Add(toDoItemTag);
+            await _context.SaveChangesAsync();
         }
 
         public async Task Delete(int? toDoItemId, int? tagId)
         {
-            ToDoItemTag toDoItemTag = await Context.ToDoItemTag.FindAsync(toDoItemId, tagId);
-            Context.ToDoItemTag.Remove(toDoItemTag);
-            await Context.SaveChangesAsync();
+            ToDoItemTagDao toDoItemTag = await _context.ToDoItemTag.FindAsync(toDoItemId, tagId);
+            _context.ToDoItemTag.Remove(toDoItemTag);
+            await _context.SaveChangesAsync();
         }
 
-        public async Task<ToDoItemTag> Get(int? toDoItemId, int? tagId)
+        public async Task<ToDoItemTagDao> Get(int? toDoItemId, int? tagId)
         {
-            ToDoItemTag foundToDoItemTag = await Context.ToDoItemTag
+            ToDoItemTagDao foundToDoItemTag = await _context.ToDoItemTag
                 .Include(t => t.Tag)
                 .Include(t => t.ToDoItem)
                 .FirstOrDefaultAsync(m => m.ToDoItemId == toDoItemId && m.TagId == tagId);
@@ -39,21 +39,21 @@ namespace ToDoApp.Business.Services.InDbProviders
             return foundToDoItemTag;
         }
 
-        public async Task<List<ToDoItemTag>> GetAll()
+        public async Task<List<ToDoItemTagDao>> GetAll()
         {
-            var sampleWebAppContext = Context.ToDoItemTag.Include(t => t.Tag).Include(t => t.ToDoItem);
-            return await sampleWebAppContext.ToListAsync();
+            var toDoItemTags = _context.ToDoItemTag.Include(t => t.Tag).Include(t => t.ToDoItem);
+            return await toDoItemTags.ToListAsync();
         }
 
-        public async Task Update(ToDoItemTag toDoItemTag)
+        public async Task Update(ToDoItemTagDao toDoItemTag)
         {
-            Context.Update(toDoItemTag);
-            await Context.SaveChangesAsync();
+            _context.Update(toDoItemTag);
+            await _context.SaveChangesAsync();
         }
 
         public bool ItemExits(int toDoItemId, int tagId)
         {
-            return Context.ToDoItemTag.Any(e => e.ToDoItemId == toDoItemId && e.TagId == tagId);
+            return _context.ToDoItemTag.Any(e => e.ToDoItemId == toDoItemId && e.TagId == tagId);
         }
     }
 }
