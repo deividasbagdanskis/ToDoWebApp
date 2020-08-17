@@ -5,21 +5,26 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using ToDoApp.Business.Models;
 
 namespace ToDoApp.Business.Services.InDbProviders
 {
-    public class InDbToDoItemProvider : IAsyncDbDataProvider<ToDoItemDao>
+    public class InDbToDoItemProvider : IAsyncDbDataProvider<ToDoItemVo>
     {
-        private SampleWebAppContext _context;
+        private readonly SampleWebAppContext _context;
+        private readonly IMapper _mapper;
 
-        public InDbToDoItemProvider(SampleWebAppContext context)
+        public InDbToDoItemProvider(SampleWebAppContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        public async Task Add(ToDoItemDao toDoItem)
+        public async Task Add(ToDoItemVo toDoItem)
         {
-            _context.Add(toDoItem);
+            ToDoItemDao toDoItemDao = _mapper.Map<ToDoItemDao>(toDoItem);
+            _context.Add(toDoItemDao);
             await _context.SaveChangesAsync();
         }
 
@@ -30,7 +35,7 @@ namespace ToDoApp.Business.Services.InDbProviders
             await _context.SaveChangesAsync();
         }
 
-        public async Task<ToDoItemDao> Get(int? id)
+        public async Task<ToDoItemVo> Get(int? id)
         {
             var foundToDoItem = await _context.ToDoItem.FindAsync(id);
 
@@ -42,18 +47,22 @@ namespace ToDoApp.Business.Services.InDbProviders
             {
                 
             }
-            return foundToDoItem;
+
+            return _mapper.Map<ToDoItemVo>(foundToDoItem);
         }
 
-        public async Task<List<ToDoItemDao>> GetAll()
+        public async Task<IEnumerable<ToDoItemVo>> GetAll()
         {
-            return await _context.ToDoItem.Include(t => t.Category).ToListAsync();
+            IEnumerable<ToDoItemDao> toDoItemDaos = await _context.ToDoItem.Include(t => t.Category).ToListAsync();
+
+            return _mapper.Map<IEnumerable<ToDoItemVo>>(toDoItemDaos);
         }
 
-        public async Task Update(ToDoItemDao toDoItem)
+        public async Task Update(ToDoItemVo toDoItem)
         {
-            _context.Update(toDoItem);
-            _context.Entry(toDoItem).Property("CreationDate").IsModified = false;
+            ToDoItemDao toDoItemDao = _mapper.Map<ToDoItemDao>(toDoItem);
+            _context.Update(toDoItemDao);
+            _context.Entry(toDoItemDao).Property("CreationDate").IsModified = false;
             await _context.SaveChangesAsync();
         }
         public bool ItemExits(int id)

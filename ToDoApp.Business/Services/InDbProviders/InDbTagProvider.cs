@@ -4,21 +4,26 @@ using ToDoApp.Data.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ToDoApp.Business.Models;
+using AutoMapper;
 
 namespace ToDoApp.Business.Services.InDbProviders
 {
-    public class InDbTagProvider : IAsyncDbDataProvider<TagDao>
+    public class InDbTagProvider : IAsyncDbDataProvider<TagVo>
     {
-        private SampleWebAppContext _context;
+        private readonly SampleWebAppContext _context;
+        private readonly IMapper _mapper;
 
-        public InDbTagProvider(SampleWebAppContext context)
+        public InDbTagProvider(SampleWebAppContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        public async Task Add(TagDao tag)
+        public async Task Add(TagVo tag)
         {
-            _context.Add(tag);
+            TagDao tagDao = _mapper.Map<TagDao>(tag); 
+            _context.Add(tagDao);
             await _context.SaveChangesAsync();
         }
 
@@ -29,30 +34,31 @@ namespace ToDoApp.Business.Services.InDbProviders
             await _context.SaveChangesAsync();
         }
 
-        public async Task<TagDao> Get(int? id)
+        public async Task<TagVo> Get(int? id)
         {
             var foundTag = await _context.Tag.FirstOrDefaultAsync(t => t.Id == id);
 
             foundTag.ToDoItemNumber = _context.ToDoItemTag.Where(t => t.TagId == foundTag.Id).Count();
 
-            return foundTag;
+            return _mapper.Map<TagVo>(foundTag);
         }
 
-        public async Task<List<TagDao>> GetAll()
+        public async Task<IEnumerable<TagVo>> GetAll()
         {
-            List<TagDao> tags = await _context.Tag.ToListAsync();
+            IEnumerable<TagDao> tagDaos = await _context.Tag.ToListAsync();
 
-            foreach (TagDao tag in tags)
+            foreach (TagDao tagDao in tagDaos)
             {
-                tag.ToDoItemNumber = _context.ToDoItemTag.Where(t => t.TagId == tag.Id).Count();
+                tagDao.ToDoItemNumber = _context.ToDoItemTag.Where(t => t.TagId == tagDao.Id).Count();
             }
 
-            return tags;
+            return _mapper.Map<IEnumerable<TagVo>>(tagDaos);
         }
 
-        public async Task Update(TagDao tag)
+        public async Task Update(TagVo tag)
         {
-            _context.Update(tag);
+            TagDao tagDao = _mapper.Map<TagDao>(tag);
+            _context.Update(tagDao);
             await _context.SaveChangesAsync();
         }
 

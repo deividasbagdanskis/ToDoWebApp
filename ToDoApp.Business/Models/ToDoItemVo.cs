@@ -1,31 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using ToDoApp.Commons.Interfaces;
 using ToDoApp.Commons.Enums;
 
 namespace ToDoApp.Business.Models
 {
-	public class ToDoItem : IHasId
+	public class ToDoItemVo : IHasId
 	{
 		public int Id { get; set; }
 
-		[Required]
 		public string Name { get; set; }
 
 		public string Description { get; set; }
 
-		[Required]
-		[DataType(DataType.Date)]
 		public DateTime CreationDate { get; set; }
 
-		[DataType(DataType.Date)]
 		public DateTime? DeadlineDate { get; set; }
 
 		private int _priority = 3;
 		
-		[Required]
-		[Range(1, 5)]
 		public int Priority
 		{
 			get { return _priority; }
@@ -42,16 +35,16 @@ namespace ToDoApp.Business.Models
 
 		public int? CategoryId { get; set; }
 
-		public Category Category { get; set; }
+		public CategoryVo Category { get; set; }
 
-		public List<ToDoItemTag> ToDoItemTags { get; set; }
+		public List<ToDoItemTagVo> ToDoItemTags { get; set; }
 
-		public ToDoItem()
+		public ToDoItemVo()
 		{
 
 		}
 
-		public ToDoItem(int id, string name, string description, int priority)
+		public ToDoItemVo(int id, string name, string description, int priority)
 		{
 			Id = id;
 			Name = name;

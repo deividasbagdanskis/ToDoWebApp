@@ -3,13 +3,13 @@ using ToDoApp.Business.Services.InMemoryProviders;
 
 namespace ToDoApp.Business.Services
 {
-    public class InMemoryCategoryProvider : InMemoryDataProvider<Category>
+    public class InMemoryCategoryProvider : InMemoryDataProvider<CategoryVo>
     {
         public InMemoryCategoryProvider() : base()
         {
-            Add(new Category(1, "Programming"));
-            Add(new Category(2, "Free time"));
-            Add(new Category(3, "Other"));
+            Add(new CategoryVo(1, "Programming"));
+            Add(new CategoryVo(2, "Free time"));
+            Add(new CategoryVo(3, "Other"));
         }
     }
 }

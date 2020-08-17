@@ -1,11 +1,11 @@
 ﻿namespace ToDoApp.Business.Models
 {
-    public class ToDoItemTag
+    public class ToDoItemTagVo
     {
         public int ToDoItemId { get; set; }
-        public ToDoItem ToDoItem { get; set; }
+        public ToDoItemVo ToDoItem { get; set; }
 
         public int TagId { get; set; }
-        public Tag Tag { get; set; }
+        public TagVo Tag { get; set; }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace ToDoApp.Business.Services.InFileProviders
 {
-    public class InFileToDoItemProvider : InFileDataProvider<ToDoItem>
+    public class InFileToDoItemProvider : InFileDataProvider<ToDoItemVo>
     {
         public InFileToDoItemProvider()
         {

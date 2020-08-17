@@ -4,21 +4,27 @@ using ToDoApp.Data.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using ToDoApp.Business.Models;
 
 namespace ToDoApp.Business.Services.InDbProviders
 {
     public class InDbToDoItemTagProvider : IInDbToDoItemTagProvider
     {
-        private SampleWebAppContext _context;
+        private readonly SampleWebAppContext _context;
+        private readonly IMapper _mapper;
 
-        public InDbToDoItemTagProvider(SampleWebAppContext context)
+        public InDbToDoItemTagProvider(SampleWebAppContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        public async Task Add(ToDoItemTagDao toDoItemTag)
+        public async Task Add(ToDoItemTagVo toDoItemTag)
         {
-            _context.Add(toDoItemTag);
+            ToDoItemTagDao toDoItemTagDao = _mapper.Map<ToDoItemTagDao>(toDoItemTag);
+            _context.Add(toDoItemTagDao);
+
             await _context.SaveChangesAsync();
         }
 
@@ -29,25 +35,29 @@ namespace ToDoApp.Business.Services.InDbProviders
             await _context.SaveChangesAsync();
         }
 
-        public async Task<ToDoItemTagDao> Get(int? toDoItemId, int? tagId)
+        public async Task<ToDoItemTagVo> Get(int? toDoItemId, int? tagId)
         {
             ToDoItemTagDao foundToDoItemTag = await _context.ToDoItemTag
                 .Include(t => t.Tag)
                 .Include(t => t.ToDoItem)
                 .FirstOrDefaultAsync(m => m.ToDoItemId == toDoItemId && m.TagId == tagId);
 
-            return foundToDoItemTag;
+            return _mapper.Map<ToDoItemTagVo>(foundToDoItemTag);
         }
 
-        public async Task<List<ToDoItemTagDao>> GetAll()
+        public async Task<IEnumerable<ToDoItemTagVo>> GetAll()
         {
-            var toDoItemTags = _context.ToDoItemTag.Include(t => t.Tag).Include(t => t.ToDoItem);
-            return await toDoItemTags.ToListAsync();
+            IEnumerable<ToDoItemTagDao> toDoItemTagDaos = await _context.ToDoItemTag.Include(t => t.Tag)
+                .Include(t => t.ToDoItem).ToListAsync();
+
+            return _mapper.Map<IEnumerable<ToDoItemTagVo>>(toDoItemTagDaos);
         }
 
-        public async Task Update(ToDoItemTagDao toDoItemTag)
+        public async Task Update(ToDoItemTagVo toDoItemTag)
         {
-            _context.Update(toDoItemTag);
+            ToDoItemTagDao toDoItemTagDao = _mapper.Map<ToDoItemTagDao>(toDoItemTag);
+
+            _context.Update(toDoItemTagDao);
             await _context.SaveChangesAsync();
         }
 

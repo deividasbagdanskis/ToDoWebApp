@@ -1,16 +1,16 @@
-﻿using ToDoApp.Data.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using ToDoApp.Business.Models;
 
 namespace ToDoApp.Business.Services.InDbProviders
 {
     public interface IInDbToDoItemTagProvider
     {
-        Task Add(ToDoItemTagDao toDoItemTag);
+        Task Add(ToDoItemTagVo toDoItemTag);
         Task Delete(int? toDoItemId, int? tagId);
-        Task<ToDoItemTagDao> Get(int? toDoItemId, int? tagId);
-        Task<List<ToDoItemTagDao>> GetAll();
-        Task Update(ToDoItemTagDao toDoItemTag);
+        Task<ToDoItemTagVo> Get(int? toDoItemId, int? tagId);
+        Task<IEnumerable<ToDoItemTagVo>> GetAll();
+        Task Update(ToDoItemTagVo toDoItemTag);
         bool ItemExits(int toDoItemId, int tagId);
     }
 }

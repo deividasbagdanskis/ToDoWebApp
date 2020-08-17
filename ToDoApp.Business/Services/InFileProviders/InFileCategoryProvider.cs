@@ -2,7 +2,7 @@
 
 namespace ToDoApp.Business.Services.InFileProviders
 {
-    public class InFileCategoryProvider : InFileDataProvider<Category>
+    public class InFileCategoryProvider : InFileDataProvider<CategoryVo>
     {
         public InFileCategoryProvider()
         {
