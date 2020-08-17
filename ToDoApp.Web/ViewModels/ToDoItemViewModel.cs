@@ -37,6 +37,6 @@ namespace ToDoApp.Web.ViewModels
 
         public int? CategoryId { get; set; }
 
-        public CategoryDao Category { get; set; }
+        public CategoryVo Category { get; set; }
     }
 }

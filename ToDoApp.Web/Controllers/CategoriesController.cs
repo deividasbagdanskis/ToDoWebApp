@@ -9,10 +9,10 @@ namespace ToDoApp.Business.Controllers
 {
     public class CategoriesController : Controller
     {
-        private readonly IDataProvider<CategoryDao> _categoryProvider;
+        private readonly IDataProvider<CategoryVo> _categoryProvider;
         private readonly IMapper _mapper;
 
-        public CategoriesController(IDataProvider<CategoryDao> categoryProvider, IMapper mapper)
+        public CategoriesController(IDataProvider<CategoryVo> categoryProvider, IMapper mapper)
         {
             _categoryProvider = categoryProvider;
             _mapper = mapper;
@@ -22,7 +22,7 @@ namespace ToDoApp.Business.Controllers
         // GET: CategoriesController
         public ActionResult Index()
         {
-            IEnumerable<CategoryDao> toDoItems = _categoryProvider.GetAll();
+            IEnumerable<CategoryVo> toDoItems = _categoryProvider.GetAll();
 
             return View(_mapper.Map<IEnumerable<CategoryViewModel>>(toDoItems));
         }
@@ -30,7 +30,7 @@ namespace ToDoApp.Business.Controllers
         // GET: CategoriesController/Details/5
         public ActionResult Details(int id)
         {
-            CategoryDao toDoItem = _categoryProvider.Get(id);
+            CategoryVo toDoItem = _categoryProvider.Get(id);
 
             return View(_mapper.Map<CategoryViewModel>(toDoItem));
         }
@@ -48,7 +48,7 @@ namespace ToDoApp.Business.Controllers
         {
             try
             {
-                _categoryProvider.Add(_mapper.Map<CategoryDao>(categoryViewModel));
+                _categoryProvider.Add(_mapper.Map<CategoryVo>(categoryViewModel));
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -60,7 +60,7 @@ namespace ToDoApp.Business.Controllers
         // GET: CategoriesController/Edit/5
         public ActionResult Edit(int id)
         {
-            CategoryDao category = _categoryProvider.Get(id);
+            CategoryVo category = _categoryProvider.Get(id);
 
             return View(_mapper.Map<CategoryViewModel>(category));
         }
@@ -72,7 +72,7 @@ namespace ToDoApp.Business.Controllers
         {
             try
             {
-                CategoryDao category = _mapper.Map<CategoryDao>(categoryViewModel);
+                CategoryVo category = _mapper.Map<CategoryVo>(categoryViewModel);
 
                 _categoryProvider.Update(category);
                 return RedirectToAction(nameof(Index));
@@ -86,9 +86,9 @@ namespace ToDoApp.Business.Controllers
         // GET: CategoriesController/Delete/5
         public ActionResult Delete(int id)
         {
-            CategoryDao toDoItem = _categoryProvider.Get(id);
+            CategoryVo category = _categoryProvider.Get(id);
 
-            return View(_mapper.Map<CategoryViewModel>(toDoItem));
+            return View(_mapper.Map<CategoryViewModel>(category));
         }
 
         // POST: CategoriesController/Delete/5

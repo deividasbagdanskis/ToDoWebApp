@@ -11,10 +11,10 @@ namespace ToDoApp.Business.Controllers
 {
     public class TagsEFController : Controller
     {
-        private readonly IAsyncDbDataProvider<TagDao> _provider;
+        private readonly IAsyncDbDataProvider<TagVo> _provider;
         private readonly IMapper _mapper;
 
-        public TagsEFController(IAsyncDbDataProvider<TagDao> provider, IMapper mapper)
+        public TagsEFController(IAsyncDbDataProvider<TagVo> provider, IMapper mapper)
         {
             _provider = provider;
             _mapper = mapper;
@@ -23,7 +23,7 @@ namespace ToDoApp.Business.Controllers
         // GET: TagsEF
         public async Task<IActionResult> Index()
         {
-            IEnumerable<TagDao> tags = await _provider.GetAll();
+            IEnumerable<TagVo> tags = await _provider.GetAll();
 
             return View(_mapper.Map<IEnumerable<TagViewModel>>(tags));
         }
@@ -36,7 +36,7 @@ namespace ToDoApp.Business.Controllers
                 return NotFound();
             }
 
-            TagDao tag = await _provider.Get(id);
+            TagVo tag = await _provider.Get(id);
 
             if (tag == null)
             {
@@ -61,7 +61,7 @@ namespace ToDoApp.Business.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _provider.Add(_mapper.Map<TagDao>(tagViewModel));
+                await _provider.Add(_mapper.Map<TagVo>(tagViewModel));
                 return RedirectToAction(nameof(Index));
             }
             return View(tagViewModel);
@@ -75,7 +75,7 @@ namespace ToDoApp.Business.Controllers
                 return NotFound();
             }
 
-            TagDao tag = await _provider.Get(id);
+            TagVo tag = await _provider.Get(id);
 
             if (tag == null)
             {
@@ -100,7 +100,7 @@ namespace ToDoApp.Business.Controllers
             {
                 try
                 {
-                    await _provider.Update(_mapper.Map<TagDao>(tagViewModel));
+                    await _provider.Update(_mapper.Map<TagVo>(tagViewModel));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -126,7 +126,7 @@ namespace ToDoApp.Business.Controllers
                 return NotFound();
             }
 
-            TagDao tag = await _provider.Get(id);
+            TagVo tag = await _provider.Get(id);
 
             if (tag == null)
             {

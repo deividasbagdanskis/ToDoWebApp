@@ -9,10 +9,10 @@ namespace ToDoApp.Business.Controllers
 {
     public class ToDoItemsController : Controller
     {
-        private readonly IDataProvider<ToDoItemDao> _todoItemProvider;
+        private readonly IDataProvider<ToDoItemVo> _todoItemProvider;
         private readonly IMapper _mapper;
 
-        public ToDoItemsController(IDataProvider<ToDoItemDao> todoItemProvider, IMapper mapper)
+        public ToDoItemsController(IDataProvider<ToDoItemVo> todoItemProvider, IMapper mapper)
         {
             _todoItemProvider = todoItemProvider;
             _mapper = mapper;
@@ -22,14 +22,14 @@ namespace ToDoApp.Business.Controllers
         // GET: TodoItemsController
         public ActionResult Index()
         {
-            IEnumerable<ToDoItemDao> toDoItems = _todoItemProvider.GetAll();
+            IEnumerable<ToDoItemVo> toDoItems = _todoItemProvider.GetAll();
             return View(_mapper.Map<IEnumerable<ToDoItemViewModel>>(toDoItems));
         }
 
         // GET: TodoItemsController/Details/5
         public ActionResult Details(int id)
         {
-            ToDoItemDao toDoItem = _todoItemProvider.Get(id);
+            ToDoItemVo toDoItem = _todoItemProvider.Get(id);
             return View(_mapper.Map<ToDoItemViewModel>(toDoItem));
         }
 
@@ -46,7 +46,7 @@ namespace ToDoApp.Business.Controllers
         {
             try
             {
-                _todoItemProvider.Add(_mapper.Map<ToDoItemDao>(toDoItemViewModel));
+                _todoItemProvider.Add(_mapper.Map<ToDoItemVo>(toDoItemViewModel));
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -58,7 +58,7 @@ namespace ToDoApp.Business.Controllers
         // GET: TodoItemsController/Edit/5
         public ActionResult Edit(int id)
         {
-            ToDoItemDao toDoItem = _todoItemProvider.Get(id);
+            ToDoItemVo toDoItem = _todoItemProvider.Get(id);
             return View(_mapper.Map<ToDoItemViewModel>(toDoItem));
         }
 
@@ -69,7 +69,7 @@ namespace ToDoApp.Business.Controllers
         {
             try
             {
-                ToDoItemDao toDoItem = _mapper.Map<ToDoItemDao>(toDoItemViewModel);
+                ToDoItemVo toDoItem = _mapper.Map<ToDoItemVo>(toDoItemViewModel);
 
                 _todoItemProvider.Update(toDoItem);
 
@@ -84,7 +84,7 @@ namespace ToDoApp.Business.Controllers
         // GET: TodoItemsController/Delete/5
         public ActionResult Delete(int id)
         {
-            ToDoItemDao toDoItem = _todoItemProvider.Get(id);
+            ToDoItemVo toDoItem = _todoItemProvider.Get(id);
 
             return View(_mapper.Map<ToDoItemViewModel>(toDoItem));
         }

@@ -11,10 +11,10 @@ namespace ToDoApp.Business.Controllers
 {
     public class CategoriesEFController : Controller
     {
-        private readonly IAsyncDbDataProvider<CategoryDao> _provider;
+        private readonly IAsyncDbDataProvider<CategoryVo> _provider;
         private readonly IMapper _mapper;
 
-        public CategoriesEFController(IAsyncDbDataProvider<CategoryDao> provider, IMapper mapper)
+        public CategoriesEFController(IAsyncDbDataProvider<CategoryVo> provider, IMapper mapper)
         {
             _provider = provider;
             _mapper = mapper;
@@ -23,7 +23,7 @@ namespace ToDoApp.Business.Controllers
         // GET: CategoriesEF
         public async Task<IActionResult> Index()
         {
-            IEnumerable<CategoryDao> categories = await _provider.GetAll();
+            IEnumerable<CategoryVo> categories = await _provider.GetAll();
 
             return View(_mapper.Map<IEnumerable<CategoryViewModel>>(categories));
         }
@@ -36,7 +36,7 @@ namespace ToDoApp.Business.Controllers
                 return NotFound();
             }
 
-            CategoryDao category = await _provider.Get(id);
+            CategoryVo category = await _provider.Get(id);
 
             if (category == null)
             {
@@ -61,7 +61,7 @@ namespace ToDoApp.Business.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _provider.Add(_mapper.Map<CategoryDao>(categoryViewModel));
+                await _provider.Add(_mapper.Map<CategoryVo>(categoryViewModel));
                 return RedirectToAction(nameof(Index));
             }
             return View(categoryViewModel);
@@ -75,7 +75,7 @@ namespace ToDoApp.Business.Controllers
                 return NotFound();
             }
 
-            CategoryDao category = await _provider.Get(id);
+            CategoryVo category = await _provider.Get(id);
 
             if (category == null)
             {
@@ -100,7 +100,7 @@ namespace ToDoApp.Business.Controllers
             {
                 try
                 {
-                    await _provider.Update(_mapper.Map<CategoryDao>(categoryViewModel));
+                    await _provider.Update(_mapper.Map<CategoryVo>(categoryViewModel));
                 }
                 catch (DbUpdateConcurrencyException)
                 {

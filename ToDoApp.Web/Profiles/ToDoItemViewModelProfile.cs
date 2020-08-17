@@ -8,7 +8,7 @@ namespace ToDoApp.Web.Profiles
     {
         public ToDoItemViewModelProfile()
         {
-            CreateMap<ToDoItemDao, ToDoItemViewModel>().ReverseMap();
+            CreateMap<ToDoItemVo, ToDoItemViewModel>().ReverseMap();
         }
     }
 }

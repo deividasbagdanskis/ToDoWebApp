@@ -13,12 +13,12 @@ namespace ToDoApp.Business.Controllers
 {
     public class ToDoItemsEFController : Controller
     {
-        private readonly IAsyncDbDataProvider<ToDoItemDao> _toDoItemProvider;
-        private readonly IAsyncDbDataProvider<CategoryDao> _categoryProvider;
+        private readonly IAsyncDbDataProvider<ToDoItemVo> _toDoItemProvider;
+        private readonly IAsyncDbDataProvider<CategoryVo> _categoryProvider;
         private readonly IMapper _mapper;
 
-        public ToDoItemsEFController(IAsyncDbDataProvider<ToDoItemDao> provider, IMapper mapper, 
-            IAsyncDbDataProvider<CategoryDao> categoryProvider)
+        public ToDoItemsEFController(IAsyncDbDataProvider<ToDoItemVo> provider, IMapper mapper, 
+            IAsyncDbDataProvider<CategoryVo> categoryProvider)
         {
             _toDoItemProvider = provider;
             _mapper = mapper;
@@ -28,7 +28,7 @@ namespace ToDoApp.Business.Controllers
         // GET: ToDoItemsEF
         public async Task<IActionResult> Index()
         {
-            IEnumerable<ToDoItemDao> toDoItems = await _toDoItemProvider.GetAll();
+            IEnumerable<ToDoItemVo> toDoItems = await _toDoItemProvider.GetAll();
 
             return View(_mapper.Map<IEnumerable<ToDoItemViewModel>>(toDoItems));
         }
@@ -41,7 +41,7 @@ namespace ToDoApp.Business.Controllers
                 return NotFound();
             }
 
-            ToDoItemDao toDoItem = await _toDoItemProvider.Get(id);
+            ToDoItemVo toDoItem = await _toDoItemProvider.Get(id);
 
             if (toDoItem == null)
             {
@@ -66,7 +66,7 @@ namespace ToDoApp.Business.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ToDoItemViewModel toDoItemViewModel)
         {
-            ToDoItemDao toDoItem = _mapper.Map<ToDoItemDao>(toDoItemViewModel);
+            ToDoItemVo toDoItem = _mapper.Map<ToDoItemVo>(toDoItemViewModel);
 
             toDoItem.CreationDate = DateTime.Today;
 
@@ -92,7 +92,7 @@ namespace ToDoApp.Business.Controllers
                 return NotFound();
             }
 
-            ToDoItemDao toDoItem = await _toDoItemProvider.Get(id);
+            ToDoItemVo toDoItem = await _toDoItemProvider.Get(id);
 
             if (toDoItem == null)
             {
@@ -111,7 +111,7 @@ namespace ToDoApp.Business.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, ToDoItemViewModel toDoItemViewModel)
         {
-            ToDoItemDao toDoItem = _mapper.Map<ToDoItemDao>(toDoItemViewModel);
+            ToDoItemVo toDoItem = _mapper.Map<ToDoItemVo>(toDoItemViewModel);
 
             if (id != toDoItem.Id)
             {
@@ -156,7 +156,7 @@ namespace ToDoApp.Business.Controllers
                 return NotFound();
             }
 
-            ToDoItemDao toDoItem = await _toDoItemProvider.Get(id);
+            ToDoItemVo toDoItem = await _toDoItemProvider.Get(id);
 
             if (toDoItem == null)
             {
@@ -176,10 +176,10 @@ namespace ToDoApp.Business.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private async Task<List<CategoryDao>> GetCategoriesForView()
+        private async Task<IEnumerable<CategoryVo>> GetCategoriesForView()
         {
-            List<CategoryDao> categories = await _categoryProvider.GetAll();
-            categories.Insert(0, new CategoryDao(0, "Uncategorized"));
+            List<CategoryVo> categories = (List<CategoryVo>) await _categoryProvider.GetAll();
+            categories.Insert(0, new CategoryVo(0, "Uncategorized"));
 
             return categories;
         }

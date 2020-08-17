@@ -32,17 +32,17 @@ namespace ToDoApp
             switch (Configuration.GetValue<string>("ProviderType"))
             {
                 case "InMemory":
-                    services.AddSingleton<IDataProvider<ToDoItemDao>, InMemoryToDoItemProvider>();
-                    services.AddSingleton<IDataProvider<CategoryDao>, InMemoryCategoryProvider>();
+                    services.AddSingleton<IDataProvider<ToDoItemVo>, InMemoryToDoItemProvider>();
+                    services.AddSingleton<IDataProvider<CategoryVo>, InMemoryCategoryProvider>();
                     break;
                 case "InFile":
-                    services.AddSingleton<IDataProvider<ToDoItemDao>, InFileToDoItemProvider>();
-                    services.AddSingleton<IDataProvider<CategoryDao>, InFileCategoryProvider>();
+                    services.AddSingleton<IDataProvider<ToDoItemVo>, InFileToDoItemProvider>();
+                    services.AddSingleton<IDataProvider<CategoryVo>, InFileCategoryProvider>();
                     break;
                 case "InDatabase":
-                    services.AddScoped<IAsyncDbDataProvider<CategoryDao>, InDbCategoryProvider>();
-                    services.AddScoped<IAsyncDbDataProvider<ToDoItemDao>, InDbToDoItemProvider>();
-                    services.AddScoped<IAsyncDbDataProvider<TagDao>, InDbTagProvider>();
+                    services.AddScoped<IAsyncDbDataProvider<CategoryVo>, InDbCategoryProvider>();
+                    services.AddScoped<IAsyncDbDataProvider<ToDoItemVo>, InDbToDoItemProvider>();
+                    services.AddScoped<IAsyncDbDataProvider<TagVo>, InDbTagProvider>();
                     services.AddScoped<IInDbToDoItemTagProvider, InDbToDoItemTagProvider>();
                     break;
                 default:

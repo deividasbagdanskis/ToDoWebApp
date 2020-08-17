@@ -8,7 +8,7 @@ namespace ToDoApp.Web.Profiles
     {
         public CategoryViewModelProfile()
         {
-            CreateMap<CategoryDao, CategoryViewModel>().ReverseMap();
+            CreateMap<CategoryVo, CategoryViewModel>().ReverseMap();
         }
     }
 }

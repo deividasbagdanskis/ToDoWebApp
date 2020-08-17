@@ -13,12 +13,12 @@ namespace ToDoApp.Business.Controllers
     public class ToDoItemTagsController : Controller
     {
         private readonly IInDbToDoItemTagProvider _toDoItemTagProvider;
-        private readonly IAsyncDbDataProvider<TagDao> _tagProvider;
-        private readonly IAsyncDbDataProvider<ToDoItemDao> _toDoItemProvider;
+        private readonly IAsyncDbDataProvider<TagVo> _tagProvider;
+        private readonly IAsyncDbDataProvider<ToDoItemVo> _toDoItemProvider;
         private readonly IMapper _mapper;
 
         public ToDoItemTagsController(IInDbToDoItemTagProvider provider, IMapper mapper, 
-            IAsyncDbDataProvider<TagDao> tagProvider, IAsyncDbDataProvider<ToDoItemDao> toDoItemProvider)
+            IAsyncDbDataProvider<TagVo> tagProvider, IAsyncDbDataProvider<ToDoItemVo> toDoItemProvider)
         {
             _toDoItemTagProvider = provider;
             _mapper = mapper;
@@ -29,7 +29,7 @@ namespace ToDoApp.Business.Controllers
         // GET: ToDoItemTags
         public async Task<IActionResult> Index()
         {
-            IEnumerable<ToDoItemTagDao> toDoItemTags = await _toDoItemTagProvider.GetAll();
+            IEnumerable<ToDoItemTagVo> toDoItemTags = await _toDoItemTagProvider.GetAll();
 
             return View(_mapper.Map<IEnumerable<ToDoItemTagViewModel>>(toDoItemTags));
         }
@@ -74,7 +74,7 @@ namespace ToDoApp.Business.Controllers
             {
                 if (isUnique)
                 {
-                    ToDoItemTagDao toDoItemTag = await MapCreatedToDoItemTag(toDoItemTagViewModel);
+                    ToDoItemTagVo toDoItemTag = await MapCreatedToDoItemTag(toDoItemTagViewModel);
 
                     await _toDoItemTagProvider.Add(toDoItemTag);
                 }
@@ -125,7 +125,7 @@ namespace ToDoApp.Business.Controllers
                 return NotFound();
             }
 
-            ToDoItemTagDao oldToDoItemTag = await _toDoItemTagProvider.Get(oldToDoItemId, oldTagId);
+            ToDoItemTagVo oldToDoItemTag = await _toDoItemTagProvider.Get(oldToDoItemId, oldTagId);
             
             if (oldToDoItemTag == null)
             {
@@ -137,8 +137,8 @@ namespace ToDoApp.Business.Controllers
                 try
                 {
                     await _toDoItemTagProvider.Delete(oldToDoItemId, oldTagId);
-                    
-                    ToDoItemTagDao toDoItemTag = await MapCreatedToDoItemTag(toDoItemTagViewModel);
+
+                    ToDoItemTagVo toDoItemTag = await MapCreatedToDoItemTag(toDoItemTagViewModel);
                     
                     await _toDoItemTagProvider.Add(toDoItemTag);
                 }
@@ -191,9 +191,9 @@ namespace ToDoApp.Business.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private async Task<ToDoItemTagDao> MapCreatedToDoItemTag(ToDoItemTagViewModel toDoItemTagViewModel)
+        private async Task<ToDoItemTagVo> MapCreatedToDoItemTag(ToDoItemTagViewModel toDoItemTagViewModel)
         {
-            ToDoItemTagDao toDoItemTag = _mapper.Map<ToDoItemTagDao>(toDoItemTagViewModel);
+            ToDoItemTagVo toDoItemTag = _mapper.Map<ToDoItemTagVo>(toDoItemTagViewModel);
             toDoItemTag.Tag = await _tagProvider.Get(toDoItemTag.TagId);
             toDoItemTag.ToDoItem = await _toDoItemProvider.Get(toDoItemTag.ToDoItemId);
 
