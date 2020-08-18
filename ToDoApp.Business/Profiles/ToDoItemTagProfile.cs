@@ -8,7 +8,7 @@ namespace ToDoApp.Business.Profiles
     {
         public ToDoItemTagProfile()
         {
-            CreateMap<ToDoItemDao, ToDoItemTagVo>().ReverseMap();
+            CreateMap<ToDoItemTagDao, ToDoItemTagVo>().ReverseMap();
         }
     }
 }

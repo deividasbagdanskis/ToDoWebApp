@@ -74,7 +74,7 @@ namespace ToDoApp.Business.Controllers
             {
                 if (isUnique)
                 {
-                    ToDoItemTagVo toDoItemTag = await MapCreatedToDoItemTag(toDoItemTagViewModel);
+                    ToDoItemTagVo toDoItemTag = _mapper.Map<ToDoItemTagVo>(toDoItemTagViewModel);
 
                     await _toDoItemTagProvider.Add(toDoItemTag);
                 }
@@ -138,8 +138,8 @@ namespace ToDoApp.Business.Controllers
                 {
                     await _toDoItemTagProvider.Delete(oldToDoItemId, oldTagId);
 
-                    ToDoItemTagVo toDoItemTag = await MapCreatedToDoItemTag(toDoItemTagViewModel);
-                    
+                    ToDoItemTagVo toDoItemTag = _mapper.Map<ToDoItemTagVo>(toDoItemTagViewModel);
+
                     await _toDoItemTagProvider.Add(toDoItemTag);
                 }
                 catch (DbUpdateConcurrencyException)
@@ -189,15 +189,6 @@ namespace ToDoApp.Business.Controllers
             await _toDoItemTagProvider.Delete(toDoItemId, tagId);
 
             return RedirectToAction(nameof(Index));
-        }
-
-        private async Task<ToDoItemTagVo> MapCreatedToDoItemTag(ToDoItemTagViewModel toDoItemTagViewModel)
-        {
-            ToDoItemTagVo toDoItemTag = _mapper.Map<ToDoItemTagVo>(toDoItemTagViewModel);
-            toDoItemTag.Tag = await _tagProvider.Get(toDoItemTag.TagId);
-            toDoItemTag.ToDoItem = await _toDoItemProvider.Get(toDoItemTag.ToDoItemId);
-
-            return toDoItemTag;
         }
     }
 }

@@ -11,6 +11,7 @@ using ToDoApp.Business.Services;
 using ToDoApp.Business.Services.InDbProviders;
 using ToDoApp.Business.Services.InFileProviders;
 using ToDoApp.Business.Services.InMemoryProviders;
+using System;
 
 namespace ToDoApp
 {
@@ -26,7 +27,7 @@ namespace ToDoApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAutoMapper(typeof(Startup));
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddControllersWithViews();
 
             switch (Configuration.GetValue<string>("ProviderType"))

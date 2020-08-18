@@ -23,6 +23,9 @@ namespace ToDoApp.Business.Services.InDbProviders
         public async Task Add(ToDoItemTagVo toDoItemTag)
         {
             ToDoItemTagDao toDoItemTagDao = _mapper.Map<ToDoItemTagDao>(toDoItemTag);
+            toDoItemTagDao.Tag = await _context.Tag.FindAsync(toDoItemTagDao.TagId);
+            toDoItemTagDao.ToDoItem = await _context.ToDoItem.FindAsync(toDoItemTagDao.ToDoItemId);
+
             _context.Add(toDoItemTagDao);
 
             await _context.SaveChangesAsync();

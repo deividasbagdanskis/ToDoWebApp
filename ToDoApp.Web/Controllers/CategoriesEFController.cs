@@ -89,7 +89,7 @@ namespace ToDoApp.Business.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name")] CategoryViewModel categoryViewModel)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] CategoryViewModel categoryViewModel)
         {
             if (id != categoryViewModel.Id)
             {
