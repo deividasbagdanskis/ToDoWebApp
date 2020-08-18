@@ -1,7 +1,6 @@
 ﻿using ToDoApp.Business.Models;
-using ToDoApp.Business.Services.InMemoryProviders;
 
-namespace ToDoApp.Business.Services
+namespace ToDoApp.Business.Services.InMemoryProviders
 {
     public class InMemoryCategoryProvider : InMemoryDataProvider<CategoryVo>
     {

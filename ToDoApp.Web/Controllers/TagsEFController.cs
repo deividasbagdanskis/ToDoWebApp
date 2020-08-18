@@ -7,7 +7,7 @@ using ToDoApp.Business.Models;
 using ToDoApp.Business.Services.InDbProviders;
 using ToDoApp.Web.ViewModels;
 
-namespace ToDoApp.Business.Controllers
+namespace ToDoApp.Web.Controllers
 {
     public class TagsEFController : Controller
     {

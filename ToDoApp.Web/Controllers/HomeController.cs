@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using ToDoApp.Web.ViewModels;
 
-namespace ToDoApp.Business.Controllers
+namespace ToDoApp.Web.Controllers
 {
     public class HomeController : Controller
     {

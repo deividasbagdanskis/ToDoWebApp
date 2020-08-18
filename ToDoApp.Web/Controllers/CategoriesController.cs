@@ -5,7 +5,7 @@ using ToDoApp.Business.Models;
 using ToDoApp.Business.Services;
 using ToDoApp.Web.ViewModels;
 
-namespace ToDoApp.Business.Controllers
+namespace ToDoApp.Web.Controllers
 {
     public class CategoriesController : Controller
     {

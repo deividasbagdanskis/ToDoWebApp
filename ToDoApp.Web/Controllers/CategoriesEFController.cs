@@ -7,7 +7,7 @@ using AutoMapper;
 using System.Collections.Generic;
 using ToDoApp.Web.ViewModels;
 
-namespace ToDoApp.Business.Controllers
+namespace ToDoApp.Web.Controllers
 {
     public class CategoriesEFController : Controller
     {

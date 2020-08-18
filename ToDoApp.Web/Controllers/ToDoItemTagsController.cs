@@ -8,7 +8,7 @@ using ToDoApp.Business.Models;
 using ToDoApp.Business.Services.InDbProviders;
 using ToDoApp.Web.ViewModels;
 
-namespace ToDoApp.Business.Controllers
+namespace ToDoApp.Web.Controllers
 {
     public class ToDoItemTagsController : Controller
     {
@@ -17,7 +17,7 @@ namespace ToDoApp.Business.Controllers
         private readonly IAsyncDbDataProvider<ToDoItemVo> _toDoItemProvider;
         private readonly IMapper _mapper;
 
-        public ToDoItemTagsController(IInDbToDoItemTagProvider provider, IMapper mapper, 
+        public ToDoItemTagsController(IInDbToDoItemTagProvider provider, IMapper mapper,
             IAsyncDbDataProvider<TagVo> tagProvider, IAsyncDbDataProvider<ToDoItemVo> toDoItemProvider)
         {
             _toDoItemTagProvider = provider;
@@ -104,7 +104,7 @@ namespace ToDoApp.Business.Controllers
             }
 
             ViewData["TagId"] = new SelectList(await _tagProvider.GetAll(), "Id", "Name", toDoItemTag.TagId);
-            ViewData["ToDoItemId"] = new SelectList(await _toDoItemProvider.GetAll(), "Id", "Name", 
+            ViewData["ToDoItemId"] = new SelectList(await _toDoItemProvider.GetAll(), "Id", "Name",
                 toDoItemTag.ToDoItemId);
             ViewData["OldToDoItemId"] = toDoItemId;
             ViewData["OldTagId"] = tagId;
@@ -126,7 +126,7 @@ namespace ToDoApp.Business.Controllers
             }
 
             ToDoItemTagVo oldToDoItemTag = await _toDoItemTagProvider.Get(oldToDoItemId, oldTagId);
-            
+
             if (oldToDoItemTag == null)
             {
                 return NotFound();
