@@ -18,10 +18,8 @@ namespace ToDoApp.Data.Models
 		public string Description { get; set; }
 
 		[Required]
-		[DataType(DataType.Date)]
 		public DateTime CreationDate { get; set; }
 
-		[DataType(DataType.Date)]
 		public DateTime? DeadlineDate { get; set; }
 
 		private int _priority = 3;
@@ -47,18 +45,5 @@ namespace ToDoApp.Data.Models
 		public CategoryDao Category { get; set; }
 
 		public List<ToDoItemTagDao> ToDoItemTags { get; set; }
-
-		public ToDoItemDao()
-		{
-
-		}
-
-		public ToDoItemDao(int id, string name, string description, int priority)
-		{
-			Id = id;
-			Name = name;
-			Description = description;
-			Priority = priority;
-		}
 	}
 }

@@ -17,7 +17,6 @@ namespace ToDoApp.Data.Models
         public List<ToDoItemTagDao> ToDoItemTags { get; set; }
 
         [NotMapped]
-        [DisplayName("ToDo items")]
         public int ToDoItemNumber { get; set; }
     }
 }

@@ -12,16 +12,5 @@ namespace ToDoApp.Data.Models
         public string Name { get; set; }
 
         public List<ToDoItemDao> ToDoItems { get; set; }
-
-        public CategoryDao()
-        {
-
-        }
-
-        public CategoryDao(int id, string name)
-        {
-            Id = id;
-            Name = name;
-        }
     }
 }

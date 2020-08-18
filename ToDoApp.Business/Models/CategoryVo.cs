@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using ToDoApp.Commons.Interfaces;
+﻿using ToDoApp.Commons.Interfaces;
 
 namespace ToDoApp.Business.Models
 {
@@ -8,8 +7,6 @@ namespace ToDoApp.Business.Models
         public int Id { get; set; }
 
         public string Name { get; set; }
-
-        public List<ToDoItemVo> ToDoItems { get; set; }
 
         public CategoryVo()
         {
