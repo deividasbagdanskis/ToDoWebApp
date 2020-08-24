@@ -3,16 +3,14 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
-using ToDoApp.Data.Data;
+using ToDoApp.Data.Context;
 
 namespace ToDoApp.Data.Migrations
 {
     [DbContext(typeof(SampleWebAppContext))]
-    [Migration("20200726142035_CreateToDoItemCategoryRelationship")]
-    partial class CreateToDoItemCategoryRelationship
+    partial class SampleWebAppContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,6 +31,22 @@ namespace ToDoApp.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Category");
+                });
+
+            modelBuilder.Entity("SampleWebApp.Models.Tag", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tag");
                 });
 
             modelBuilder.Entity("SampleWebApp.Models.ToDoItem", b =>
@@ -71,11 +85,41 @@ namespace ToDoApp.Data.Migrations
                     b.ToTable("ToDoItem");
                 });
 
+            modelBuilder.Entity("SampleWebApp.Models.ToDoItemTag", b =>
+                {
+                    b.Property<int>("ToDoItemId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TagId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ToDoItemId", "TagId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("ToDoItemTag");
+                });
+
             modelBuilder.Entity("SampleWebApp.Models.ToDoItem", b =>
                 {
                     b.HasOne("SampleWebApp.Models.Category", "Category")
                         .WithMany("ToDoItems")
                         .HasForeignKey("CategoryId");
+                });
+
+            modelBuilder.Entity("SampleWebApp.Models.ToDoItemTag", b =>
+                {
+                    b.HasOne("SampleWebApp.Models.Tag", "Tag")
+                        .WithMany("ToDoItemTags")
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SampleWebApp.Models.ToDoItem", "ToDoItem")
+                        .WithMany("ToDoItemTags")
+                        .HasForeignKey("ToDoItemId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

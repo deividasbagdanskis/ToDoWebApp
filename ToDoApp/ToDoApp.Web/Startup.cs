@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using ToDoApp.Data.Data;
+using ToDoApp.Data.Context;
 using ToDoApp.Business.Models;
 using ToDoApp.Business.Services;
 using ToDoApp.Business.Services.InDbProviders;
