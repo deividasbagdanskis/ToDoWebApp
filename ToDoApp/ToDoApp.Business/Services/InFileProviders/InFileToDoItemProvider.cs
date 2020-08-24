@@ -6,7 +6,7 @@ namespace ToDoApp.Business.Services.InFileProviders
     {
         public InFileToDoItemProvider()
         {
-            FilePath = @"Data\todoItems.json";
+            FilePath = @"..\ToDoApp\ToDoApp.Data\Data\todoItems.json";
         }
     }
 }

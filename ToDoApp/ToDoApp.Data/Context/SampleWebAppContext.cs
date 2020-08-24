@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ToDoApp.Data.Models;
 
-namespace ToDoApp.Data.Data
+namespace ToDoApp.Data.Context
 {
     public class SampleWebAppContext : DbContext
     {

@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using ToDoApp.Data.Data;
+using ToDoApp.Data.Context;
 
 namespace ToDoApp.Data.Migrations
 {
     [DbContext(typeof(SampleWebAppContext))]
-    [Migration("20200725172632_ToDoItemTableAdded")]
-    partial class ToDoItemTableAdded
+    [Migration("20200802174541_ToDoItemTagTableAdded")]
+    partial class ToDoItemTagTableAdded
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -35,12 +35,31 @@ namespace ToDoApp.Data.Migrations
                     b.ToTable("Category");
                 });
 
+            modelBuilder.Entity("SampleWebApp.Models.Tag", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tag");
+                });
+
             modelBuilder.Entity("SampleWebApp.Models.ToDoItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("CategoryId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
@@ -63,7 +82,46 @@ namespace ToDoApp.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CategoryId");
+
                     b.ToTable("ToDoItem");
+                });
+
+            modelBuilder.Entity("SampleWebApp.Models.ToDoItemTag", b =>
+                {
+                    b.Property<int>("ToDoItemId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TagId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ToDoItemId", "TagId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("ToDoItemTag");
+                });
+
+            modelBuilder.Entity("SampleWebApp.Models.ToDoItem", b =>
+                {
+                    b.HasOne("SampleWebApp.Models.Category", "Category")
+                        .WithMany("ToDoItems")
+                        .HasForeignKey("CategoryId");
+                });
+
+            modelBuilder.Entity("SampleWebApp.Models.ToDoItemTag", b =>
+                {
+                    b.HasOne("SampleWebApp.Models.Tag", "Tag")
+                        .WithMany("ToDoItemTags")
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SampleWebApp.Models.ToDoItem", "ToDoItem")
+                        .WithMany("ToDoItemTags")
+                        .HasForeignKey("ToDoItemId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

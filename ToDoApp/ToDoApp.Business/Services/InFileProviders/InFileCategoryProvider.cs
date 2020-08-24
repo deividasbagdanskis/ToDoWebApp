@@ -6,7 +6,7 @@ namespace ToDoApp.Business.Services.InFileProviders
     {
         public InFileCategoryProvider()
         {
-            FilePath = @"Data\categories.json";
+            FilePath = @"..\ToDoApp\ToDoApp.Data\Data\categories.json";
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ToDoApp.Data.Data;
+using ToDoApp.Data.Context;
 using ToDoApp.Data.Models;
 using System.Collections.Generic;
 using System.Linq;
