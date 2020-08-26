@@ -11,5 +11,7 @@ namespace ToDoApp.Projects.Api.Data
         }
 
         public DbSet<Client> Client { get; set; }
+
+        public DbSet<Project> Project { get; set; }
     }
 }
