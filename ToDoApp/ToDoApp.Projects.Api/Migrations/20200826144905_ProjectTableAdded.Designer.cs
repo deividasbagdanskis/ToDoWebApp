@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ToDoApp.Projects.Api.Data;
 
 namespace ToDoApp.Projects.Api.Migrations
 {
     [DbContext(typeof(ToDoAppProjectsApiContext))]
-    partial class ToDoAppProjectsApiContextModelSnapshot : ModelSnapshot
+    [Migration("20200826144905_ProjectTableAdded")]
+    partial class ProjectTableAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
