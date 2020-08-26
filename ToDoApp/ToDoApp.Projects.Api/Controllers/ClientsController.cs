@@ -8,7 +8,7 @@ using ToDoApp.Projects.Api.Models;
 
 namespace ToDoApp.Projects.Api.Controllers
 {
-    [Route("api/Client")]
+    [Route("api/clients")]
     [ApiController]
     public class ClientsController : ControllerBase
     {
