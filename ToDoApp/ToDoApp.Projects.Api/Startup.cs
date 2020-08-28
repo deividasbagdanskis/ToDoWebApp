@@ -20,10 +20,12 @@ namespace ToDoApp.Projects.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
-            services.AddControllersWithViews().AddNewtonsoftJson(options =>
+            services.AddControllers().AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
             );
+
+            services.AddSwaggerGen();
+
             services.AddDbContext<ToDoAppProjectsApiContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("ToDoAppProjectsApiContext")));
         }
@@ -35,6 +37,9 @@ namespace ToDoApp.Projects.Api
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(config => config.SwaggerEndpoint("/swagger/v1/swagger.json", "ToDoApp Projects API V1"));
 
             app.UseHttpsRedirection();
 
