@@ -3,10 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using ToDoApp.Projects.Api.Data;
+using ToDoApp.Projects.Data.Context;
 
-namespace ToDoApp.Projects.Api.Migrations
+namespace ToDoApp.Projects.Data.Migrations
 {
     [DbContext(typeof(ToDoAppProjectsApiContext))]
     [Migration("20200824184352_ClientTableAdded")]

@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 
-namespace ToDoApp.Projects.Api.Models
+namespace ToDoApp.Projects.Data.Models
 {
     public class Project
     {

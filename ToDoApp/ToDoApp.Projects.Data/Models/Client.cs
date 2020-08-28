@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ToDoApp.Projects.Api.Models
+namespace ToDoApp.Projects.Data.Models
 {
     public class Client
     {

@@ -3,8 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ToDoApp.Projects.Api.Data;
-using ToDoApp.Projects.Api.Models;
+using ToDoApp.Projects.Data.Models;
+using ToDoApp.Projects.Data.Context;
 
 namespace ToDoApp.Projects.Api.Controllers
 {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ToDoApp.Projects.Api.Models;
+using ToDoApp.Projects.Data.Models;
 
-namespace ToDoApp.Projects.Api.Data
+namespace ToDoApp.Projects.Data.Context
 {
     public class ToDoAppProjectsApiContext : DbContext
     {

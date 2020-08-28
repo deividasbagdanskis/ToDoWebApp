@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
-using ToDoApp.Projects.Api.Data;
+using ToDoApp.Projects.Data.Context;
 
 namespace ToDoApp.Projects.Api
 {

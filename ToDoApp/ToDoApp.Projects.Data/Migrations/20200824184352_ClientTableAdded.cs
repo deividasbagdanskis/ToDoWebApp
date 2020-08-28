@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace ToDoApp.Projects.Api.Migrations
+namespace ToDoApp.Projects.Data.Migrations
 {
     public partial class ClientTableAdded : Migration
     {
