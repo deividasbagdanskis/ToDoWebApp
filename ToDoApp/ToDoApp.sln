@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoApp.Data", "ToDoApp.Dat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoApp.Commons", "Commons\ToDoApp.Commons.csproj", "{591D3599-AE4C-4C8F-A9A2-848111C210AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDoApp.Projects.Api", "ToDoApp.Projects.Api\ToDoApp.Projects.Api.csproj", "{4B1EFE7E-54C7-42FE-BDCA-4F5754AAE7C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoApp.Projects.Api", "ToDoApp.Projects.Api\ToDoApp.Projects.Api.csproj", "{4B1EFE7E-54C7-42FE-BDCA-4F5754AAE7C3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Projects", "Projects", "{679D3CC1-7EF3-4521-9E15-202831698249}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,6 +44,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4B1EFE7E-54C7-42FE-BDCA-4F5754AAE7C3} = {679D3CC1-7EF3-4521-9E15-202831698249}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4734DF9A-16AE-40D1-AB77-76BEED82C1DE}
