@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ToDoApp.Business\ToDoApp.Business.csproj" />
+    <ProjectReference Include="..\ToDoApp.Projects.ApiClient\ToDoApp.Projects.ApiClient.csproj" />
   </ItemGroup>
 
 </Project>

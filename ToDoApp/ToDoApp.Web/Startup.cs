@@ -12,6 +12,7 @@ using ToDoApp.Business.Services.InDbProviders;
 using ToDoApp.Business.Services.InFileProviders;
 using ToDoApp.Business.Services.InMemoryProviders;
 using System;
+using ToDoApp.Projects.ApiClient;
 
 namespace ToDoApp
 {
@@ -49,6 +50,8 @@ namespace ToDoApp
                 default:
                     break;
             }
+
+            services.AddSingleton(new ApiClient("https://localhost:44343"));
 
             services.AddDbContext<SampleWebAppContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("SampleWebAppContext")));
