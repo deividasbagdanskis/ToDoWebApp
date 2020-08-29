@@ -826,7 +826,7 @@ namespace ToDoApp.Projects.ApiClient
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 200)
+                        if (status_ == 201)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<Project>(response_, headers_).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
@@ -976,7 +976,7 @@ namespace ToDoApp.Projects.ApiClient
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 200)
+                        if (status_ == 204)
                         {
                             return;
                         }
