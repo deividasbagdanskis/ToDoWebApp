@@ -28,6 +28,8 @@ namespace ToDoApp.Projects.Api.Controllers
 
         // GET: api/Clients/5
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(Client), 200)]
+        [ProducesResponseType(404)]
         public async Task<ActionResult<Client>> GetClient(int id)
         {
             var client = await _context.Client.FindAsync(id);
@@ -44,6 +46,10 @@ namespace ToDoApp.Projects.Api.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
         public async Task<IActionResult> PutClient(int id, Client client)
         {
             if (id != client.Id)
@@ -76,6 +82,7 @@ namespace ToDoApp.Projects.Api.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
+        [ProducesResponseType(201)]
         public async Task<ActionResult<Client>> PostClient(Client client)
         {
             _context.Client.Add(client);
@@ -85,6 +92,8 @@ namespace ToDoApp.Projects.Api.Controllers
         }
 
         // DELETE: api/Clients/5
+        [ProducesResponseType(typeof(Client), 200)]
+        [ProducesResponseType(404)]
         [HttpDelete("{id}")]
         public async Task<ActionResult<Client>> DeleteClient(int id)
         {

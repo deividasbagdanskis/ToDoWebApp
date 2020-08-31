@@ -28,6 +28,8 @@ namespace ToDoApp.Projects.Api.Controllers
 
         // GET: api/Projects/5
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(Project), 200)]
+        [ProducesResponseType(404)]
         public async Task<ActionResult<Project>> GetProject(int id)
         {
             var project = await _context.Project.FindAsync(id);
@@ -44,6 +46,10 @@ namespace ToDoApp.Projects.Api.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
         public async Task<IActionResult> PutProject(int id, Project project)
         {
             if (id != project.Id)
@@ -76,6 +82,7 @@ namespace ToDoApp.Projects.Api.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
+        [ProducesResponseType(201)]
         public async Task<ActionResult<Project>> PostProject(Project project)
         {
             _context.Project.Add(project);
@@ -86,6 +93,8 @@ namespace ToDoApp.Projects.Api.Controllers
 
         // DELETE: api/Projects/5
         [HttpDelete("{id}")]
+        [ProducesResponseType(typeof(Project), 200)]
+        [ProducesResponseType(404)]
         public async Task<ActionResult<Project>> DeleteProject(int id)
         {
             var project = await _context.Project.FindAsync(id);

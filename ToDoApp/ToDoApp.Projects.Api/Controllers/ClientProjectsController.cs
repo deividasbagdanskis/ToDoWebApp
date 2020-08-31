@@ -21,6 +21,10 @@ namespace ToDoApp.Projects.Api.Controllers
 
         // GET: api/clients/1/projects
         [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<Project>), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+
         public async Task<ActionResult<IEnumerable<Project>>> GetClientProject(int clientId)
         {
             bool clientDoesNotExists = await _context.Client.FindAsync(clientId) == null;
@@ -44,6 +48,8 @@ namespace ToDoApp.Projects.Api.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
         public async Task<ActionResult<Project>> PostClientProject(int clientId, Project project)
         {
             bool clientDoesNotExists = await _context.Client.FindAsync(clientId) == null;
@@ -65,6 +71,10 @@ namespace ToDoApp.Projects.Api.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{projectId}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
         public async Task<IActionResult> PutClientProject(int clientId, int projectId, Project project)
         {
             bool projectIdsDiffer = projectId != project.Id;
@@ -99,6 +109,9 @@ namespace ToDoApp.Projects.Api.Controllers
 
         // DELETE: api/clients/1/projects/5
         [HttpDelete("{projectId}")]
+        [ProducesResponseType(typeof(Project), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public async Task<ActionResult<Project>> DeleteProject(int clientId, int projectId)
         {
             bool clientDoesNotExists = await _context.Client.FindAsync(clientId) == null;
