@@ -38,5 +38,9 @@ namespace ToDoApp.Web.ViewModels
         public int? CategoryId { get; set; }
 
         public CategoryVo Category { get; set; }
+
+        public int ProjectId { get; set; }
+
+        public string ProjectName { get; set; }
     }
 }

@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20200831173015_AddedProjectToToDoItem.cs" />
+    <Compile Remove="Migrations\20200831173015_AddedProjectToToDoItem.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Data\categories.json" />
     <None Remove="Data\todoItems.json" />
   </ItemGroup>

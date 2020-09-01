@@ -30,6 +30,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Category)
             </th>
+            <th>
+                @Html.DisplayName("Project")
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -52,13 +55,23 @@
                 @Html.DisplayFor(modelItem => item.Status)
             </td>
             <td>
-                @if(item.Category == null)
+                @if (item.Category == null)
                 {
                     @Html.DisplayName("Uncategorized")
                 }
                 else
                 {
                     @Html.DisplayFor(modelItem => item.Category.Name)
+                }
+            </td>
+            <td>
+                @if (item.ProjectName == null)
+                {
+                    @Html.DisplayName("None")
+                }
+                else
+                {
+                    @Html.DisplayFor(modelItem => item.ProjectName)
                 }
             </td>
             <td>

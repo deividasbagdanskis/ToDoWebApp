@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ToDoApp.Data.Context;
 
 namespace ToDoApp.Data.Migrations
 {
     [DbContext(typeof(SampleWebAppContext))]
-    partial class SampleWebAppContextModelSnapshot : ModelSnapshot
+    [Migration("20200831173352_AddedProjectToToDoItem")]
+    partial class AddedProjectToToDoItem
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
