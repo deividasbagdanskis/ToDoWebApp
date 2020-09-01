@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using ToDoApp.Business.Models;
+using ToDoApp.Business.Services.InDbProviders;
 using ToDoApp.Projects.ApiClient;
 using ToDoApp.Web.ViewModels;
 
@@ -13,11 +14,13 @@ namespace ToDoApp.Web.Controllers
     {
         private readonly ApiClient _apiClient;
         private readonly IMapper _mapper;
+        private readonly IInDbProjectToDoItemProvider _toDoItemProvider;
 
-        public ProjectsController(ApiClient apiClient, IMapper mapper)
+        public ProjectsController(ApiClient apiClient, IMapper mapper, IInDbProjectToDoItemProvider toDoItemProvider)
         {
             _apiClient = apiClient;
             _mapper = mapper;
+            _toDoItemProvider = toDoItemProvider;
         }
 
         // GET: ProjectsController
@@ -45,6 +48,8 @@ namespace ToDoApp.Web.Controllers
 
             project.Client = await _apiClient.ApiClientsGetAsync(project.ClientId);
 
+            IEnumerable<ToDoItemVo> toDoItems = _toDoItemProvider.GetToDoItemsByProjectId(project.Id);
+            ViewData["ToDoItems"] = _mapper.Map<IEnumerable<ToDoItemViewModel>>(toDoItems);
             return View(_mapper.Map<ProjectViewModel>(project));
         }
 

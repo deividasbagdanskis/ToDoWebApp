@@ -1,4 +1,5 @@
-﻿@model ToDoApp.Web.ViewModels.ProjectViewModel
+﻿@using ToDoApp.Web.ViewModels;
+@model ToDoApp.Web.ViewModels.ProjectViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -10,31 +11,96 @@
     <h4>Project</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Name)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Name)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Description)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Description)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.DeadlineDate)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.DeadlineDate)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Client)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Client.Name)
         </dd>
     </dl>
+
+    <h5>To-Dos</h5>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayName("Name")
+                </th>
+                <th>
+                    @Html.DisplayName("Description")
+                </th>
+                <th>
+                    @Html.DisplayName("DeadlineDate")
+                </th>
+                <th>
+                    @Html.DisplayName("Priority")
+                </th>
+                <th>
+                    @Html.DisplayName("Status")
+                </th>
+                <th>
+                    @Html.DisplayName("Category")
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (ToDoItemViewModel toDoItem in ViewBag.ToDoItems)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(td => toDoItem.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(td => toDoItem.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(td => toDoItem.DeadlineDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(td => toDoItem.Priority)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(td => toDoItem.Status)
+                    </td>
+                    <td>
+                        @if (toDoItem.Category == null)
+                        {
+                            @Html.DisplayName("Uncategorized")
+                        }
+                        else
+                        {
+                            @Html.DisplayFor(td => toDoItem.Category.Name)
+                        }
+                    </td>
+                    <td>
+                        <a asp-controller="ToDoItemsEF" asp-action="Edit" asp-route-id="@toDoItem.Id">Edit</a> |
+                        <a asp-controller="ToDoItemsEF" asp-action="Details" asp-route-id="@toDoItem.Id">Details</a> |
+                        <a asp-controller="ToDoItemsEF" asp-action="Delete" asp-route-id="@toDoItem.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
 <div>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |

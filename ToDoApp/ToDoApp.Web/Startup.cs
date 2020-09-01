@@ -46,6 +46,7 @@ namespace ToDoApp
                     services.AddScoped<IAsyncDbDataProvider<ToDoItemVo>, InDbToDoItemProvider>();
                     services.AddScoped<IAsyncDbDataProvider<TagVo>, InDbTagProvider>();
                     services.AddScoped<IInDbToDoItemTagProvider, InDbToDoItemTagProvider>();
+                    services.AddScoped<IInDbProjectToDoItemProvider, InDbToDoItemProvider>();
                     break;
                 default:
                     break;

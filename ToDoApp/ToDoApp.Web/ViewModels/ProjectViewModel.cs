@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using ToDoApp.Business.Models;
 using ToDoApp.Projects.ApiClient;
 
 namespace ToDoApp.Web.ViewModels
@@ -22,5 +24,7 @@ namespace ToDoApp.Web.ViewModels
         public int ClientId { get; set; }
 
         public Client Client { get; set; }
+
+        public IEnumerable<ToDoItemVo> toDoItems { get; set; }
     }
 }
