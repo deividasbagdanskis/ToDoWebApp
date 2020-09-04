@@ -3,13 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30406.217
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoApp.Web", "..\ToDoApp\ToDoApp.Web\ToDoApp.Web.csproj", "{3CC7F6E4-0AA8-4786-BED1-11CA5962B2B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoApp.Web", "ToDoApp.Web\ToDoApp.Web.csproj", "{3CC7F6E4-0AA8-4786-BED1-11CA5962B2B7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoApp.Business", "..\ToDoApp\ToDoApp.Business\ToDoApp.Business.csproj", "{7FC33C6A-AC65-4AC1-A34D-2EFBCF59EDB7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoApp.Business", "ToDoApp.Business\ToDoApp.Business.csproj", "{7FC33C6A-AC65-4AC1-A34D-2EFBCF59EDB7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoApp.Data", "..\ToDoApp\ToDoApp.Data\ToDoApp.Data.csproj", "{4E70BC4C-5CDC-4E4A-A6A4-9B45761FFA2B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoApp.Data", "ToDoApp.Data\ToDoApp.Data.csproj", "{4E70BC4C-5CDC-4E4A-A6A4-9B45761FFA2B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoApp.Commons", "..\ToDoApp\Commons\ToDoApp.Commons.csproj", "{591D3599-AE4C-4C8F-A9A2-848111C210AA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoApp.Commons", "Commons\ToDoApp.Commons.csproj", "{591D3599-AE4C-4C8F-A9A2-848111C210AA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoApp.Projects.Api", "ToDoApp.Projects.Api\ToDoApp.Projects.Api.csproj", "{4B1EFE7E-54C7-42FE-BDCA-4F5754AAE7C3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Projects", "Projects", "{679D3CC1-7EF3-4521-9E15-202831698249}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDoApp.Projects.Data", "ToDoApp.Projects.Data\ToDoApp.Projects.Data.csproj", "{2078BE86-4ACB-4065-B1B8-F8B68BC7EEFC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDoApp.Projects.ApiClient", "ToDoApp.Projects.ApiClient\ToDoApp.Projects.ApiClient.csproj", "{BFAB7869-8D6F-4C97-BAAF-00509E50DE7E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,9 +41,26 @@ Global
 		{591D3599-AE4C-4C8F-A9A2-848111C210AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{591D3599-AE4C-4C8F-A9A2-848111C210AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{591D3599-AE4C-4C8F-A9A2-848111C210AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B1EFE7E-54C7-42FE-BDCA-4F5754AAE7C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B1EFE7E-54C7-42FE-BDCA-4F5754AAE7C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B1EFE7E-54C7-42FE-BDCA-4F5754AAE7C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B1EFE7E-54C7-42FE-BDCA-4F5754AAE7C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2078BE86-4ACB-4065-B1B8-F8B68BC7EEFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2078BE86-4ACB-4065-B1B8-F8B68BC7EEFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2078BE86-4ACB-4065-B1B8-F8B68BC7EEFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2078BE86-4ACB-4065-B1B8-F8B68BC7EEFC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFAB7869-8D6F-4C97-BAAF-00509E50DE7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFAB7869-8D6F-4C97-BAAF-00509E50DE7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFAB7869-8D6F-4C97-BAAF-00509E50DE7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFAB7869-8D6F-4C97-BAAF-00509E50DE7E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4B1EFE7E-54C7-42FE-BDCA-4F5754AAE7C3} = {679D3CC1-7EF3-4521-9E15-202831698249}
+		{2078BE86-4ACB-4065-B1B8-F8B68BC7EEFC} = {679D3CC1-7EF3-4521-9E15-202831698249}
+		{BFAB7869-8D6F-4C97-BAAF-00509E50DE7E} = {679D3CC1-7EF3-4521-9E15-202831698249}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4734DF9A-16AE-40D1-AB77-76BEED82C1DE}

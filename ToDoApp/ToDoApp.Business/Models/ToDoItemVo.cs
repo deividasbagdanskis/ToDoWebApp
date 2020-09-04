@@ -39,6 +39,10 @@ namespace ToDoApp.Business.Models
 
 		public List<ToDoItemTagVo> ToDoItemTags { get; set; }
 
+		public int ProjectId { get; set; }
+
+		public string ProjectName { get; set; }
+
 		public ToDoItemVo()
 		{
 

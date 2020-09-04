@@ -53,6 +53,19 @@
                 @Html.DisplayFor(model => model.Category.Name)
             }
         </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayName("Project")
+        </dt>
+        <dd class="col-sm-10">
+            @if (Model.ProjectName == null)
+            {
+                @Html.DisplayName("None")
+            }
+            else
+            {
+                @Html.DisplayFor(modelItem => Model.ProjectName)
+            }
+        </dd>
     </dl>
 </div>
 <div>

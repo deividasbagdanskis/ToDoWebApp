@@ -12,6 +12,7 @@ using ToDoApp.Business.Services.InDbProviders;
 using ToDoApp.Business.Services.InFileProviders;
 using ToDoApp.Business.Services.InMemoryProviders;
 using System;
+using ToDoApp.Projects.ApiClient;
 
 namespace ToDoApp
 {
@@ -45,10 +46,13 @@ namespace ToDoApp
                     services.AddScoped<IAsyncDbDataProvider<ToDoItemVo>, InDbToDoItemProvider>();
                     services.AddScoped<IAsyncDbDataProvider<TagVo>, InDbTagProvider>();
                     services.AddScoped<IInDbToDoItemTagProvider, InDbToDoItemTagProvider>();
+                    services.AddScoped<IInDbProjectToDoItemProvider, InDbToDoItemProvider>();
                     break;
                 default:
                     break;
             }
+
+            services.AddSingleton(new ApiClient("https://localhost:44343"));
 
             services.AddDbContext<SampleWebAppContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("SampleWebAppContext")));

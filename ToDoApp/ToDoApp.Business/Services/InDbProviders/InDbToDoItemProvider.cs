@@ -10,7 +10,7 @@ using ToDoApp.Business.Models;
 
 namespace ToDoApp.Business.Services.InDbProviders
 {
-    public class InDbToDoItemProvider : IAsyncDbDataProvider<ToDoItemVo>
+    public class InDbToDoItemProvider : IAsyncDbDataProvider<ToDoItemVo>, IInDbProjectToDoItemProvider
     {
         private readonly SampleWebAppContext _context;
         private readonly IMapper _mapper;
@@ -68,6 +68,14 @@ namespace ToDoApp.Business.Services.InDbProviders
         public bool ItemExits(int id)
         {
             return _context.ToDoItem.Any(e => e.Id == id);
+        }
+
+        public IEnumerable<ToDoItemVo> GetToDoItemsByProjectId(int projectId)
+        {
+            IEnumerable<ToDoItemDao> toDoItems = _context.ToDoItem.Where(td => td.ProjectId == projectId)
+                .Include(td => td.Category).ToList();
+
+            return _mapper.Map<IEnumerable<ToDoItemVo>>(toDoItems);
         }
     }
 }

@@ -45,5 +45,10 @@ namespace ToDoApp.Data.Models
 		public CategoryDao Category { get; set; }
 
 		public List<ToDoItemTagDao> ToDoItemTags { get; set; }
-	}
+
+        public int ProjectId { get; set; }
+
+		[NotMapped]
+        public string ProjectName { get; set; }
+    }
 }
