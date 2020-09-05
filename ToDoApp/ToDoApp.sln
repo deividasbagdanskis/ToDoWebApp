@@ -15,9 +15,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoApp.Projects.Api", "ToD
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Projects", "Projects", "{679D3CC1-7EF3-4521-9E15-202831698249}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDoApp.Projects.Data", "ToDoApp.Projects.Data\ToDoApp.Projects.Data.csproj", "{2078BE86-4ACB-4065-B1B8-F8B68BC7EEFC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoApp.Projects.Data", "ToDoApp.Projects.Data\ToDoApp.Projects.Data.csproj", "{2078BE86-4ACB-4065-B1B8-F8B68BC7EEFC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDoApp.Projects.ApiClient", "ToDoApp.Projects.ApiClient\ToDoApp.Projects.ApiClient.csproj", "{BFAB7869-8D6F-4C97-BAAF-00509E50DE7E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoApp.Projects.ApiClient", "ToDoApp.Projects.ApiClient\ToDoApp.Projects.ApiClient.csproj", "{BFAB7869-8D6F-4C97-BAAF-00509E50DE7E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{3188A92B-C783-4569-8A93-E1C0D7CCB5BC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDoApp.Data.Tests", "ToDoApp.Data.Tests\ToDoApp.Data.Tests.csproj", "{827E5C13-E826-4068-AEDC-9CE772C1BE0A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,6 +57,10 @@ Global
 		{BFAB7869-8D6F-4C97-BAAF-00509E50DE7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BFAB7869-8D6F-4C97-BAAF-00509E50DE7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BFAB7869-8D6F-4C97-BAAF-00509E50DE7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{827E5C13-E826-4068-AEDC-9CE772C1BE0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{827E5C13-E826-4068-AEDC-9CE772C1BE0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{827E5C13-E826-4068-AEDC-9CE772C1BE0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{827E5C13-E826-4068-AEDC-9CE772C1BE0A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -61,6 +69,7 @@ Global
 		{4B1EFE7E-54C7-42FE-BDCA-4F5754AAE7C3} = {679D3CC1-7EF3-4521-9E15-202831698249}
 		{2078BE86-4ACB-4065-B1B8-F8B68BC7EEFC} = {679D3CC1-7EF3-4521-9E15-202831698249}
 		{BFAB7869-8D6F-4C97-BAAF-00509E50DE7E} = {679D3CC1-7EF3-4521-9E15-202831698249}
+		{827E5C13-E826-4068-AEDC-9CE772C1BE0A} = {3188A92B-C783-4569-8A93-E1C0D7CCB5BC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4734DF9A-16AE-40D1-AB77-76BEED82C1DE}
