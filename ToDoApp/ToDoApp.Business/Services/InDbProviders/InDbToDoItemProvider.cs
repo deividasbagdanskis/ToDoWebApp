@@ -24,6 +24,11 @@ namespace ToDoApp.Business.Services.InDbProviders
 
         public async Task Add(ToDoItemVo toDoItem)
         {
+            if (toDoItem.Priority < 1 || toDoItem.Priority > 5)
+            {
+                throw new ToDoItemPriorityException(toDoItem.Priority);
+            }
+
             if (toDoItem.DeadlineDate != null)
             {
                 if (DateTime.Compare(toDoItem.CreationDate, (DateTime)toDoItem.DeadlineDate) >= 0)
@@ -76,6 +81,11 @@ namespace ToDoApp.Business.Services.InDbProviders
 
         public async Task Update(ToDoItemVo toDoItem)
         {
+            if (toDoItem.Priority < 1 || toDoItem.Priority > 5)
+            {
+                throw new ToDoItemPriorityException(toDoItem.Priority);
+            }
+
             if (toDoItem.DeadlineDate != null)
             {
                 if (DateTime.Compare(toDoItem.CreationDate, (DateTime)toDoItem.DeadlineDate) >= 0)

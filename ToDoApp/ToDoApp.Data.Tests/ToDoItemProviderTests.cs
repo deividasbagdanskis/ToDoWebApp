@@ -137,5 +137,37 @@ namespace ToDoApp.Data.Tests
 
             Assert.Equal(expected, ex.Message);
         }
+
+        [Fact]
+        public async Task TestCreatedToDoItemPriorityMustBeFrom1To5()
+        {
+            _toDoItem.Priority = 6;
+
+            _toDoItemProvider.Setup(o => o.Add(_toDoItem)).Throws(new ToDoItemPriorityException(_toDoItem.Priority));
+
+            Func<Task> action = async () => await _toDoItemProvider.Object.Add(_toDoItem);
+
+            ToDoItemPriorityException ex = await Assert.ThrowsAsync<ToDoItemPriorityException>(action);
+
+            string expected = $"Priority value of {_toDoItem.Priority} is invalid. Must be from 1 to 5.";
+
+            Assert.Equal(expected, ex.Message);
+        }
+
+        [Fact]
+        public async Task TestModifiedToDoItemPriorityMustBeFrom1To5()
+        {
+            _toDoItem.Priority = 6;
+
+            _toDoItemProvider.Setup(o => o.Update(_toDoItem)).Throws(new ToDoItemPriorityException(_toDoItem.Priority));
+
+            Func<Task> action = async () => await _toDoItemProvider.Object.Update(_toDoItem);
+
+            ToDoItemPriorityException ex = await Assert.ThrowsAsync<ToDoItemPriorityException>(action);
+
+            string expected = $"Priority value of {_toDoItem.Priority} is invalid. Must be from 1 to 5.";
+
+            Assert.Equal(expected, ex.Message);
+        }
     }
 }
