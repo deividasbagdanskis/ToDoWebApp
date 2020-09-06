@@ -1,8 +1,10 @@
 using Moq;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ToDoApp.Business.Models;
 using ToDoApp.Business.Services.InDbProviders;
+using ToDoApp.Commons.Exceptions;
 using Xunit;
 
 namespace ToDoApp.Data.Tests
@@ -69,6 +71,38 @@ namespace ToDoApp.Data.Tests
             await _categoryProvider.Object.Delete(3);
 
             _categoryProvider.Verify(o => o.Delete(3), Times.Once);
+        }
+
+        [Fact]
+        public async Task TestCreatedCategoryNameMustBeLongerThan2Characters()
+        {
+            _category.Name = "ab";
+
+            _categoryProvider.Setup(o => o.Add(_category)).Throws(new CategoryNameException(_category.Name));
+
+            Func<Task> action = async () => await _categoryProvider.Object.Add(_category);
+
+            CategoryNameException ex = await Assert.ThrowsAsync<CategoryNameException>(action);
+
+            string expected = $"Category name {_category.Name} is too short.\nMust be longer than 2 characters.";
+
+            Assert.Equal(expected, ex.Message);
+        }
+
+        [Fact]
+        public async Task TestModifiedCategoryNameMustBeLongerThan2Characters()
+        {
+            _category.Name = "a";
+
+            _categoryProvider.Setup(o => o.Update(_category)).Throws(new CategoryNameException(_category.Name));
+
+            Func<Task> action = async () => await _categoryProvider.Object.Update(_category);
+
+            CategoryNameException ex = await Assert.ThrowsAsync<CategoryNameException>(action);
+
+            string expected = $"Category name {_category.Name} is too short.\nMust be longer than 2 characters.";
+
+            Assert.Equal(expected, ex.Message);
         }
     }
 }

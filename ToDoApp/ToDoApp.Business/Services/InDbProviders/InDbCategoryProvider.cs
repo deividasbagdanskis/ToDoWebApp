@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using ToDoApp.Business.Models;
+using ToDoApp.Commons.Exceptions;
 
 namespace ToDoApp.Business.Services.InDbProviders
 {
@@ -22,6 +23,11 @@ namespace ToDoApp.Business.Services.InDbProviders
 
         public async Task Add(CategoryVo category)
         {
+            if (category.Name.Length <= 2)
+            {
+                throw new CategoryNameException(category.Name);
+            }
+
             CategoryDao categoryDao = _mapper.Map<CategoryDao>(category);
             _context.Add(categoryDao);
 
@@ -51,6 +57,11 @@ namespace ToDoApp.Business.Services.InDbProviders
 
         public async Task Update(CategoryVo category)
         {
+            if (category.Name.Length <= 2)
+            {
+                throw new CategoryNameException(category.Name);
+            }
+
             CategoryDao categoryDao = _mapper.Map<CategoryDao>(category);
 
             _context.Update(categoryDao);
