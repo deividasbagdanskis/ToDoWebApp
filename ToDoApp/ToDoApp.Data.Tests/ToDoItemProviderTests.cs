@@ -17,7 +17,15 @@ namespace ToDoApp.Data.Tests
         public ToDoItemProviderTests()
         {
             _toDoItemProvider = new Mock<IAsyncDbDataProvider<ToDoItemVo>>();
-            _toDoItem = new ToDoItemVo(4, "Lorem ipsum", "Lorem ipsum", 4);
+            _toDoItem = new ToDoItemVo() 
+            {   
+                Id = 4,
+                Name = "Lorem ipsum",
+                Description = "Lorem ipsum",
+                Priority = 4,
+                CreationDate = new DateTime(2020, 9, 6), 
+                DeadlineDate = new DateTime(2020, 9, 4)
+            };
         }
 
         [Fact]
@@ -77,8 +85,6 @@ namespace ToDoApp.Data.Tests
         [Fact]
         public async Task TestCreatedToDoItemNameMustBeUnique()
         {
-            await _toDoItemProvider.Object.Add(_toDoItem);
-
             _toDoItemProvider.Setup(o => o.Add(_toDoItem)).Throws(new ToDoItemUniqueNameException(_toDoItem.Name));
 
             Func<Task> action = async () => await _toDoItemProvider.Object.Add(_toDoItem);
@@ -93,8 +99,6 @@ namespace ToDoApp.Data.Tests
         [Fact]
         public async Task TestModifiedToDoItemNameMustBeUnique()
         {
-            await _toDoItemProvider.Object.Update(_toDoItem);
-
             _toDoItemProvider.Setup(o => o.Update(_toDoItem)).Throws(new ToDoItemUniqueNameException(_toDoItem.Name));
 
             Func<Task> action = async () => await _toDoItemProvider.Object.Update(_toDoItem);
@@ -102,6 +106,34 @@ namespace ToDoApp.Data.Tests
             ToDoItemUniqueNameException ex = await Assert.ThrowsAsync<ToDoItemUniqueNameException>(action);
 
             string expected = "ToDo item with name Lorem ipsum already exists.";
+
+            Assert.Equal(expected, ex.Message);
+        }
+
+        [Fact]
+        public async Task TestCreatedToDoItemDeadlineDateMustBeLaterThanCreationDate()
+        {
+            _toDoItemProvider.Setup(o => o.Add(_toDoItem)).Throws(new ToDoItemDeadlineDateException());
+
+            Func<Task> action = async () => await _toDoItemProvider.Object.Add(_toDoItem);
+
+            ToDoItemDeadlineDateException ex = await Assert.ThrowsAsync<ToDoItemDeadlineDateException>(action);
+
+            string expected = $"Deadline date must be later than {DateTime.Today}";
+
+            Assert.Equal(expected, ex.Message);
+        }
+
+        [Fact]
+        public async Task TestModifiedToDoItemDeadlineDateMustBeLaterThanCreationDate()
+        {
+            _toDoItemProvider.Setup(o => o.Update(_toDoItem)).Throws(new ToDoItemDeadlineDateException());
+
+            Func<Task> action = async () => await _toDoItemProvider.Object.Update(_toDoItem);
+
+            ToDoItemDeadlineDateException ex = await Assert.ThrowsAsync<ToDoItemDeadlineDateException>(action);
+
+            string expected = $"Deadline date must be later than {DateTime.Today}";
 
             Assert.Equal(expected, ex.Message);
         }

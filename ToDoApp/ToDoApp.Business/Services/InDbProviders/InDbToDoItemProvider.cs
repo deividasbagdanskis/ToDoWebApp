@@ -24,6 +24,14 @@ namespace ToDoApp.Business.Services.InDbProviders
 
         public async Task Add(ToDoItemVo toDoItem)
         {
+            if (toDoItem.DeadlineDate != null)
+            {
+                if (DateTime.Compare(toDoItem.CreationDate, (DateTime)toDoItem.DeadlineDate) >= 0)
+                {
+                    throw new ToDoItemDeadlineDateException();
+                }
+            }
+
             List<ToDoItemDao> toDoItems =  _context.ToDoItem.Where(td => td.Name == toDoItem.Name).ToList();
 
             if (toDoItems.Count > 0)
@@ -68,6 +76,14 @@ namespace ToDoApp.Business.Services.InDbProviders
 
         public async Task Update(ToDoItemVo toDoItem)
         {
+            if (toDoItem.DeadlineDate != null)
+            {
+                if (DateTime.Compare(toDoItem.CreationDate, (DateTime)toDoItem.DeadlineDate) >= 0)
+                {
+                    throw new ToDoItemDeadlineDateException();
+                }
+            }
+
             List<ToDoItemDao> toDoItems = _context.ToDoItem.Where(td => td.Name == toDoItem.Name).ToList();
 
             if (toDoItems.Count > 0)
