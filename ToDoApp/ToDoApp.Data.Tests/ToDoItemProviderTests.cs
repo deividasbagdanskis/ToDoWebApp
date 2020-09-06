@@ -1,8 +1,10 @@
 ﻿using Moq;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ToDoApp.Business.Models;
 using ToDoApp.Business.Services.InDbProviders;
+using ToDoApp.Commons.Exceptions;
 using Xunit;
 
 namespace ToDoApp.Data.Tests
@@ -70,6 +72,38 @@ namespace ToDoApp.Data.Tests
             await _toDoItemProvider.Object.Delete(3);
 
             _toDoItemProvider.Verify(o => o.Delete(3), Times.Once);
+        }
+
+        [Fact]
+        public async Task TestCreatedToDoItemNameMustBeUnique()
+        {
+            await _toDoItemProvider.Object.Add(_toDoItem);
+
+            _toDoItemProvider.Setup(o => o.Add(_toDoItem)).Throws(new ToDoItemUniqueNameException(_toDoItem.Name));
+
+            Func<Task> action = async () => await _toDoItemProvider.Object.Add(_toDoItem);
+
+            ToDoItemUniqueNameException ex = await Assert.ThrowsAsync<ToDoItemUniqueNameException>(action);
+
+            string expected = "ToDo item with name Lorem ipsum already exists.";
+
+            Assert.Equal(expected, ex.Message);
+        }
+
+        [Fact]
+        public async Task TestModifiedToDoItemNameMustBeUnique()
+        {
+            await _toDoItemProvider.Object.Update(_toDoItem);
+
+            _toDoItemProvider.Setup(o => o.Update(_toDoItem)).Throws(new ToDoItemUniqueNameException(_toDoItem.Name));
+
+            Func<Task> action = async () => await _toDoItemProvider.Object.Update(_toDoItem);
+
+            ToDoItemUniqueNameException ex = await Assert.ThrowsAsync<ToDoItemUniqueNameException>(action);
+
+            string expected = "ToDo item with name Lorem ipsum already exists.";
+
+            Assert.Equal(expected, ex.Message);
         }
     }
 }

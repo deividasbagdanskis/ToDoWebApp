@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using ToDoApp.Business.Models;
+using ToDoApp.Commons.Exceptions;
 
 namespace ToDoApp.Business.Services.InDbProviders
 {
@@ -23,6 +24,13 @@ namespace ToDoApp.Business.Services.InDbProviders
 
         public async Task Add(ToDoItemVo toDoItem)
         {
+            List<ToDoItemDao> toDoItems =  _context.ToDoItem.Where(td => td.Name == toDoItem.Name).ToList();
+
+            if (toDoItems.Count > 0)
+            {
+                throw new ToDoItemUniqueNameException(toDoItem.Name);
+            }
+
             ToDoItemDao toDoItemDao = _mapper.Map<ToDoItemDao>(toDoItem);
             _context.Add(toDoItemDao);
             await _context.SaveChangesAsync();
@@ -60,9 +68,18 @@ namespace ToDoApp.Business.Services.InDbProviders
 
         public async Task Update(ToDoItemVo toDoItem)
         {
+            List<ToDoItemDao> toDoItems = _context.ToDoItem.Where(td => td.Name == toDoItem.Name).ToList();
+
+            if (toDoItems.Count > 0)
+            {
+                throw new ToDoItemUniqueNameException(toDoItem.Name);
+            }
+
             ToDoItemDao toDoItemDao = _mapper.Map<ToDoItemDao>(toDoItem);
+            
             _context.Update(toDoItemDao);
             _context.Entry(toDoItemDao).Property("CreationDate").IsModified = false;
+            
             await _context.SaveChangesAsync();
         }
         public bool ItemExits(int id)
