@@ -52,7 +52,7 @@ namespace ToDoApp
                     break;
             }
 
-            services.AddSingleton(new ApiClient("https://localhost:44343"));
+            services.AddSingleton<IApiClient>(new ApiClient("https://localhost:44343"));
 
             services.AddDbContext<SampleWebAppContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("SampleWebAppContext")));

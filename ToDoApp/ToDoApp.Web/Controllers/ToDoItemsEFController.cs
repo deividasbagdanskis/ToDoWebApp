@@ -18,10 +18,10 @@ namespace ToDoApp.Web.Controllers
         private readonly IAsyncDbDataProvider<ToDoItemVo> _toDoItemProvider;
         private readonly IAsyncDbDataProvider<CategoryVo> _categoryProvider;
         private readonly IMapper _mapper;
-        private readonly ApiClient _apiClient;
+        private readonly IApiClient _apiClient;
 
         public ToDoItemsEFController(IAsyncDbDataProvider<ToDoItemVo> provider, IMapper mapper,
-            IAsyncDbDataProvider<CategoryVo> categoryProvider, ApiClient apiClient)
+            IAsyncDbDataProvider<CategoryVo> categoryProvider, IApiClient apiClient)
         {
             _toDoItemProvider = provider;
             _mapper = mapper;
