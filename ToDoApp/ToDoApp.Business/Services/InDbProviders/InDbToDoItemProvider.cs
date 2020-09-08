@@ -38,6 +38,9 @@ namespace ToDoApp.Business.Services.InDbProviders
             ValidateThatToDoItemHasDeadlineDateAndItsNotLessThanAWeekInFutureWithPriority1(toDoItem.CreationDate, 
                 toDoItem.DeadlineDate, toDoItem.Priority);
 
+            ValidateThatToDoItemHasDeadlineDateAndItsNotLessThan2DaysInFutureWithPriority2(toDoItem.CreationDate,
+                toDoItem.DeadlineDate, toDoItem.Priority);
+
             ToDoItemDao toDoItemDao = _mapper.Map<ToDoItemDao>(toDoItem);
             _context.Add(toDoItemDao);
             await _context.SaveChangesAsync();
@@ -84,6 +87,9 @@ namespace ToDoApp.Business.Services.InDbProviders
             ValidateThatThereIsOnlyThreeToDoItemsWithWipStatusPriority2();
 
             ValidateThatToDoItemHasDeadlineDateAndItsNotLessThanAWeekInFutureWithPriority1(toDoItem.CreationDate,
+                toDoItem.DeadlineDate, toDoItem.Priority);
+
+            ValidateThatToDoItemHasDeadlineDateAndItsNotLessThan2DaysInFutureWithPriority2(toDoItem.CreationDate,
                 toDoItem.DeadlineDate, toDoItem.Priority);
 
             ToDoItemDao toDoItemDao = _mapper.Map<ToDoItemDao>(toDoItem);
@@ -140,6 +146,27 @@ namespace ToDoApp.Business.Services.InDbProviders
                     if ((castedDeadlineDate2.Date - creationDate.Date).TotalDays > 7)
                     {
                         throw new ToDoItemException("Deadline date must not be less than a week in the future");
+                    }
+                }
+                else
+                {
+                    throw new ToDoItemException("Deadline date is required");
+                }
+            }
+        }
+
+        private void ValidateThatToDoItemHasDeadlineDateAndItsNotLessThan2DaysInFutureWithPriority2(DateTime creationDate,
+            DateTime? deadlineDate, int priority)
+        {
+            if (priority == 2)
+            {
+                if (deadlineDate != null)
+                {
+                    DateTime castedDeadlineDate2 = (DateTime)deadlineDate;
+
+                    if ((castedDeadlineDate2.Date - creationDate.Date).TotalDays > 2)
+                    {
+                        throw new ToDoItemException("Deadline date must not be less than 2 days in the future");
                     }
                 }
                 else

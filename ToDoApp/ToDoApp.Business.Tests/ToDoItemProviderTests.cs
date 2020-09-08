@@ -161,5 +161,55 @@ namespace ToDoApp.Business.Tests
 
             Assert.Equal(message, ex.Message);
         }
+
+        [Fact]
+        public async Task TestToDoItemHasDeadlineDateAndItsNotLessThan2DaysInFutureWithPriority2WhenCreated()
+        {
+            ToDoItemVo _toDoItem = new ToDoItemVo()
+            {
+                Id = 4,
+                Name = "Lorem ipsum",
+                Description = "Lorem ipsum",
+                Priority = 2,
+                Status = StatusEnum.Wip,
+                CreationDate = new DateTime(2020, 09, 08),
+                DeadlineDate = new DateTime(2020, 09, 11)
+            };
+
+            string message = "Deadline date must not be less than 2 days in the future";
+
+            _toDoItemProvider.Setup(o => o.Add(_toDoItem)).ThrowsAsync(new ToDoItemException(message));
+
+            Func<Task> action = async () => await _toDoItemProvider.Object.Add(_toDoItem);
+
+            ToDoItemException ex = await Assert.ThrowsAsync<ToDoItemException>(action);
+
+            Assert.Equal(message, ex.Message);
+        }
+
+        [Fact]
+        public async Task TestToDoItemHasDeadlineDateAndItsNotLessThan2DaysInFutureWithPriority2WhenModified()
+        {
+            ToDoItemVo _toDoItem = new ToDoItemVo()
+            {
+                Id = 4,
+                Name = "Lorem ipsum",
+                Description = "Lorem ipsum",
+                Priority = 2,
+                Status = StatusEnum.Wip,
+                CreationDate = new DateTime(2020, 09, 08),
+                DeadlineDate = new DateTime(2020, 09, 11)
+            };
+
+            string message = "Deadline date must not be less than 2 days in the future";
+
+            _toDoItemProvider.Setup(o => o.Update(_toDoItem)).ThrowsAsync(new ToDoItemException(message));
+
+            Func<Task> action = async () => await _toDoItemProvider.Object.Update(_toDoItem);
+
+            ToDoItemException ex = await Assert.ThrowsAsync<ToDoItemException>(action);
+
+            Assert.Equal(message, ex.Message);
+        }
     }
 }
