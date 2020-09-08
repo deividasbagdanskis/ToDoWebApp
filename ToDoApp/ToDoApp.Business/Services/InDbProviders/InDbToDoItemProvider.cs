@@ -41,6 +41,9 @@ namespace ToDoApp.Business.Services.InDbProviders
             ValidateThatToDoItemHasDeadlineDateAndItsNotLessThan2DaysInFutureWithPriority2(toDoItem.CreationDate,
                 toDoItem.DeadlineDate, toDoItem.Priority);
 
+            ValidateThatToDoItemHasDescriptionAndItHasAtLeast140CharsWithPriority1(toDoItem.Description, 
+                toDoItem.Priority);
+
             ToDoItemDao toDoItemDao = _mapper.Map<ToDoItemDao>(toDoItem);
             _context.Add(toDoItemDao);
             await _context.SaveChangesAsync();
@@ -91,6 +94,9 @@ namespace ToDoApp.Business.Services.InDbProviders
 
             ValidateThatToDoItemHasDeadlineDateAndItsNotLessThan2DaysInFutureWithPriority2(toDoItem.CreationDate,
                 toDoItem.DeadlineDate, toDoItem.Priority);
+
+            ValidateThatToDoItemHasDescriptionAndItHasAtLeast140CharsWithPriority1(toDoItem.Description,
+                toDoItem.Priority);
 
             ToDoItemDao toDoItemDao = _mapper.Map<ToDoItemDao>(toDoItem);
             
@@ -172,6 +178,25 @@ namespace ToDoApp.Business.Services.InDbProviders
                 else
                 {
                     throw new ToDoItemException("Deadline date is required");
+                }
+            }
+        }
+
+        private void ValidateThatToDoItemHasDescriptionAndItHasAtLeast140CharsWithPriority1(string description, 
+            int priority)
+        {
+            if (priority == 1)
+            {
+                if (description != null || description != "")
+                {
+                    if (description.Length < 140)
+                    {
+                        throw new ToDoItemException("Description must have at least 140 characters");
+                    }
+                }
+                else
+                {
+                    throw new ToDoItemException("Description is required");
                 }
             }
         }
