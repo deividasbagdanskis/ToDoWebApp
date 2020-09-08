@@ -26,10 +26,17 @@ namespace ToDoApp.Business.Services.InDbProviders
         public async Task Add(ToDoItemVo toDoItem)
         {
             ValidateName(toDoItem.Name);
+
             ValidatePriority(toDoItem.Priority);
+            
             ValidateDeadlineDate(toDoItem.CreationDate, toDoItem.DeadlineDate);
+            
             ValidateThatThereIsOnlyASingleWipStatusWithPriority1();
+            
             ValidateThatThereIsOnlyThreeToDoItemsWithWipStatusPriority2();
+            
+            ValidateThatToDoItemHasDeadlineDateAndItsNotLessThanAWeekInFutureWithPriority1(toDoItem.CreationDate, 
+                toDoItem.DeadlineDate, toDoItem.Priority);
 
             ToDoItemDao toDoItemDao = _mapper.Map<ToDoItemDao>(toDoItem);
             _context.Add(toDoItemDao);
@@ -69,9 +76,15 @@ namespace ToDoApp.Business.Services.InDbProviders
         public async Task Update(ToDoItemVo toDoItem)
         {
             ValidatePriority(toDoItem.Priority);
+            
             ValidateDeadlineDate(toDoItem.CreationDate, toDoItem.DeadlineDate);
+            
             ValidateThatThereIsOnlyASingleWipStatusWithPriority1();
+            
             ValidateThatThereIsOnlyThreeToDoItemsWithWipStatusPriority2();
+
+            ValidateThatToDoItemHasDeadlineDateAndItsNotLessThanAWeekInFutureWithPriority1(toDoItem.CreationDate,
+                toDoItem.DeadlineDate, toDoItem.Priority);
 
             ToDoItemDao toDoItemDao = _mapper.Map<ToDoItemDao>(toDoItem);
             
@@ -112,6 +125,27 @@ namespace ToDoApp.Business.Services.InDbProviders
             if (toDoItemsWithWipStatusAndPriority2 > 3)
             {
                 throw new ToDoItemException("There can only be three ToDo item with Wip status and priority of 2");
+            }
+        }
+
+        private void ValidateThatToDoItemHasDeadlineDateAndItsNotLessThanAWeekInFutureWithPriority1(DateTime creationDate, 
+            DateTime? deadlineDate, int priority)
+        {
+            if (priority == 1)
+            {
+                if (deadlineDate != null)
+                {
+                    DateTime castedDeadlineDate2 = (DateTime)deadlineDate;
+
+                    if ((castedDeadlineDate2.Date - creationDate.Date).TotalDays > 7)
+                    {
+                        throw new ToDoItemException("Deadline date must not be less than a week in the future");
+                    }
+                }
+                else
+                {
+                    throw new ToDoItemException("Deadline date is required");
+                }
             }
         }
 
