@@ -29,6 +29,7 @@ namespace ToDoApp.Business.Services.InDbProviders
             ValidatePriority(toDoItem.Priority);
             ValidateDeadlineDate(toDoItem.CreationDate, toDoItem.DeadlineDate);
             ValidateThatThereIsOnlyASingleWipStatusWithPriority1();
+            ValidateThatThereIsOnlyThreeToDoItemsWithWipStatusPriority2();
 
             ToDoItemDao toDoItemDao = _mapper.Map<ToDoItemDao>(toDoItem);
             _context.Add(toDoItemDao);
@@ -70,6 +71,7 @@ namespace ToDoApp.Business.Services.InDbProviders
             ValidatePriority(toDoItem.Priority);
             ValidateDeadlineDate(toDoItem.CreationDate, toDoItem.DeadlineDate);
             ValidateThatThereIsOnlyASingleWipStatusWithPriority1();
+            ValidateThatThereIsOnlyThreeToDoItemsWithWipStatusPriority2();
 
             ToDoItemDao toDoItemDao = _mapper.Map<ToDoItemDao>(toDoItem);
             
@@ -96,9 +98,20 @@ namespace ToDoApp.Business.Services.InDbProviders
             int toDoItemsWithWipStatusAndPriority1 = _context.ToDoItem
                 .Where(td => td.Status == StatusEnum.Wip && td.Priority == 1).Count();
 
-            if (toDoItemsWithWipStatusAndPriority1 > 0)
+            if (toDoItemsWithWipStatusAndPriority1 >= 3)
             {
-                throw new ToDoItemException("There can only be a single ToDo item with Wip status and priority of 1");
+                throw new ToDoItemException("There can only a sigle ToDo item with Wip status and priority of 1");
+            }
+        }
+
+        private void ValidateThatThereIsOnlyThreeToDoItemsWithWipStatusPriority2()
+        {
+            int toDoItemsWithWipStatusAndPriority2 = _context.ToDoItem
+                .Where(td => td.Status == StatusEnum.Wip && td.Priority == 2).Count();
+
+            if (toDoItemsWithWipStatusAndPriority2 > 3)
+            {
+                throw new ToDoItemException("There can only be three ToDo item with Wip status and priority of 2");
             }
         }
 
