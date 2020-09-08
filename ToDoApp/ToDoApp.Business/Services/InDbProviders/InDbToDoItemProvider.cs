@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using ToDoApp.Business.Models;
 using ToDoApp.Commons.Exceptions;
+using ToDoApp.Commons.Enums;
 
 namespace ToDoApp.Business.Services.InDbProviders
 {
@@ -24,25 +25,10 @@ namespace ToDoApp.Business.Services.InDbProviders
 
         public async Task Add(ToDoItemVo toDoItem)
         {
-            if (toDoItem.Priority < 1 || toDoItem.Priority > 5)
-            {
-                throw new ToDoItemPriorityException(toDoItem.Priority);
-            }
-
-            if (toDoItem.DeadlineDate != null)
-            {
-                if (DateTime.Compare(toDoItem.CreationDate, (DateTime)toDoItem.DeadlineDate) >= 0)
-                {
-                    throw new ToDoItemDeadlineDateException();
-                }
-            }
-
-            List<ToDoItemDao> toDoItems =  _context.ToDoItem.Where(td => td.Name == toDoItem.Name).ToList();
-
-            if (toDoItems.Count > 0)
-            {
-                throw new ToDoItemUniqueNameException(toDoItem.Name);
-            }
+            ValidateName(toDoItem.Name);
+            ValidatePriority(toDoItem.Priority);
+            ValidateDeadlineDate(toDoItem.CreationDate, toDoItem.DeadlineDate);
+            ValidateThatThereIsOnlyASingleWipStatusWithPriority1();
 
             ToDoItemDao toDoItemDao = _mapper.Map<ToDoItemDao>(toDoItem);
             _context.Add(toDoItemDao);
@@ -81,25 +67,9 @@ namespace ToDoApp.Business.Services.InDbProviders
 
         public async Task Update(ToDoItemVo toDoItem)
         {
-            if (toDoItem.Priority < 1 || toDoItem.Priority > 5)
-            {
-                throw new ToDoItemPriorityException(toDoItem.Priority);
-            }
-
-            if (toDoItem.DeadlineDate != null)
-            {
-                if (DateTime.Compare(toDoItem.CreationDate, (DateTime)toDoItem.DeadlineDate) >= 0)
-                {
-                    throw new ToDoItemDeadlineDateException();
-                }
-            }
-
-            List<ToDoItemDao> toDoItems = _context.ToDoItem.Where(td => td.Name == toDoItem.Name).ToList();
-
-            if (toDoItems.Count > 0)
-            {
-                throw new ToDoItemUniqueNameException(toDoItem.Name);
-            }
+            ValidatePriority(toDoItem.Priority);
+            ValidateDeadlineDate(toDoItem.CreationDate, toDoItem.DeadlineDate);
+            ValidateThatThereIsOnlyASingleWipStatusWithPriority1();
 
             ToDoItemDao toDoItemDao = _mapper.Map<ToDoItemDao>(toDoItem);
             
@@ -119,6 +89,46 @@ namespace ToDoApp.Business.Services.InDbProviders
                 .Include(td => td.Category).ToList();
 
             return _mapper.Map<IEnumerable<ToDoItemVo>>(toDoItems);
+        }
+
+        private void ValidateThatThereIsOnlyASingleWipStatusWithPriority1()
+        {
+            int toDoItemsWithWipStatusAndPriority1 = _context.ToDoItem
+                .Where(td => td.Status == StatusEnum.Wip && td.Priority == 1).Count();
+
+            if (toDoItemsWithWipStatusAndPriority1 > 0)
+            {
+                throw new ToDoItemException("There can only be a single ToDo item with Wip status and priority of 1");
+            }
+        }
+
+        private void ValidatePriority(int priority)
+        {
+            if (priority < 1 || priority > 5)
+            {
+                throw new ToDoItemPriorityException(priority);
+            }
+        }
+
+        private void ValidateDeadlineDate(DateTime creationDate, DateTime? deadlineDate)
+        {
+            if (deadlineDate != null)
+            {
+                if (DateTime.Compare(creationDate, (DateTime)deadlineDate) >= 0)
+                {
+                    throw new ToDoItemDeadlineDateException();
+                }
+            }
+        }
+
+        private void ValidateName(string name)
+        {
+            List<ToDoItemDao> toDoItemsWithTheSameName = _context.ToDoItem.Where(td => td.Name == name).ToList();
+
+            if (toDoItemsWithTheSameName.Count > 0)
+            {
+                throw new ToDoItemUniqueNameException(name);
+            }
         }
     }
 }
