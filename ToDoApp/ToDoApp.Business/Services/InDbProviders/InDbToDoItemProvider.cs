@@ -31,7 +31,7 @@ namespace ToDoApp.Business.Services.InDbProviders
             
             ValidateDeadlineDate(toDoItem.CreationDate, toDoItem.DeadlineDate);
             
-            ValidateThatThereIsOnlyASingleWipStatusWithPriority1();
+            ValidateThatThereIsOnlyASingleWipStatusWithPriority1(toDoItem.Status, toDoItem.Priority);
             
             ValidateThatThereIsOnlyThreeToDoItemsWithWipStatusPriority2();
             
@@ -85,7 +85,7 @@ namespace ToDoApp.Business.Services.InDbProviders
             
             ValidateDeadlineDate(toDoItem.CreationDate, toDoItem.DeadlineDate);
             
-            ValidateThatThereIsOnlyASingleWipStatusWithPriority1();
+            ValidateThatThereIsOnlyASingleWipStatusWithPriority1(toDoItem.Status, toDoItem.Priority);
             
             ValidateThatThereIsOnlyThreeToDoItemsWithWipStatusPriority2();
 
@@ -118,14 +118,17 @@ namespace ToDoApp.Business.Services.InDbProviders
             return _mapper.Map<IEnumerable<ToDoItemVo>>(toDoItems);
         }
 
-        private void ValidateThatThereIsOnlyASingleWipStatusWithPriority1()
+        private void ValidateThatThereIsOnlyASingleWipStatusWithPriority1(StatusEnum status, int priority)
         {
-            int toDoItemsWithWipStatusAndPriority1 = _context.ToDoItem
-                .Where(td => td.Status == StatusEnum.Wip && td.Priority == 1).Count();
-
-            if (toDoItemsWithWipStatusAndPriority1 >= 3)
+            if (status == StatusEnum.Wip && priority == 1)
             {
-                throw new ToDoItemException("There can only a sigle ToDo item with Wip status and priority of 1");
+                int toDoItemsWithWipStatusAndPriority1 = _context.ToDoItem
+                    .Where(td => td.Status == StatusEnum.Wip && td.Priority == 1).Count();
+
+                if (toDoItemsWithWipStatusAndPriority1 >= 1)
+                {
+                    throw new ToDoItemException("There can only be a single ToDo item with Wip status and priority of 1");
+                }
             }
         }
 
@@ -187,7 +190,7 @@ namespace ToDoApp.Business.Services.InDbProviders
         {
             if (priority == 1)
             {
-                if (description != null || description != "")
+                if (!string.IsNullOrEmpty(description))
                 {
                     if (description.Length < 140)
                     {

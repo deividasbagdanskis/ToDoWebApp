@@ -23,10 +23,7 @@ namespace ToDoApp.Business.Services.InDbProviders
 
         public async Task Add(CategoryVo category)
         {
-            if (category.Name.Length <= 2)
-            {
-                throw new CategoryNameException(category.Name);
-            }
+            ValidateCategoryNameLength(category.Name);
 
             CategoryDao categoryDao = _mapper.Map<CategoryDao>(category);
             _context.Add(categoryDao);
@@ -57,19 +54,25 @@ namespace ToDoApp.Business.Services.InDbProviders
 
         public async Task Update(CategoryVo category)
         {
-            if (category.Name.Length <= 2)
-            {
-                throw new CategoryNameException(category.Name);
-            }
+            ValidateCategoryNameLength(category.Name);
 
             CategoryDao categoryDao = _mapper.Map<CategoryDao>(category);
 
             _context.Update(categoryDao);
             await _context.SaveChangesAsync();
         }
+
         public bool ItemExits(int id)
         {
             return _context.Category.Any(e => e.Id == id);
+        }
+
+        private void ValidateCategoryNameLength(string name)
+        {
+            if (name.Length <= 2)
+            {
+                throw new CategoryNameException(name);
+            }
         }
     }
 }
