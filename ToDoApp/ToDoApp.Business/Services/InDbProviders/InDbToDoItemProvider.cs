@@ -7,6 +7,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using ToDoApp.Business.Models;
+using ToDoApp.Commons.Exceptions;
+using ToDoApp.Commons.Enums;
 
 namespace ToDoApp.Business.Services.InDbProviders
 {
@@ -23,6 +25,25 @@ namespace ToDoApp.Business.Services.InDbProviders
 
         public async Task Add(ToDoItemVo toDoItem)
         {
+            ValidateName(toDoItem.Name);
+
+            ValidatePriority(toDoItem.Priority);
+            
+            ValidateDeadlineDate(toDoItem.CreationDate, toDoItem.DeadlineDate);
+            
+            ValidateThatThereIsOnlyASingleWipStatusWithPriority1(toDoItem.Status, toDoItem.Priority);
+            
+            ValidateThatThereIsOnlyThreeToDoItemsWithWipStatusPriority2();
+            
+            ValidateThatToDoItemHasDeadlineDateAndItsNotLessThanAWeekInFutureWithPriority1(toDoItem.CreationDate, 
+                toDoItem.DeadlineDate, toDoItem.Priority);
+
+            ValidateThatToDoItemHasDeadlineDateAndItsNotLessThan2DaysInFutureWithPriority2(toDoItem.CreationDate,
+                toDoItem.DeadlineDate, toDoItem.Priority);
+
+            ValidateThatToDoItemHasDescriptionAndItHasAtLeast140CharsWithPriority1(toDoItem.Description, 
+                toDoItem.Priority);
+
             ToDoItemDao toDoItemDao = _mapper.Map<ToDoItemDao>(toDoItem);
             _context.Add(toDoItemDao);
             await _context.SaveChangesAsync();
@@ -60,9 +81,28 @@ namespace ToDoApp.Business.Services.InDbProviders
 
         public async Task Update(ToDoItemVo toDoItem)
         {
+            ValidatePriority(toDoItem.Priority);
+            
+            ValidateDeadlineDate(toDoItem.CreationDate, toDoItem.DeadlineDate);
+            
+            ValidateThatThereIsOnlyASingleWipStatusWithPriority1(toDoItem.Status, toDoItem.Priority);
+            
+            ValidateThatThereIsOnlyThreeToDoItemsWithWipStatusPriority2();
+
+            ValidateThatToDoItemHasDeadlineDateAndItsNotLessThanAWeekInFutureWithPriority1(toDoItem.CreationDate,
+                toDoItem.DeadlineDate, toDoItem.Priority);
+
+            ValidateThatToDoItemHasDeadlineDateAndItsNotLessThan2DaysInFutureWithPriority2(toDoItem.CreationDate,
+                toDoItem.DeadlineDate, toDoItem.Priority);
+
+            ValidateThatToDoItemHasDescriptionAndItHasAtLeast140CharsWithPriority1(toDoItem.Description,
+                toDoItem.Priority);
+
             ToDoItemDao toDoItemDao = _mapper.Map<ToDoItemDao>(toDoItem);
+            
             _context.Update(toDoItemDao);
             _context.Entry(toDoItemDao).Property("CreationDate").IsModified = false;
+            
             await _context.SaveChangesAsync();
         }
         public bool ItemExits(int id)
@@ -76,6 +116,121 @@ namespace ToDoApp.Business.Services.InDbProviders
                 .Include(td => td.Category).ToList();
 
             return _mapper.Map<IEnumerable<ToDoItemVo>>(toDoItems);
+        }
+
+        private void ValidateThatThereIsOnlyASingleWipStatusWithPriority1(StatusEnum status, int priority)
+        {
+            if (status == StatusEnum.Wip && priority == 1)
+            {
+                int toDoItemsWithWipStatusAndPriority1 = _context.ToDoItem
+                    .Where(td => td.Status == StatusEnum.Wip && td.Priority == 1).Count();
+
+                if (toDoItemsWithWipStatusAndPriority1 >= 1)
+                {
+                    throw new ToDoItemException("There can only be a single ToDo item with Wip status and priority of 1");
+                }
+            }
+        }
+
+        private void ValidateThatThereIsOnlyThreeToDoItemsWithWipStatusPriority2()
+        {
+            int toDoItemsWithWipStatusAndPriority2 = _context.ToDoItem
+                .Where(td => td.Status == StatusEnum.Wip && td.Priority == 2).Count();
+
+            if (toDoItemsWithWipStatusAndPriority2 > 3)
+            {
+                throw new ToDoItemException("There can only be three ToDo item with Wip status and priority of 2");
+            }
+        }
+
+        private void ValidateThatToDoItemHasDeadlineDateAndItsNotLessThanAWeekInFutureWithPriority1(DateTime creationDate, 
+            DateTime? deadlineDate, int priority)
+        {
+            if (priority == 1)
+            {
+                if (deadlineDate != null)
+                {
+                    DateTime castedDeadlineDate2 = (DateTime)deadlineDate;
+
+                    if ((castedDeadlineDate2.Date - creationDate.Date).TotalDays > 7)
+                    {
+                        throw new ToDoItemException("Deadline date must not be less than a week in the future");
+                    }
+                }
+                else
+                {
+                    throw new ToDoItemException("Deadline date is required");
+                }
+            }
+        }
+
+        private void ValidateThatToDoItemHasDeadlineDateAndItsNotLessThan2DaysInFutureWithPriority2(DateTime creationDate,
+            DateTime? deadlineDate, int priority)
+        {
+            if (priority == 2)
+            {
+                if (deadlineDate != null)
+                {
+                    DateTime castedDeadlineDate2 = (DateTime)deadlineDate;
+
+                    if ((castedDeadlineDate2.Date - creationDate.Date).TotalDays > 2)
+                    {
+                        throw new ToDoItemException("Deadline date must not be less than 2 days in the future");
+                    }
+                }
+                else
+                {
+                    throw new ToDoItemException("Deadline date is required");
+                }
+            }
+        }
+
+        private void ValidateThatToDoItemHasDescriptionAndItHasAtLeast140CharsWithPriority1(string description, 
+            int priority)
+        {
+            if (priority == 1)
+            {
+                if (!string.IsNullOrEmpty(description))
+                {
+                    if (description.Length < 140)
+                    {
+                        throw new ToDoItemException("Description must have at least 140 characters");
+                    }
+                }
+                else
+                {
+                    throw new ToDoItemException("Description is required");
+                }
+            }
+        }
+
+        private void ValidatePriority(int priority)
+        {
+            if (priority < 1 || priority > 5)
+            {
+                throw new ToDoItemPriorityException(priority);
+            }
+        }
+
+        private void ValidateDeadlineDate(DateTime creationDate, DateTime? deadlineDate)
+        {
+            if (deadlineDate != null)
+            {
+                if (DateTime.Compare(creationDate, (DateTime)deadlineDate) >= 0)
+                {
+                    throw new ToDoItemDeadlineDateException();
+                }
+            }
+        }
+
+        private void ValidateName(string name)
+        {
+            List<ToDoItemDao> toDoItemsWithTheSameName = _context.ToDoItem.Where(td => td.Name == name).ToList();
+
+            if (toDoItemsWithTheSameName.Count > 0)
+            {
+                throw new ToDoItemUniqueNameException(name);
+            }
         }
     }
 }

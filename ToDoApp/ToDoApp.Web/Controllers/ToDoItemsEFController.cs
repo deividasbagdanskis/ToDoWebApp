@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ToDoApp.Business.Models;
 using ToDoApp.Business.Services.InDbProviders;
+using ToDoApp.Commons.Exceptions;
 using ToDoApp.Projects.ApiClient;
 using ToDoApp.Web.ViewModels;
 
@@ -18,10 +19,10 @@ namespace ToDoApp.Web.Controllers
         private readonly IAsyncDbDataProvider<ToDoItemVo> _toDoItemProvider;
         private readonly IAsyncDbDataProvider<CategoryVo> _categoryProvider;
         private readonly IMapper _mapper;
-        private readonly ApiClient _apiClient;
+        private readonly IApiClient _apiClient;
 
         public ToDoItemsEFController(IAsyncDbDataProvider<ToDoItemVo> provider, IMapper mapper,
-            IAsyncDbDataProvider<CategoryVo> categoryProvider, ApiClient apiClient)
+            IAsyncDbDataProvider<CategoryVo> categoryProvider, IApiClient apiClient)
         {
             _toDoItemProvider = provider;
             _mapper = mapper;
@@ -89,11 +90,27 @@ namespace ToDoApp.Web.Controllers
                     toDoItem.CategoryId = null;
                 }
 
-                await _toDoItemProvider.Add(toDoItem);
+                try
+                {
+                    await _toDoItemProvider.Add(toDoItem);
+                }
+                catch(Exception ex) when (ex is ToDoItemException || ex is ToDoItemPriorityException || 
+                                          ex is ToDoItemDeadlineDateException || ex is ToDoItemUniqueNameException)
+                {
+                    ViewData["ErrorMessage"] = ex.Message;
+                    ViewData["CategoryId"] = new SelectList(await GetCategoriesForView(), "Id", "Name");
+                    ViewData["ProjectId"] = new SelectList(await GetProjects(), "Id", "Name");
+                    
+                    return View(toDoItemViewModel);
+                }
 
                 return RedirectToAction(nameof(Index));
             }
-            return View(toDoItem);
+
+            ViewData["CategoryId"] = new SelectList(await GetCategoriesForView(), "Id", "Name");
+            ViewData["ProjectId"] = new SelectList(await GetProjects(), "Id", "Name");
+            
+            return View(toDoItemViewModel);
         }
 
         // GET: ToDoItemsEF/Edit/5
@@ -140,7 +157,19 @@ namespace ToDoApp.Web.Controllers
                         toDoItem.CategoryId = null;
                     }
 
-                    await _toDoItemProvider.Update(toDoItem);
+                    try
+                    {
+                        await _toDoItemProvider.Update(toDoItem);
+                    }
+                    catch (Exception ex) when (ex is ToDoItemException || ex is ToDoItemPriorityException ||
+                                               ex is ToDoItemDeadlineDateException)
+                    {
+                        ViewData["ErrorMessage"] = ex.Message;
+                        ViewData["CategoryId"] = new SelectList(await GetCategoriesForView(), "Id", "Name");
+                        ViewData["ProjectId"] = new SelectList(await GetProjects(), "Id", "Name");
+
+                        return View(toDoItemViewModel);
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {

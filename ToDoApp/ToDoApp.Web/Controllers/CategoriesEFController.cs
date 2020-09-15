@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using System.Collections.Generic;
 using ToDoApp.Web.ViewModels;
+using ToDoApp.Commons.Exceptions;
 
 namespace ToDoApp.Web.Controllers
 {
@@ -61,7 +62,16 @@ namespace ToDoApp.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _provider.Add(_mapper.Map<CategoryVo>(categoryViewModel));
+                try
+                {
+                    await _provider.Add(_mapper.Map<CategoryVo>(categoryViewModel));
+                }
+                catch (CategoryNameException ex)
+                {
+                    ViewData["ErrorMessage"] = ex.Message;
+
+                    return View(categoryViewModel);
+                }
                 return RedirectToAction(nameof(Index));
             }
             return View(categoryViewModel);
@@ -113,6 +123,13 @@ namespace ToDoApp.Web.Controllers
                         throw;
                     }
                 }
+                catch(CategoryNameException ex)
+                {
+                    ViewData["ErrorMessage"] = ex.Message;
+
+                    return View(categoryViewModel);
+                }
+
                 return RedirectToAction(nameof(Index));
             }
             return View(categoryViewModel);

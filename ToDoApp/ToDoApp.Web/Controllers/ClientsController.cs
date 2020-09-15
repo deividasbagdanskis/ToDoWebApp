@@ -9,10 +9,10 @@ namespace ToDoApp.Web.Controllers
 {
     public class ClientsController : Controller
     {
-        private readonly ApiClient _apiClient;
+        private readonly IApiClient _apiClient;
         private readonly IMapper _mapper;
 
-        public ClientsController(ApiClient apiClient, IMapper mapper)
+        public ClientsController(IApiClient apiClient, IMapper mapper)
         {
             _apiClient = apiClient;
             _mapper = mapper;

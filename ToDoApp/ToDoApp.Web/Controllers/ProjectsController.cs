@@ -12,11 +12,11 @@ namespace ToDoApp.Web.Controllers
 {
     public class ProjectsController : Controller
     {
-        private readonly ApiClient _apiClient;
+        private readonly IApiClient _apiClient;
         private readonly IMapper _mapper;
         private readonly IInDbProjectToDoItemProvider _toDoItemProvider;
 
-        public ProjectsController(ApiClient apiClient, IMapper mapper, IInDbProjectToDoItemProvider toDoItemProvider)
+        public ProjectsController(IApiClient apiClient, IMapper mapper, IInDbProjectToDoItemProvider toDoItemProvider)
         {
             _apiClient = apiClient;
             _mapper = mapper;
