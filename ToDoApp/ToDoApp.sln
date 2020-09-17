@@ -23,7 +23,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{3188A92B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoApp.Data.Tests", "ToDoApp.Data.Tests\ToDoApp.Data.Tests.csproj", "{827E5C13-E826-4068-AEDC-9CE772C1BE0A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDoApp.Business.Tests", "ToDoApp.Business.Tests\ToDoApp.Business.Tests.csproj", "{3F1EC923-365F-4BE9-BB6F-C392FAA13073}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoApp.Business.Tests", "ToDoApp.Business.Tests\ToDoApp.Business.Tests.csproj", "{3F1EC923-365F-4BE9-BB6F-C392FAA13073}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDoApp.Web.Tests", "ToDoApp.Web.Tests\ToDoApp.Web.Tests.csproj", "{A1EB29E7-94B5-4B99-8C5B-844963C35192}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -67,6 +69,10 @@ Global
 		{3F1EC923-365F-4BE9-BB6F-C392FAA13073}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3F1EC923-365F-4BE9-BB6F-C392FAA13073}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3F1EC923-365F-4BE9-BB6F-C392FAA13073}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1EB29E7-94B5-4B99-8C5B-844963C35192}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1EB29E7-94B5-4B99-8C5B-844963C35192}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1EB29E7-94B5-4B99-8C5B-844963C35192}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1EB29E7-94B5-4B99-8C5B-844963C35192}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -77,6 +83,7 @@ Global
 		{BFAB7869-8D6F-4C97-BAAF-00509E50DE7E} = {679D3CC1-7EF3-4521-9E15-202831698249}
 		{827E5C13-E826-4068-AEDC-9CE772C1BE0A} = {3188A92B-C783-4569-8A93-E1C0D7CCB5BC}
 		{3F1EC923-365F-4BE9-BB6F-C392FAA13073} = {3188A92B-C783-4569-8A93-E1C0D7CCB5BC}
+		{A1EB29E7-94B5-4B99-8C5B-844963C35192} = {3188A92B-C783-4569-8A93-E1C0D7CCB5BC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4734DF9A-16AE-40D1-AB77-76BEED82C1DE}
