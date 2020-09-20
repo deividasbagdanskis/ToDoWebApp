@@ -82,8 +82,11 @@ namespace ToDoApp.Business.Services.InDbProviders
         public async Task Update(ToDoItemVo toDoItem)
         {
             ValidatePriority(toDoItem.Priority);
-            
-            ValidateDeadlineDate(toDoItem.CreationDate, toDoItem.DeadlineDate);
+
+            ToDoItemDao toDoItemForCreationDate = await _context.ToDoItem.FindAsync(toDoItem.Id);
+            DateTime creationDate = toDoItemForCreationDate.CreationDate;
+
+            ValidateDeadlineDate(creationDate, toDoItem.DeadlineDate);
             
             ValidateThatThereIsOnlyASingleWipStatusWithPriority1(toDoItem.Status, toDoItem.Priority);
             

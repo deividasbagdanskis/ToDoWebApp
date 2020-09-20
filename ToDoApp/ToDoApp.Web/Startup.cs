@@ -82,7 +82,7 @@ namespace ToDoApp
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=CategoriesEF}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }
