@@ -9,7 +9,7 @@ namespace ToDoApp.Web.Tests.PageObjects.CategoryPages
         private readonly string createCategoryPageUrl = "https://localhost:44392/CategoriesEF/Create";
         private readonly By categotyNameInput = By.Id("Name");
         private readonly By createCategotyButton = By.XPath("/html/body/div/main/div[1]/div/form/div[2]/input");
-        private readonly By categoryNameError = By.XPath("/html/body/div/main/div[1]/div/form/div[1]");
+        private readonly By errorDiv = By.XPath("/html/body/div/main/div[1]/div/form/div[1]");
 
         public CreateCategoryPage(IWebDriver webDriver)
         {
@@ -50,7 +50,7 @@ namespace ToDoApp.Web.Tests.PageObjects.CategoryPages
 
             try
             {
-                errorMessage = webDriver.FindElement(categoryNameError).Text;
+                errorMessage = webDriver.FindElement(errorDiv).Text;
             }
             catch (NoSuchElementException)
             {
