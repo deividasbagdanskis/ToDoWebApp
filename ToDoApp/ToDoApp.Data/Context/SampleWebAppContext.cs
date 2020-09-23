@@ -13,6 +13,8 @@ namespace ToDoApp.Data.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<ToDoItemTagDao>().HasKey(tt => new { tt.ToDoItemId, tt.TagId });
 
             modelBuilder.Entity<ToDoItemTagDao>()
