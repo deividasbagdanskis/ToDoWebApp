@@ -80,7 +80,10 @@ namespace ToDoApp.Web.Areas.Identity.Pages.Account
             {
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                string username = GetUsernameFromEmail(Input.Email);
+
+                var result = await _signInManager.PasswordSignInAsync(username, Input.Password, Input.RememberMe, 
+                    lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
@@ -104,6 +107,20 @@ namespace ToDoApp.Web.Areas.Identity.Pages.Account
 
             // If we got this far, something failed, redisplay form
             return Page();
+        }
+
+        private string GetUsernameFromEmail(string email)
+        {
+            string[] usernameArr = email.Split('@')[0].Split(".");
+
+            for (int i = 0; i < usernameArr.Length; i++)
+            {
+                usernameArr[i] = char.ToUpper(usernameArr[i][0]) + usernameArr[i].Substring(1);
+            }
+
+            string username = string.Join(" ", usernameArr);
+
+            return username;
         }
     }
 }

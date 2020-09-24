@@ -45,9 +45,9 @@ namespace ToDoApp.Business.Services.InDbProviders
             return _mapper.Map<CategoryVo>(foundCategory);
         }
 
-        public async Task<IEnumerable<CategoryVo>> GetAll()
+        public async Task<IEnumerable<CategoryVo>> GetAll(string userId)
         {
-            IEnumerable<CategoryDao> categoryDaos = await _context.Category.ToListAsync();
+            IEnumerable<CategoryDao> categoryDaos = await _context.Category.Where(c => c.UserId == userId).ToListAsync();
 
             return _mapper.Map<IEnumerable<CategoryVo>>(categoryDaos);
         }

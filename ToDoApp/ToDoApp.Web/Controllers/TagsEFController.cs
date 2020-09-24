@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +24,8 @@ namespace ToDoApp.Web.Controllers
         // GET: TagsEF
         public async Task<IActionResult> Index()
         {
-            IEnumerable<TagVo> tags = await _provider.GetAll();
+            IEnumerable<TagVo> tags = await _provider.GetAll(User
+                .FindFirstValue(ClaimTypes.NameIdentifier));
 
             return View(_mapper.Map<IEnumerable<TagViewModel>>(tags));
         }

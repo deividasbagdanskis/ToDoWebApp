@@ -9,7 +9,7 @@ namespace ToDoApp.Business.Services.InDbProviders
         Task Add(ToDoItemTagVo toDoItemTag);
         Task Delete(int? toDoItemId, int? tagId);
         Task<ToDoItemTagVo> Get(int? toDoItemId, int? tagId);
-        Task<IEnumerable<ToDoItemTagVo>> GetAll();
+        Task<IEnumerable<ToDoItemTagVo>> GetAll(string userId);
         Task Update(ToDoItemTagVo toDoItemTag);
         bool ItemExits(int toDoItemId, int tagId);
     }

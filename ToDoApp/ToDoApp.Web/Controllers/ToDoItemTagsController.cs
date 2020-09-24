@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -29,7 +30,8 @@ namespace ToDoApp.Web.Controllers
         // GET: ToDoItemTags
         public async Task<IActionResult> Index()
         {
-            IEnumerable<ToDoItemTagVo> toDoItemTags = await _toDoItemTagProvider.GetAll();
+            IEnumerable<ToDoItemTagVo> toDoItemTags = await _toDoItemTagProvider.GetAll(User
+                .FindFirstValue(ClaimTypes.NameIdentifier));
 
             return View(_mapper.Map<IEnumerable<ToDoItemTagViewModel>>(toDoItemTags));
         }
@@ -55,8 +57,10 @@ namespace ToDoApp.Web.Controllers
         // GET: ToDoItemTags/Create
         public async Task<IActionResult> Create()
         {
-            ViewData["TagId"] = new SelectList(await _tagProvider.GetAll(), "Id", "Name");
-            ViewData["ToDoItemId"] = new SelectList(await _toDoItemProvider.GetAll(), "Id", "Name");
+            ViewData["TagId"] = new SelectList(await _tagProvider.GetAll(User
+                .FindFirstValue(ClaimTypes.NameIdentifier)), "Id", "Name");
+            ViewData["ToDoItemId"] = new SelectList(await _toDoItemProvider.GetAll(User
+                .FindFirstValue(ClaimTypes.NameIdentifier)), "Id", "Name");
 
             return View();
         }
@@ -81,8 +85,10 @@ namespace ToDoApp.Web.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["TagId"] = new SelectList(await _tagProvider.GetAll(), "Id", "Name", toDoItemTagViewModel.TagId);
-            ViewData["ToDoItemId"] = new SelectList(await _toDoItemProvider.GetAll(), "Id", "Name",
+            ViewData["TagId"] = new SelectList(await _tagProvider.GetAll(User
+                .FindFirstValue(ClaimTypes.NameIdentifier)), "Id", "Name", toDoItemTagViewModel.TagId);
+            ViewData["ToDoItemId"] = new SelectList(await _toDoItemProvider.GetAll(User
+                .FindFirstValue(ClaimTypes.NameIdentifier)), "Id", "Name",
                 toDoItemTagViewModel.ToDoItemId);
 
             return View(toDoItemTagViewModel);
@@ -103,8 +109,10 @@ namespace ToDoApp.Web.Controllers
                 return NotFound();
             }
 
-            ViewData["TagId"] = new SelectList(await _tagProvider.GetAll(), "Id", "Name", toDoItemTag.TagId);
-            ViewData["ToDoItemId"] = new SelectList(await _toDoItemProvider.GetAll(), "Id", "Name",
+            ViewData["TagId"] = new SelectList(await _tagProvider.GetAll(User
+                .FindFirstValue(ClaimTypes.NameIdentifier)), "Id", "Name", toDoItemTag.TagId);
+            ViewData["ToDoItemId"] = new SelectList(await _toDoItemProvider.GetAll(User
+                .FindFirstValue(ClaimTypes.NameIdentifier)), "Id", "Name",
                 toDoItemTag.ToDoItemId);
             ViewData["OldToDoItemId"] = toDoItemId;
             ViewData["OldTagId"] = tagId;
@@ -156,8 +164,10 @@ namespace ToDoApp.Web.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["TagId"] = new SelectList(await _tagProvider.GetAll(), "Id", "Name", toDoItemTagViewModel.TagId);
-            ViewData["ToDoItemId"] = new SelectList(await _toDoItemProvider.GetAll(), "Id", "Name",
+            ViewData["TagId"] = new SelectList(await _tagProvider.GetAll(User
+                .FindFirstValue(ClaimTypes.NameIdentifier)), "Id", "Name", toDoItemTagViewModel.TagId);
+            ViewData["ToDoItemId"] = new SelectList(await _toDoItemProvider.GetAll(User
+                .FindFirstValue(ClaimTypes.NameIdentifier)), "Id", "Name",
                 toDoItemTagViewModel.ToDoItemId);
 
             return View(toDoItemTagViewModel);

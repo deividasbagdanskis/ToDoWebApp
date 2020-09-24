@@ -5,7 +5,7 @@ namespace ToDoApp.Business.Services.InDbProviders
 {
     public interface IAsyncDbDataProvider<T>
     {
-        Task<IEnumerable<T>> GetAll();
+        Task<IEnumerable<T>> GetAll(string userId);
 
         Task<T> Get(int? id);
 

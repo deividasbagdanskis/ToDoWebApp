@@ -72,9 +72,10 @@ namespace ToDoApp.Business.Services.InDbProviders
             return _mapper.Map<ToDoItemVo>(foundToDoItem);
         }
 
-        public async Task<IEnumerable<ToDoItemVo>> GetAll()
+        public async Task<IEnumerable<ToDoItemVo>> GetAll(string userId)
         {
-            IEnumerable<ToDoItemDao> toDoItemDaos = await _context.ToDoItem.Include(t => t.Category).ToListAsync();
+            IEnumerable<ToDoItemDao> toDoItemDaos = await _context.ToDoItem.Include(t => t.Category)
+                .Where(td => td.UserId == userId).ToListAsync();
 
             return _mapper.Map<IEnumerable<ToDoItemVo>>(toDoItemDaos);
         }

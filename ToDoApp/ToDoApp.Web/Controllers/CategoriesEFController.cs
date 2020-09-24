@@ -7,6 +7,7 @@ using AutoMapper;
 using System.Collections.Generic;
 using ToDoApp.Web.ViewModels;
 using ToDoApp.Commons.Exceptions;
+using System.Security.Claims;
 
 namespace ToDoApp.Web.Controllers
 {
@@ -24,7 +25,8 @@ namespace ToDoApp.Web.Controllers
         // GET: CategoriesEF
         public async Task<IActionResult> Index()
         {
-            IEnumerable<CategoryVo> categories = await _provider.GetAll();
+            IEnumerable<CategoryVo> categories = await _provider.GetAll(User
+                .FindFirstValue(ClaimTypes.NameIdentifier));
 
             return View(_mapper.Map<IEnumerable<CategoryViewModel>>(categories));
         }

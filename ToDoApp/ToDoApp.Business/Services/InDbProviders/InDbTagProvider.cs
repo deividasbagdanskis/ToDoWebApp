@@ -43,9 +43,9 @@ namespace ToDoApp.Business.Services.InDbProviders
             return _mapper.Map<TagVo>(foundTag);
         }
 
-        public async Task<IEnumerable<TagVo>> GetAll()
+        public async Task<IEnumerable<TagVo>> GetAll(string userId)
         {
-            IEnumerable<TagDao> tagDaos = await _context.Tag.ToListAsync();
+            IEnumerable<TagDao> tagDaos = await _context.Tag.Where(t => t.UserId == userId).ToListAsync();
 
             foreach (TagDao tagDao in tagDaos)
             {

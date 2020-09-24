@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -33,7 +34,8 @@ namespace ToDoApp.Web.Controllers
         // GET: ToDoItemsEF
         public async Task<IActionResult> Index()
         {
-            IEnumerable<ToDoItemVo> toDoItems = await _toDoItemProvider.GetAll();
+            IEnumerable<ToDoItemVo> toDoItems = await _toDoItemProvider.GetAll(User
+                .FindFirstValue(ClaimTypes.NameIdentifier));
 
             foreach (ToDoItemVo toDoItem in toDoItems)
             {
@@ -223,7 +225,8 @@ namespace ToDoApp.Web.Controllers
 
         private async Task<IEnumerable<CategoryVo>> GetCategoriesForView()
         {
-            List<CategoryVo> categories = (List<CategoryVo>) await _categoryProvider.GetAll();
+            List<CategoryVo> categories = (List<CategoryVo>) await _categoryProvider.GetAll(User
+                .FindFirstValue(ClaimTypes.NameIdentifier));
             categories.Insert(0, new CategoryVo(0, "Uncategorized"));
 
             return categories;
