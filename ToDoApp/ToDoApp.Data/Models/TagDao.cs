@@ -15,6 +15,10 @@ namespace ToDoApp.Data.Models
 
         public List<ToDoItemTagDao> ToDoItemTags { get; set; }
 
+        public string UserId { get; set; }
+
+        public User User { get; set; }
+
         [NotMapped]
         public int ToDoItemNumber { get; set; }
     }
