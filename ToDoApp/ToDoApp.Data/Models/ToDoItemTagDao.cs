@@ -10,5 +10,9 @@ namespace ToDoApp.Data.Models
 
         public int TagId { get; set; }
         public TagDao Tag { get; set; }
+
+        public string UserId { get; set; }
+
+        public User User { get; set; }
     }
 }
