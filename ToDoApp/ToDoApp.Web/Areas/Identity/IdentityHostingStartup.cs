@@ -21,6 +21,7 @@ namespace ToDoApp.Web.Areas.Identity
 
                 services.AddDefaultIdentity<User>(options => 
                 {
+                    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+ ";
                     options.SignIn.RequireConfirmedAccount = true;
                     options.Password.RequireDigit = false;
                     options.Password.RequireDigit = false;

@@ -64,10 +64,16 @@ namespace ToDoApp.Web.Areas.Identity.Pages.Account
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/");
-            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            //ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new User { UserName = Input.Email, Email = Input.Email, EmailConfirmed = true };
+                var user = new User 
+                { 
+                    UserName = GetUsernameFromEmail(Input.Email), 
+                    Email = Input.Email, 
+                    EmailConfirmed = true 
+                };
+
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
@@ -85,6 +91,20 @@ namespace ToDoApp.Web.Areas.Identity.Pages.Account
 
             // If we got this far, something failed, redisplay form
             return Page();
+        }
+
+        private string GetUsernameFromEmail(string email)
+        {
+            string[] usernameArr = email.Split('@')[0].Split(".");
+
+            for (int i = 0; i < usernameArr.Length; i++)
+            {
+                usernameArr[i] = char.ToUpper(usernameArr[i][0]) + usernameArr[i].Substring(1);
+            }
+
+            string username = string.Join(" ", usernameArr);
+
+            return username;
         }
     }
 }
