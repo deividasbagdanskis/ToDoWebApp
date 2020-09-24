@@ -19,7 +19,14 @@ namespace ToDoApp.Web.Areas.Identity
                 services.AddDbContext<SampleWebAppContext>(options =>
                     options.UseSqlServer(context.Configuration.GetConnectionString("SampleWebAppContext")));
 
-                services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
+                services.AddDefaultIdentity<User>(options => 
+                {
+                    options.SignIn.RequireConfirmedAccount = true;
+                    options.Password.RequireDigit = false;
+                    options.Password.RequireDigit = false;
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequireUppercase = false;
+                })
                 .AddEntityFrameworkStores<SampleWebAppContext>();
             });
         }
