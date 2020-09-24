@@ -48,7 +48,11 @@ namespace ToDoApp.Data.Models
 
         public int ProjectId { get; set; }
 
-		[NotMapped]
+        public string UserId { get; set; }
+
+        public User User { get; set; }
+
+        [NotMapped]
         public string ProjectName { get; set; }
     }
 }
