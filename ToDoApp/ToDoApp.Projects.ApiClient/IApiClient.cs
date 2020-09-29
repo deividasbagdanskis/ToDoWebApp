@@ -12,12 +12,12 @@ namespace ToDoApp.Projects.ApiClient
 {
     public interface IApiClient
     {
-        Task<Client> ApiClientsDeleteAsync(int id);
-        Task<Client> ApiClientsDeleteAsync(int id, CancellationToken cancellationToken);
-        Task<ICollection<Client>> ApiClientsGetAsync();
-        Task<ICollection<Client>> ApiClientsGetAsync(CancellationToken cancellationToken);
-        Task<Client> ApiClientsGetAsync(int id);
-        Task<Client> ApiClientsGetAsync(int id, CancellationToken cancellationToken);
+        Task<Client> ApiClientsDeleteAsync(int id, string userId);
+        Task<Client> ApiClientsDeleteAsync(int id, string userId, CancellationToken cancellationToken);
+        Task<Client> ApiClientsGetAsync(int id, string userId);
+        Task<Client> ApiClientsGetAsync(int id, string userId, CancellationToken cancellationToken);
+        Task<ICollection<Client>> ApiClientsGetAsync(string userId);
+        Task<ICollection<Client>> ApiClientsGetAsync(string userId, CancellationToken cancellationToken);
         Task<Client> ApiClientsPostAsync(Client body);
         Task<Client> ApiClientsPostAsync(Client body, CancellationToken cancellationToken);
         Task<Project> ApiClientsProjectsDeleteAsync(int clientId, int projectId);
@@ -30,12 +30,12 @@ namespace ToDoApp.Projects.ApiClient
         Task ApiClientsProjectsPutAsync(int clientId, int projectId, Project body, CancellationToken cancellationToken);
         Task ApiClientsPutAsync(int id, Client body);
         Task ApiClientsPutAsync(int id, Client body, CancellationToken cancellationToken);
-        Task<Project> ApiProjectsDeleteAsync(int id);
-        Task<Project> ApiProjectsDeleteAsync(int id, CancellationToken cancellationToken);
-        Task<ICollection<Project>> ApiProjectsGetAsync();
-        Task<ICollection<Project>> ApiProjectsGetAsync(CancellationToken cancellationToken);
-        Task<Project> ApiProjectsGetAsync(int id);
-        Task<Project> ApiProjectsGetAsync(int id, CancellationToken cancellationToken);
+        Task<Project> ApiProjectsDeleteAsync(int id, string userId);
+        Task<Project> ApiProjectsDeleteAsync(int id, string userId, CancellationToken cancellationToken);
+        Task<Project> ApiProjectsGetAsync(int id, string userId);
+        Task<Project> ApiProjectsGetAsync(int id, string userId, CancellationToken cancellationToken);
+        Task<ICollection<Project>> ApiProjectsGetAsync(string userId);
+        Task<ICollection<Project>> ApiProjectsGetAsync(string userId, CancellationToken cancellationToken);
         Task<Project> ApiProjectsPostAsync(Project body);
         Task<Project> ApiProjectsPostAsync(Project body, CancellationToken cancellationToken);
         Task ApiProjectsPutAsync(int id, Project body);
