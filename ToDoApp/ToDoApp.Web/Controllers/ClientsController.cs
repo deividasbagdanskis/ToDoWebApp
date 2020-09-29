@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ToDoApp.Projects.ApiClient;
 using ToDoApp.Web.ViewModels;
@@ -11,17 +13,19 @@ namespace ToDoApp.Web.Controllers
     {
         private readonly IApiClient _apiClient;
         private readonly IMapper _mapper;
+        private readonly string _userId;
 
-        public ClientsController(IApiClient apiClient, IMapper mapper)
+        public ClientsController(IApiClient apiClient, IMapper mapper, IHttpContextAccessor httpContextAccessor)
         {
             _apiClient = apiClient;
             _mapper = mapper;
+            _userId = httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
         }
 
         // GET: ClientController
         public async Task<ActionResult> Index()
         {
-            IEnumerable<Client> clients = await _apiClient.ApiClientsGetAsync();
+            IEnumerable<Client> clients = await _apiClient.ApiClientsGetAsync(_userId);
 
             return View(_mapper.Map<IEnumerable<ClientViewModel>>(clients));
         }
@@ -29,7 +33,7 @@ namespace ToDoApp.Web.Controllers
         // GET: ClientController/Details/5
         public async Task<ActionResult> Details(int id)
         {
-            Client client = await _apiClient.ApiClientsGetAsync(id);
+            Client client = await _apiClient.ApiClientsGetAsync(id, _userId);
 
             if (client == null)
             {
@@ -54,6 +58,8 @@ namespace ToDoApp.Web.Controllers
 
             if (ModelState.IsValid)
             {
+                client.UserId = _userId;
+
                 await _apiClient.ApiClientsPostAsync(client);
 
                 return RedirectToAction(nameof(Index));
@@ -65,7 +71,7 @@ namespace ToDoApp.Web.Controllers
         // GET: ClientController/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
-            Client client = await _apiClient.ApiClientsGetAsync(id);
+            Client client = await _apiClient.ApiClientsGetAsync(id, _userId);
 
             if (client == null)
             {
@@ -107,7 +113,7 @@ namespace ToDoApp.Web.Controllers
         // GET: ClientController/Delete/5
         public async Task<ActionResult> Delete(int id)
         {
-            Client client = await _apiClient.ApiClientsGetAsync(id);
+            Client client = await _apiClient.ApiClientsGetAsync(id, _userId);
 
             if (client == null)
             {
@@ -129,7 +135,7 @@ namespace ToDoApp.Web.Controllers
 
             try
             {
-                await _apiClient.ApiClientsDeleteAsync(id);
+                await _apiClient.ApiClientsDeleteAsync(id, _userId);
 
                 return RedirectToAction(nameof(Index));
             }
