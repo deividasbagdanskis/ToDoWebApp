@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ToDoApp.Projects.ApiClient;
@@ -9,6 +10,7 @@ using ToDoApp.Web.ViewModels;
 
 namespace ToDoApp.Web.Controllers
 {
+    [Authorize]
     public class ClientsController : Controller
     {
         private readonly IApiClient _apiClient;

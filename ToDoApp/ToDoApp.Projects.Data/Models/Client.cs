@@ -11,7 +11,6 @@ namespace ToDoApp.Projects.Data.Models
 
         public IEnumerable<Project> Projects { get; set; }
 
-        [JsonIgnore]
         public string UserId { get; set; }
     }
 }

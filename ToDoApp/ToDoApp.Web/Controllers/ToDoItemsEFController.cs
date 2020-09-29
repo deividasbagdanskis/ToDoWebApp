@@ -247,7 +247,7 @@ namespace ToDoApp.Web.Controllers
 
             try
             {
-                Project project = await _apiClient.ApiProjectsGetAsync(projectId);
+                Project project = await _apiClient.ApiProjectsGetAsync(projectId, _userId);
                 projectName = project.Name;
             }
             catch (ApiException)
@@ -260,7 +260,7 @@ namespace ToDoApp.Web.Controllers
 
         private async Task<IEnumerable<Project>> GetProjects()
         {
-            List<Project> projects = (List<Project>) await _apiClient.ApiProjectsGetAsync();
+            List<Project> projects = (List<Project>) await _apiClient.ApiProjectsGetAsync(_userId);
             projects.Insert(0, new Project() { Id = 0, Name = "None" });
 
             return projects;

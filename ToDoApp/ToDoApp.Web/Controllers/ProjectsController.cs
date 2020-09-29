@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ToDoApp.Business.Models;
@@ -10,27 +13,31 @@ using ToDoApp.Web.ViewModels;
 
 namespace ToDoApp.Web.Controllers
 {
+    [Authorize]
     public class ProjectsController : Controller
     {
         private readonly IApiClient _apiClient;
         private readonly IMapper _mapper;
         private readonly IInDbProjectToDoItemProvider _toDoItemProvider;
+        private readonly string _userId;
 
-        public ProjectsController(IApiClient apiClient, IMapper mapper, IInDbProjectToDoItemProvider toDoItemProvider)
+        public ProjectsController(IApiClient apiClient, IMapper mapper, IInDbProjectToDoItemProvider toDoItemProvider,
+            IHttpContextAccessor httpContextAccessor)
         {
             _apiClient = apiClient;
             _mapper = mapper;
             _toDoItemProvider = toDoItemProvider;
+            _userId = httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
         }
 
         // GET: ProjectsController
         public async Task<ActionResult> Index()
         {
-            IEnumerable<Project> projects = await _apiClient.ApiProjectsGetAsync();
+            IEnumerable<Project> projects = await _apiClient.ApiProjectsGetAsync(_userId);
 
             foreach (Project project in projects)
             {
-                project.Client = await _apiClient.ApiClientsGetAsync(project.ClientId);
+                project.Client = await _apiClient.ApiClientsGetAsync(project.ClientId, _userId);
             }
 
             return View(_mapper.Map<IEnumerable<ProjectViewModel>>(projects));
@@ -39,14 +46,14 @@ namespace ToDoApp.Web.Controllers
         // GET: ProjectsController/Details/5
         public async Task<ActionResult> Details(int id)
         {
-            Project project = await _apiClient.ApiProjectsGetAsync(id);
+            Project project = await _apiClient.ApiProjectsGetAsync(id,_userId);
 
             if (project == null)
             {
                 return NotFound();
             }
 
-            project.Client = await _apiClient.ApiClientsGetAsync(project.ClientId);
+            project.Client = await _apiClient.ApiClientsGetAsync(project.ClientId, _userId);
 
             IEnumerable<ToDoItemVo> toDoItems = _toDoItemProvider.GetToDoItemsByProjectId(project.Id);
             ViewData["ToDoItems"] = _mapper.Map<IEnumerable<ToDoItemViewModel>>(toDoItems);
@@ -56,7 +63,7 @@ namespace ToDoApp.Web.Controllers
         // GET: ProjectsController/Create
         public async Task<ActionResult> Create()
         {
-            ViewData["ClientId"] = new SelectList(await _apiClient.ApiClientsGetAsync(), "Id", "Name");
+            ViewData["ClientId"] = new SelectList(await _apiClient.ApiClientsGetAsync(_userId), "Id", "Name");
 
             return View();
         }
@@ -70,12 +77,14 @@ namespace ToDoApp.Web.Controllers
 
             if (ModelState.IsValid)
             {
+                project.UserId = _userId;
+
                 await _apiClient.ApiProjectsPostAsync(project);
 
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["ClientId"] = new SelectList(await _apiClient.ApiClientsGetAsync(), "Id", "Name");
+            ViewData["ClientId"] = new SelectList(await _apiClient.ApiClientsGetAsync(_userId), "Id", "Name");
 
             return View(projectViewModel);
         }
@@ -83,14 +92,14 @@ namespace ToDoApp.Web.Controllers
         // GET: ProjectsController/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
-            Project project = await _apiClient.ApiProjectsGetAsync(id);
+            Project project = await _apiClient.ApiProjectsGetAsync(id,_userId);
 
             if (project == null)
             {
                 return NotFound();
             }
 
-            ViewData["ClientId"] = new SelectList(await _apiClient.ApiClientsGetAsync(), "Id", "Name");
+            ViewData["ClientId"] = new SelectList(await _apiClient.ApiClientsGetAsync(_userId), "Id", "Name");
 
             return View(_mapper.Map<ProjectViewModel>(project));
         }
@@ -121,7 +130,7 @@ namespace ToDoApp.Web.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["ClientId"] = new SelectList(await _apiClient.ApiClientsGetAsync(), "Id", "Name");
+            ViewData["ClientId"] = new SelectList(await _apiClient.ApiClientsGetAsync(_userId), "Id", "Name");
 
             return View(projectViewModel);
         }
@@ -129,14 +138,14 @@ namespace ToDoApp.Web.Controllers
         // GET: ProjectsController/Delete/5
         public async Task<ActionResult> Delete(int id)
         {
-            Project project = await _apiClient.ApiProjectsGetAsync(id);
+            Project project = await _apiClient.ApiProjectsGetAsync(id, _userId);
 
             if (project == null)
             {
                 return NotFound();
             }
 
-            project.Client = await _apiClient.ApiClientsGetAsync(project.ClientId);
+            project.Client = await _apiClient.ApiClientsGetAsync(project.ClientId, _userId);
 
             return View(_mapper.Map<ProjectViewModel>(project));
         }
@@ -153,7 +162,7 @@ namespace ToDoApp.Web.Controllers
 
             try
             {
-                await _apiClient.ApiProjectsDeleteAsync(id);
+                await _apiClient.ApiProjectsDeleteAsync(id, _userId);
 
                 return RedirectToAction(nameof(Index));
             }
