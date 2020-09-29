@@ -21,18 +21,18 @@ namespace ToDoApp.Projects.Api.Controllers
 
         // GET: api/Clients
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Client>>> GetClient()
+        public async Task<ActionResult<IEnumerable<Client>>> GetClient(string userId)
         {
-            return await _context.Client.ToListAsync();
+            return await _context.Client.Where(c => c.UserId == userId).ToListAsync();
         }
 
         // GET: api/Clients/5
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(Client), 200)]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<Client>> GetClient(int id)
+        public async Task<ActionResult<Client>> GetClient(int id, string userId)
         {
-            var client = await _context.Client.FindAsync(id);
+            var client = await _context.Client.Where(c => c.Id == id && c.UserId == userId).FirstOrDefaultAsync();
 
             if (client == null)
             {
@@ -61,6 +61,8 @@ namespace ToDoApp.Projects.Api.Controllers
 
             try
             {
+                _context.Entry(client).Property("UserId").IsModified = false;
+
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
@@ -95,9 +97,9 @@ namespace ToDoApp.Projects.Api.Controllers
         [ProducesResponseType(typeof(Client), 200)]
         [ProducesResponseType(404)]
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Client>> DeleteClient(int id)
+        public async Task<ActionResult<Client>> DeleteClient(int id, string userId)
         {
-            var client = await _context.Client.FindAsync(id);
+            var client = await _context.Client.Where(c => c.Id == id && c.UserId == userId).FirstOrDefaultAsync();
             if (client == null)
             {
                 return NotFound();
