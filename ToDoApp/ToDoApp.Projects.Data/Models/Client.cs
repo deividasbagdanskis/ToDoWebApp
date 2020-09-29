@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace ToDoApp.Projects.Data.Models
 {
@@ -10,6 +11,7 @@ namespace ToDoApp.Projects.Data.Models
 
         public IEnumerable<Project> Projects { get; set; }
 
+        [JsonIgnore]
         public string UserId { get; set; }
     }
 }
