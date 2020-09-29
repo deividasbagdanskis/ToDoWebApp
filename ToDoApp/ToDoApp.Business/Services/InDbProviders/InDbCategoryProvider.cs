@@ -31,16 +31,17 @@ namespace ToDoApp.Business.Services.InDbProviders
             await _context.SaveChangesAsync();
         }
 
-        public async Task Delete(int id)
+        public async Task Delete(int id, string userId)
         {
-            var category = await _context.Category.FindAsync(id);
+            var category = await _context.Category.Where(c => c.Id == id && c.UserId == userId).FirstOrDefaultAsync();
             _context.Category.Remove(category);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<CategoryVo> Get(int? id)
+        public async Task<CategoryVo> Get(int? id, string userId)
         {
-            var foundCategory = await _context.Category.FirstOrDefaultAsync(m => m.Id == id);
+            var foundCategory = await _context.Category.Where(c => c.Id == id && c.UserId == userId)
+                .FirstOrDefaultAsync();
 
             return _mapper.Map<CategoryVo>(foundCategory);
         }

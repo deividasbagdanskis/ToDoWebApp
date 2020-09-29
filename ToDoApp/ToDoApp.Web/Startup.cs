@@ -31,6 +31,7 @@ namespace ToDoApp
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddControllersWithViews();
             services.AddRazorPages();
+            services.AddHttpContextAccessor();
 
             switch (Configuration.GetValue<string>("ProviderType"))
             {

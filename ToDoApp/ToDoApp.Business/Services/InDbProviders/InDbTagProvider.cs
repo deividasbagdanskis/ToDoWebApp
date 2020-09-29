@@ -27,16 +27,16 @@ namespace ToDoApp.Business.Services.InDbProviders
             await _context.SaveChangesAsync();
         }
 
-        public async Task Delete(int id)
+        public async Task Delete(int id, string userId)
         {
-            var tag = await _context.Tag.FindAsync(id);
+            var tag = await _context.Tag.Where(t => t.Id == id && t.UserId == userId).FirstOrDefaultAsync();
             _context.Tag.Remove(tag);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<TagVo> Get(int? id)
+        public async Task<TagVo> Get(int? id, string userId)
         {
-            var foundTag = await _context.Tag.FirstOrDefaultAsync(t => t.Id == id);
+            var foundTag = await _context.Tag.Where(t => t.Id == id && t.UserId == userId).FirstOrDefaultAsync();
 
             foundTag.ToDoItemNumber = _context.ToDoItemTag.Where(t => t.TagId == foundTag.Id).Count();
 

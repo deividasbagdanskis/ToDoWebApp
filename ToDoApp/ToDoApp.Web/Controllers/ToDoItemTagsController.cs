@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -19,22 +20,23 @@ namespace ToDoApp.Web.Controllers
         private readonly IAsyncDbDataProvider<TagVo> _tagProvider;
         private readonly IAsyncDbDataProvider<ToDoItemVo> _toDoItemProvider;
         private readonly IMapper _mapper;
+        private readonly string _userId;
 
         public ToDoItemTagsController(IInDbToDoItemTagProvider provider, IMapper mapper,
-            IAsyncDbDataProvider<TagVo> tagProvider, IAsyncDbDataProvider<ToDoItemVo> toDoItemProvider)
+            IAsyncDbDataProvider<TagVo> tagProvider, IAsyncDbDataProvider<ToDoItemVo> toDoItemProvider,
+            IHttpContextAccessor httpContextAccessor)
         {
             _toDoItemTagProvider = provider;
             _mapper = mapper;
             _tagProvider = tagProvider;
             _toDoItemProvider = toDoItemProvider;
+            _userId = httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
         }
 
         // GET: ToDoItemTags
         public async Task<IActionResult> Index()
         {
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            IEnumerable<ToDoItemTagVo> toDoItemTags = await _toDoItemTagProvider.GetAll(userId);
+            IEnumerable<ToDoItemTagVo> toDoItemTags = await _toDoItemTagProvider.GetAll(_userId);
 
             return View(_mapper.Map<IEnumerable<ToDoItemTagViewModel>>(toDoItemTags));
         }
@@ -47,7 +49,7 @@ namespace ToDoApp.Web.Controllers
                 return NotFound();
             }
 
-            var toDoItemTag = await _toDoItemTagProvider.Get(toDoItemId, tagId);
+            var toDoItemTag = await _toDoItemTagProvider.Get(toDoItemId, tagId, _userId);
 
             if (toDoItemTag == null)
             {
@@ -78,7 +80,7 @@ namespace ToDoApp.Web.Controllers
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             bool isUnique = await _toDoItemTagProvider.Get(toDoItemTagViewModel.ToDoItemId, 
-                toDoItemTagViewModel.TagId) == null;
+                toDoItemTagViewModel.TagId, _userId) == null;
 
             if (ModelState.IsValid)
             {
@@ -110,7 +112,7 @@ namespace ToDoApp.Web.Controllers
                 return NotFound();
             }
 
-            var toDoItemTag = await _toDoItemTagProvider.Get(toDoItemId, tagId);
+            var toDoItemTag = await _toDoItemTagProvider.Get(toDoItemId, tagId, _userId);
 
             if (toDoItemTag == null)
             {
@@ -142,7 +144,7 @@ namespace ToDoApp.Web.Controllers
                 return NotFound();
             }
 
-            ToDoItemTagVo oldToDoItemTag = await _toDoItemTagProvider.Get(oldToDoItemId, oldTagId);
+            ToDoItemTagVo oldToDoItemTag = await _toDoItemTagProvider.Get(oldToDoItemId, oldTagId, _userId);
 
             if (oldToDoItemTag == null)
             {
@@ -153,7 +155,7 @@ namespace ToDoApp.Web.Controllers
             {
                 try
                 {
-                    await _toDoItemTagProvider.Delete(oldToDoItemId, oldTagId);
+                    await _toDoItemTagProvider.Delete(oldToDoItemId, oldTagId, _userId);
 
                     ToDoItemTagVo toDoItemTag = _mapper.Map<ToDoItemTagVo>(toDoItemTagViewModel);
 
@@ -192,7 +194,7 @@ namespace ToDoApp.Web.Controllers
                 return NotFound();
             }
 
-            var toDoItemTag = await _toDoItemTagProvider.Get(toDoItemId, tagId);
+            var toDoItemTag = await _toDoItemTagProvider.Get(toDoItemId, tagId, _userId);
 
             if (toDoItemTag == null)
             {
@@ -207,7 +209,7 @@ namespace ToDoApp.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int toDoItemId, int tagId)
         {
-            await _toDoItemTagProvider.Delete(toDoItemId, tagId);
+            await _toDoItemTagProvider.Delete(toDoItemId, tagId, _userId);
 
             return RedirectToAction(nameof(Index));
         }

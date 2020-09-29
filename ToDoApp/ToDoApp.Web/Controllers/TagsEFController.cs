@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ToDoApp.Business.Models;
@@ -16,19 +17,20 @@ namespace ToDoApp.Web.Controllers
     {
         private readonly IAsyncDbDataProvider<TagVo> _provider;
         private readonly IMapper _mapper;
+        private readonly string _userId;
 
-        public TagsEFController(IAsyncDbDataProvider<TagVo> provider, IMapper mapper)
+        public TagsEFController(IAsyncDbDataProvider<TagVo> provider, IMapper mapper,
+            IHttpContextAccessor httpContextAccessor)
         {
             _provider = provider;
             _mapper = mapper;
+            _userId = httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
         }
 
         // GET: TagsEF
         public async Task<IActionResult> Index()
         {
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            IEnumerable<TagVo> tags = await _provider.GetAll(userId);
+            IEnumerable<TagVo> tags = await _provider.GetAll(_userId);
 
             return View(_mapper.Map<IEnumerable<TagViewModel>>(tags));
         }
@@ -41,7 +43,7 @@ namespace ToDoApp.Web.Controllers
                 return NotFound();
             }
 
-            TagVo tag = await _provider.Get(id);
+            TagVo tag = await _provider.Get(id, _userId);
 
             if (tag == null)
             {
@@ -84,7 +86,7 @@ namespace ToDoApp.Web.Controllers
                 return NotFound();
             }
 
-            TagVo tag = await _provider.Get(id);
+            TagVo tag = await _provider.Get(id, _userId);
 
             if (tag == null)
             {
@@ -135,7 +137,7 @@ namespace ToDoApp.Web.Controllers
                 return NotFound();
             }
 
-            TagVo tag = await _provider.Get(id);
+            TagVo tag = await _provider.Get(id, _userId);
 
             if (tag == null)
             {
@@ -150,7 +152,7 @@ namespace ToDoApp.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _provider.Delete(id);
+            await _provider.Delete(id, _userId);
             return RedirectToAction(nameof(Index));
         }
     }

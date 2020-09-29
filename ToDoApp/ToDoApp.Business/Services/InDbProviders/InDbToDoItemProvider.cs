@@ -49,16 +49,17 @@ namespace ToDoApp.Business.Services.InDbProviders
             await _context.SaveChangesAsync();
         }
 
-        public async Task Delete(int id)
+        public async Task Delete(int id, string userId)
         {
-            var toDoItem = await _context.ToDoItem.FindAsync(id);
+            var toDoItem = await _context.ToDoItem.Where(t => t.Id == id && t.UserId == userId).FirstOrDefaultAsync();
             _context.ToDoItem.Remove(toDoItem);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<ToDoItemVo> Get(int? id)
+        public async Task<ToDoItemVo> Get(int? id, string userId)
         {
-            var foundToDoItem = await _context.ToDoItem.FindAsync(id);
+            var foundToDoItem = await _context.ToDoItem.Where(t => t.Id == id && t.UserId == userId)
+                .FirstOrDefaultAsync();
 
             try
             {
@@ -85,7 +86,9 @@ namespace ToDoApp.Business.Services.InDbProviders
             ValidatePriority(toDoItem.Priority);
 
             ToDoItemDao toDoItemForCreationDate = await _context.ToDoItem.FindAsync(toDoItem.Id);
+            
             _context.Entry(toDoItemForCreationDate).State = EntityState.Detached;
+            
             DateTime creationDate = toDoItemForCreationDate.CreationDate;
 
             ValidateDeadlineDate(creationDate, toDoItem.DeadlineDate);

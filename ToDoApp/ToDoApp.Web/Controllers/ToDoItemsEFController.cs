@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -23,22 +24,23 @@ namespace ToDoApp.Web.Controllers
         private readonly IAsyncDbDataProvider<CategoryVo> _categoryProvider;
         private readonly IMapper _mapper;
         private readonly IApiClient _apiClient;
+        private readonly string _userId;
 
         public ToDoItemsEFController(IAsyncDbDataProvider<ToDoItemVo> provider, IMapper mapper,
-            IAsyncDbDataProvider<CategoryVo> categoryProvider, IApiClient apiClient)
+            IAsyncDbDataProvider<CategoryVo> categoryProvider, IApiClient apiClient,
+            IHttpContextAccessor httpContextAccessor)
         {
             _toDoItemProvider = provider;
             _mapper = mapper;
             _categoryProvider = categoryProvider;
             _apiClient = apiClient;
+            _userId = httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
         }
 
         // GET: ToDoItemsEF
         public async Task<IActionResult> Index()
         {
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            IEnumerable<ToDoItemVo> toDoItems = await _toDoItemProvider.GetAll(userId);
+            IEnumerable<ToDoItemVo> toDoItems = await _toDoItemProvider.GetAll(_userId);
 
             foreach (ToDoItemVo toDoItem in toDoItems)
             {
@@ -56,7 +58,7 @@ namespace ToDoApp.Web.Controllers
                 return NotFound();
             }
 
-            ToDoItemVo toDoItem = await _toDoItemProvider.Get(id);
+            ToDoItemVo toDoItem = await _toDoItemProvider.Get(id, _userId);
 
             if (toDoItem == null)
             {
@@ -129,7 +131,7 @@ namespace ToDoApp.Web.Controllers
                 return NotFound();
             }
 
-            ToDoItemVo toDoItem = await _toDoItemProvider.Get(id);
+            ToDoItemVo toDoItem = await _toDoItemProvider.Get(id, _userId);
 
             if (toDoItem == null)
             {
@@ -207,7 +209,7 @@ namespace ToDoApp.Web.Controllers
                 return NotFound();
             }
 
-            ToDoItemVo toDoItem = await _toDoItemProvider.Get(id);
+            ToDoItemVo toDoItem = await _toDoItemProvider.Get(id, _userId);
 
             if (toDoItem == null)
             {
@@ -224,7 +226,7 @@ namespace ToDoApp.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _toDoItemProvider.Delete(id);
+            await _toDoItemProvider.Delete(id, _userId);
 
             return RedirectToAction(nameof(Index));
         }
