@@ -8,9 +8,11 @@ using System.Collections.Generic;
 using ToDoApp.Web.ViewModels;
 using ToDoApp.Commons.Exceptions;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ToDoApp.Web.Controllers
 {
+    [Authorize]
     public class CategoriesEFController : Controller
     {
         private readonly IAsyncDbDataProvider<CategoryVo> _provider;
@@ -64,9 +66,13 @@ namespace ToDoApp.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                CategoryVo category = _mapper.Map<CategoryVo>(categoryViewModel);
+                
+                category.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
                 try
                 {
-                    await _provider.Add(_mapper.Map<CategoryVo>(categoryViewModel));
+                    await _provider.Add(category);
                 }
                 catch (CategoryNameException ex)
                 {

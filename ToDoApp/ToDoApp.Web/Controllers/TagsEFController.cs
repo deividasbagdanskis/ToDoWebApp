@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ToDoApp.Business.Models;
@@ -10,6 +11,7 @@ using ToDoApp.Web.ViewModels;
 
 namespace ToDoApp.Web.Controllers
 {
+    [Authorize]
     public class TagsEFController : Controller
     {
         private readonly IAsyncDbDataProvider<TagVo> _provider;
@@ -24,8 +26,9 @@ namespace ToDoApp.Web.Controllers
         // GET: TagsEF
         public async Task<IActionResult> Index()
         {
-            IEnumerable<TagVo> tags = await _provider.GetAll(User
-                .FindFirstValue(ClaimTypes.NameIdentifier));
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            IEnumerable<TagVo> tags = await _provider.GetAll(userId);
 
             return View(_mapper.Map<IEnumerable<TagViewModel>>(tags));
         }
@@ -63,7 +66,11 @@ namespace ToDoApp.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _provider.Add(_mapper.Map<TagVo>(tagViewModel));
+                TagVo tag = _mapper.Map<TagVo>(tagViewModel);
+
+                tag.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                await _provider.Add(tag);
                 return RedirectToAction(nameof(Index));
             }
             return View(tagViewModel);

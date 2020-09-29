@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,7 @@ using ToDoApp.Web.ViewModels;
 
 namespace ToDoApp.Web.Controllers
 {
+    [Authorize]
     public class ToDoItemsEFController : Controller
     {
         private readonly IAsyncDbDataProvider<ToDoItemVo> _toDoItemProvider;
@@ -34,8 +36,9 @@ namespace ToDoApp.Web.Controllers
         // GET: ToDoItemsEF
         public async Task<IActionResult> Index()
         {
-            IEnumerable<ToDoItemVo> toDoItems = await _toDoItemProvider.GetAll(User
-                .FindFirstValue(ClaimTypes.NameIdentifier));
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            IEnumerable<ToDoItemVo> toDoItems = await _toDoItemProvider.GetAll(userId);
 
             foreach (ToDoItemVo toDoItem in toDoItems)
             {
@@ -81,12 +84,15 @@ namespace ToDoApp.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ToDoItemViewModel toDoItemViewModel)
         {
-            ToDoItemVo toDoItem = _mapper.Map<ToDoItemVo>(toDoItemViewModel);
-
-            toDoItem.CreationDate = DateTime.Today;
-
             if (ModelState.IsValid)
             {
+                ToDoItemVo toDoItem = _mapper.Map<ToDoItemVo>(toDoItemViewModel);
+
+                string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                toDoItem.CreationDate = DateTime.Today;
+                toDoItem.UserId = userId;
+
                 if (toDoItem.CategoryId == 0)
                 {
                     toDoItem.CategoryId = null;
@@ -225,8 +231,9 @@ namespace ToDoApp.Web.Controllers
 
         private async Task<IEnumerable<CategoryVo>> GetCategoriesForView()
         {
-            List<CategoryVo> categories = (List<CategoryVo>) await _categoryProvider.GetAll(User
-                .FindFirstValue(ClaimTypes.NameIdentifier));
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            List<CategoryVo> categories = (List<CategoryVo>) await _categoryProvider.GetAll(userId);
             categories.Insert(0, new CategoryVo(0, "Uncategorized"));
 
             return categories;

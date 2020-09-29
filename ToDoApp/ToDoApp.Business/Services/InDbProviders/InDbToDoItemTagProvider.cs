@@ -61,6 +61,8 @@ namespace ToDoApp.Business.Services.InDbProviders
             ToDoItemTagDao toDoItemTagDao = _mapper.Map<ToDoItemTagDao>(toDoItemTag);
 
             _context.Update(toDoItemTagDao);
+            _context.Entry(toDoItemTagDao).Property("UserId").IsModified = false;
+
             await _context.SaveChangesAsync();
         }
 

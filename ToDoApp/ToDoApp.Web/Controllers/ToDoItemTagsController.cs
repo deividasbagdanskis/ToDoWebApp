@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ using ToDoApp.Web.ViewModels;
 
 namespace ToDoApp.Web.Controllers
 {
+    [Authorize]
     public class ToDoItemTagsController : Controller
     {
         private readonly IInDbToDoItemTagProvider _toDoItemTagProvider;
@@ -30,8 +32,9 @@ namespace ToDoApp.Web.Controllers
         // GET: ToDoItemTags
         public async Task<IActionResult> Index()
         {
-            IEnumerable<ToDoItemTagVo> toDoItemTags = await _toDoItemTagProvider.GetAll(User
-                .FindFirstValue(ClaimTypes.NameIdentifier));
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            IEnumerable<ToDoItemTagVo> toDoItemTags = await _toDoItemTagProvider.GetAll(userId);
 
             return View(_mapper.Map<IEnumerable<ToDoItemTagViewModel>>(toDoItemTags));
         }
@@ -57,10 +60,10 @@ namespace ToDoApp.Web.Controllers
         // GET: ToDoItemTags/Create
         public async Task<IActionResult> Create()
         {
-            ViewData["TagId"] = new SelectList(await _tagProvider.GetAll(User
-                .FindFirstValue(ClaimTypes.NameIdentifier)), "Id", "Name");
-            ViewData["ToDoItemId"] = new SelectList(await _toDoItemProvider.GetAll(User
-                .FindFirstValue(ClaimTypes.NameIdentifier)), "Id", "Name");
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            ViewData["TagId"] = new SelectList(await _tagProvider.GetAll(userId), "Id", "Name");
+            ViewData["ToDoItemId"] = new SelectList(await _toDoItemProvider.GetAll(userId), "Id", "Name");
 
             return View();
         }
@@ -72,7 +75,10 @@ namespace ToDoApp.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ToDoItemId,TagId")] ToDoItemTagViewModel toDoItemTagViewModel)
         {
-            bool isUnique = await _toDoItemTagProvider.Get(toDoItemTagViewModel.ToDoItemId, toDoItemTagViewModel.TagId) == null;
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            bool isUnique = await _toDoItemTagProvider.Get(toDoItemTagViewModel.ToDoItemId, 
+                toDoItemTagViewModel.TagId) == null;
 
             if (ModelState.IsValid)
             {
@@ -80,15 +86,17 @@ namespace ToDoApp.Web.Controllers
                 {
                     ToDoItemTagVo toDoItemTag = _mapper.Map<ToDoItemTagVo>(toDoItemTagViewModel);
 
+                    toDoItemTag.UserId = userId;
+
                     await _toDoItemTagProvider.Add(toDoItemTag);
                 }
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["TagId"] = new SelectList(await _tagProvider.GetAll(User
-                .FindFirstValue(ClaimTypes.NameIdentifier)), "Id", "Name", toDoItemTagViewModel.TagId);
-            ViewData["ToDoItemId"] = new SelectList(await _toDoItemProvider.GetAll(User
-                .FindFirstValue(ClaimTypes.NameIdentifier)), "Id", "Name",
+            ViewData["TagId"] = new SelectList(await _tagProvider.GetAll(userId), "Id", "Name", 
+                toDoItemTagViewModel.TagId);
+            
+            ViewData["ToDoItemId"] = new SelectList(await _toDoItemProvider.GetAll(userId), "Id", "Name",
                 toDoItemTagViewModel.ToDoItemId);
 
             return View(toDoItemTagViewModel);
@@ -109,11 +117,12 @@ namespace ToDoApp.Web.Controllers
                 return NotFound();
             }
 
-            ViewData["TagId"] = new SelectList(await _tagProvider.GetAll(User
-                .FindFirstValue(ClaimTypes.NameIdentifier)), "Id", "Name", toDoItemTag.TagId);
-            ViewData["ToDoItemId"] = new SelectList(await _toDoItemProvider.GetAll(User
-                .FindFirstValue(ClaimTypes.NameIdentifier)), "Id", "Name",
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            ViewData["TagId"] = new SelectList(await _tagProvider.GetAll(userId), "Id", "Name", toDoItemTag.TagId);
+            ViewData["ToDoItemId"] = new SelectList(await _toDoItemProvider.GetAll(userId), "Id", "Name",
                 toDoItemTag.ToDoItemId);
+
             ViewData["OldToDoItemId"] = toDoItemId;
             ViewData["OldTagId"] = tagId;
 
@@ -164,10 +173,12 @@ namespace ToDoApp.Web.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["TagId"] = new SelectList(await _tagProvider.GetAll(User
-                .FindFirstValue(ClaimTypes.NameIdentifier)), "Id", "Name", toDoItemTagViewModel.TagId);
-            ViewData["ToDoItemId"] = new SelectList(await _toDoItemProvider.GetAll(User
-                .FindFirstValue(ClaimTypes.NameIdentifier)), "Id", "Name",
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            ViewData["TagId"] = new SelectList(await _tagProvider.GetAll(userId), "Id", "Name", 
+                toDoItemTagViewModel.TagId);
+
+            ViewData["ToDoItemId"] = new SelectList(await _toDoItemProvider.GetAll(userId), "Id", "Name",
                 toDoItemTagViewModel.ToDoItemId);
 
             return View(toDoItemTagViewModel);

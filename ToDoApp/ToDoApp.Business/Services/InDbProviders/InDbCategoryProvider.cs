@@ -59,6 +59,7 @@ namespace ToDoApp.Business.Services.InDbProviders
             CategoryDao categoryDao = _mapper.Map<CategoryDao>(category);
 
             _context.Update(categoryDao);
+            _context.Entry(categoryDao).Property("UserId").IsModified = false;
             await _context.SaveChangesAsync();
         }
 

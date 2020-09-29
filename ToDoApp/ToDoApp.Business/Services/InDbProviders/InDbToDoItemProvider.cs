@@ -85,10 +85,11 @@ namespace ToDoApp.Business.Services.InDbProviders
             ValidatePriority(toDoItem.Priority);
 
             ToDoItemDao toDoItemForCreationDate = await _context.ToDoItem.FindAsync(toDoItem.Id);
+            _context.Entry(toDoItemForCreationDate).State = EntityState.Detached;
             DateTime creationDate = toDoItemForCreationDate.CreationDate;
 
             ValidateDeadlineDate(creationDate, toDoItem.DeadlineDate);
-            
+
             ValidateThatThereIsOnlyASingleWipStatusWithPriority1(toDoItem.Status, toDoItem.Priority);
             
             ValidateThatThereIsOnlyThreeToDoItemsWithWipStatusPriority2();
@@ -103,10 +104,11 @@ namespace ToDoApp.Business.Services.InDbProviders
                 toDoItem.Priority);
 
             ToDoItemDao toDoItemDao = _mapper.Map<ToDoItemDao>(toDoItem);
-            
+
             _context.Update(toDoItemDao);
             _context.Entry(toDoItemDao).Property("CreationDate").IsModified = false;
-            
+            _context.Entry(toDoItemDao).Property("UserId").IsModified = false;
+
             await _context.SaveChangesAsync();
         }
         public bool ItemExits(int id)
