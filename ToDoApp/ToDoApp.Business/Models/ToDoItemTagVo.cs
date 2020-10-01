@@ -7,5 +7,7 @@
 
         public int TagId { get; set; }
         public TagVo Tag { get; set; }
+
+        public string UserId { get; set; }
     }
 }

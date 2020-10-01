@@ -17,5 +17,7 @@ namespace ToDoApp.Projects.Data.Models
 
         [JsonIgnore]
         public Client Client { get; set; }
+        
+        public string UserId { get; set; }
     }
 }

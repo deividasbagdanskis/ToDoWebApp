@@ -21,18 +21,18 @@ namespace ToDoApp.Projects.Api.Controllers
 
         // GET: api/Projects
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Project>>> GetProject()
+        public async Task<ActionResult<IEnumerable<Project>>> GetProject(string userId)
         {
-            return await _context.Project.ToListAsync();
+            return await _context.Project.Where(p => p.UserId == userId).ToListAsync(); 
         }
 
         // GET: api/Projects/5
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(Project), 200)]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<Project>> GetProject(int id)
+        public async Task<ActionResult<Project>> GetProject(int id, string userId)
         {
-            var project = await _context.Project.FindAsync(id);
+            var project = await _context.Project.Where(p => p.Id == id && p.UserId == userId).FirstOrDefaultAsync();
 
             if (project == null)
             {
@@ -61,6 +61,8 @@ namespace ToDoApp.Projects.Api.Controllers
 
             try
             {
+                _context.Entry(project).Property("UserId").IsModified = false;
+
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
@@ -95,9 +97,9 @@ namespace ToDoApp.Projects.Api.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(typeof(Project), 200)]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<Project>> DeleteProject(int id)
+        public async Task<ActionResult<Project>> DeleteProject(int id, string userId)
         {
-            var project = await _context.Project.FindAsync(id);
+            var project = await _context.Project.Where(p => p.Id == id && p.UserId == userId).FirstOrDefaultAsync();
             if (project == null)
             {
                 return NotFound();

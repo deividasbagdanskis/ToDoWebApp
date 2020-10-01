@@ -7,24 +7,31 @@ using AutoMapper;
 using System.Collections.Generic;
 using ToDoApp.Web.ViewModels;
 using ToDoApp.Commons.Exceptions;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 
 namespace ToDoApp.Web.Controllers
 {
+    [Authorize]
     public class CategoriesEFController : Controller
     {
         private readonly IAsyncDbDataProvider<CategoryVo> _provider;
         private readonly IMapper _mapper;
+        private readonly string _userId;
 
-        public CategoriesEFController(IAsyncDbDataProvider<CategoryVo> provider, IMapper mapper)
+        public CategoriesEFController(IAsyncDbDataProvider<CategoryVo> provider, IMapper mapper,
+            IHttpContextAccessor httpContextAccessor)
         {
             _provider = provider;
             _mapper = mapper;
+            _userId = httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
         }
 
         // GET: CategoriesEF
         public async Task<IActionResult> Index()
         {
-            IEnumerable<CategoryVo> categories = await _provider.GetAll();
+            IEnumerable<CategoryVo> categories = await _provider.GetAll(_userId);
 
             return View(_mapper.Map<IEnumerable<CategoryViewModel>>(categories));
         }
@@ -37,7 +44,7 @@ namespace ToDoApp.Web.Controllers
                 return NotFound();
             }
 
-            CategoryVo category = await _provider.Get(id);
+            CategoryVo category = await _provider.Get(id, _userId);
 
             if (category == null)
             {
@@ -62,9 +69,13 @@ namespace ToDoApp.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                CategoryVo category = _mapper.Map<CategoryVo>(categoryViewModel);
+                
+                category.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
                 try
                 {
-                    await _provider.Add(_mapper.Map<CategoryVo>(categoryViewModel));
+                    await _provider.Add(category);
                 }
                 catch (CategoryNameException ex)
                 {
@@ -85,7 +96,7 @@ namespace ToDoApp.Web.Controllers
                 return NotFound();
             }
 
-            CategoryVo category = await _provider.Get(id);
+            CategoryVo category = await _provider.Get(id, _userId);
 
             if (category == null)
             {
@@ -143,7 +154,7 @@ namespace ToDoApp.Web.Controllers
                 return NotFound();
             }
 
-            var category = await _provider.Get(id);
+            var category = await _provider.Get(id, _userId);
 
             if (category == null)
             {
@@ -158,7 +169,7 @@ namespace ToDoApp.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _provider.Delete(id);
+            await _provider.Delete(id, _userId);
 
             return RedirectToAction(nameof(Index));
         }

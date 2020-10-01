@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,26 +17,30 @@ using ToDoApp.Web.ViewModels;
 
 namespace ToDoApp.Web.Controllers
 {
+    [Authorize]
     public class ToDoItemsEFController : Controller
     {
         private readonly IAsyncDbDataProvider<ToDoItemVo> _toDoItemProvider;
         private readonly IAsyncDbDataProvider<CategoryVo> _categoryProvider;
         private readonly IMapper _mapper;
         private readonly IApiClient _apiClient;
+        private readonly string _userId;
 
         public ToDoItemsEFController(IAsyncDbDataProvider<ToDoItemVo> provider, IMapper mapper,
-            IAsyncDbDataProvider<CategoryVo> categoryProvider, IApiClient apiClient)
+            IAsyncDbDataProvider<CategoryVo> categoryProvider, IApiClient apiClient,
+            IHttpContextAccessor httpContextAccessor)
         {
             _toDoItemProvider = provider;
             _mapper = mapper;
             _categoryProvider = categoryProvider;
             _apiClient = apiClient;
+            _userId = httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
         }
 
         // GET: ToDoItemsEF
         public async Task<IActionResult> Index()
         {
-            IEnumerable<ToDoItemVo> toDoItems = await _toDoItemProvider.GetAll();
+            IEnumerable<ToDoItemVo> toDoItems = await _toDoItemProvider.GetAll(_userId);
 
             foreach (ToDoItemVo toDoItem in toDoItems)
             {
@@ -51,7 +58,7 @@ namespace ToDoApp.Web.Controllers
                 return NotFound();
             }
 
-            ToDoItemVo toDoItem = await _toDoItemProvider.Get(id);
+            ToDoItemVo toDoItem = await _toDoItemProvider.Get(id, _userId);
 
             if (toDoItem == null)
             {
@@ -79,12 +86,15 @@ namespace ToDoApp.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ToDoItemViewModel toDoItemViewModel)
         {
-            ToDoItemVo toDoItem = _mapper.Map<ToDoItemVo>(toDoItemViewModel);
-
-            toDoItem.CreationDate = DateTime.Today;
-
             if (ModelState.IsValid)
             {
+                ToDoItemVo toDoItem = _mapper.Map<ToDoItemVo>(toDoItemViewModel);
+
+                string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                toDoItem.CreationDate = DateTime.Today;
+                toDoItem.UserId = userId;
+
                 if (toDoItem.CategoryId == 0)
                 {
                     toDoItem.CategoryId = null;
@@ -121,7 +131,7 @@ namespace ToDoApp.Web.Controllers
                 return NotFound();
             }
 
-            ToDoItemVo toDoItem = await _toDoItemProvider.Get(id);
+            ToDoItemVo toDoItem = await _toDoItemProvider.Get(id, _userId);
 
             if (toDoItem == null)
             {
@@ -199,7 +209,7 @@ namespace ToDoApp.Web.Controllers
                 return NotFound();
             }
 
-            ToDoItemVo toDoItem = await _toDoItemProvider.Get(id);
+            ToDoItemVo toDoItem = await _toDoItemProvider.Get(id, _userId);
 
             if (toDoItem == null)
             {
@@ -216,14 +226,16 @@ namespace ToDoApp.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _toDoItemProvider.Delete(id);
+            await _toDoItemProvider.Delete(id, _userId);
 
             return RedirectToAction(nameof(Index));
         }
 
         private async Task<IEnumerable<CategoryVo>> GetCategoriesForView()
         {
-            List<CategoryVo> categories = (List<CategoryVo>) await _categoryProvider.GetAll();
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            List<CategoryVo> categories = (List<CategoryVo>) await _categoryProvider.GetAll(userId);
             categories.Insert(0, new CategoryVo(0, "Uncategorized"));
 
             return categories;
@@ -235,7 +247,7 @@ namespace ToDoApp.Web.Controllers
 
             try
             {
-                Project project = await _apiClient.ApiProjectsGetAsync(projectId);
+                Project project = await _apiClient.ApiProjectsGetAsync(projectId, _userId);
                 projectName = project.Name;
             }
             catch (ApiException)
@@ -248,7 +260,7 @@ namespace ToDoApp.Web.Controllers
 
         private async Task<IEnumerable<Project>> GetProjects()
         {
-            List<Project> projects = (List<Project>) await _apiClient.ApiProjectsGetAsync();
+            List<Project> projects = (List<Project>) await _apiClient.ApiProjectsGetAsync(_userId);
             projects.Insert(0, new Project() { Id = 0, Name = "None" });
 
             return projects;

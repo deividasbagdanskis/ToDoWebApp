@@ -12,5 +12,9 @@ namespace ToDoApp.Data.Models
         public string Name { get; set; }
 
         public List<ToDoItemDao> ToDoItems { get; set; }
+
+        public string UserId { get; set; }
+
+        public User User { get; set; }
     }
 }

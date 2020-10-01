@@ -31,27 +31,28 @@ namespace ToDoApp.Business.Services.InDbProviders
             await _context.SaveChangesAsync();
         }
 
-        public async Task Delete(int? toDoItemId, int? tagId)
+        public async Task Delete(int? toDoItemId, int? tagId, string userId)
         {
-            ToDoItemTagDao toDoItemTag = await _context.ToDoItemTag.FindAsync(toDoItemId, tagId);
+            ToDoItemTagDao toDoItemTag = await _context.ToDoItemTag
+                .Where(t => t.ToDoItemId == toDoItemId && t.TagId == tagId && t.UserId == userId).FirstOrDefaultAsync();
             _context.ToDoItemTag.Remove(toDoItemTag);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<ToDoItemTagVo> Get(int? toDoItemId, int? tagId)
+        public async Task<ToDoItemTagVo> Get(int? toDoItemId, int? tagId, string userId)
         {
             ToDoItemTagDao foundToDoItemTag = await _context.ToDoItemTag
                 .Include(t => t.Tag)
                 .Include(t => t.ToDoItem)
-                .FirstOrDefaultAsync(m => m.ToDoItemId == toDoItemId && m.TagId == tagId);
+                .FirstOrDefaultAsync(t => t.ToDoItemId == toDoItemId && t.TagId == tagId && t.UserId == userId);
 
             return _mapper.Map<ToDoItemTagVo>(foundToDoItemTag);
         }
 
-        public async Task<IEnumerable<ToDoItemTagVo>> GetAll()
+        public async Task<IEnumerable<ToDoItemTagVo>> GetAll(string userId)
         {
-            IEnumerable<ToDoItemTagDao> toDoItemTagDaos = await _context.ToDoItemTag.Include(t => t.Tag)
-                .Include(t => t.ToDoItem).ToListAsync();
+            IEnumerable<ToDoItemTagDao> toDoItemTagDaos = await _context.ToDoItemTag.Where(t => t.UserId == userId)
+                .Include(t => t.Tag).Include(t => t.ToDoItem).ToListAsync();
 
             return _mapper.Map<IEnumerable<ToDoItemTagVo>>(toDoItemTagDaos);
         }
@@ -61,6 +62,8 @@ namespace ToDoApp.Business.Services.InDbProviders
             ToDoItemTagDao toDoItemTagDao = _mapper.Map<ToDoItemTagDao>(toDoItemTag);
 
             _context.Update(toDoItemTagDao);
+            _context.Entry(toDoItemTagDao).Property("UserId").IsModified = false;
+
             await _context.SaveChangesAsync();
         }
 

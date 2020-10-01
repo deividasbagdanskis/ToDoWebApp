@@ -27,25 +27,25 @@ namespace ToDoApp.Business.Services.InDbProviders
             await _context.SaveChangesAsync();
         }
 
-        public async Task Delete(int id)
+        public async Task Delete(int id, string userId)
         {
-            var tag = await _context.Tag.FindAsync(id);
+            var tag = await _context.Tag.Where(t => t.Id == id && t.UserId == userId).FirstOrDefaultAsync();
             _context.Tag.Remove(tag);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<TagVo> Get(int? id)
+        public async Task<TagVo> Get(int? id, string userId)
         {
-            var foundTag = await _context.Tag.FirstOrDefaultAsync(t => t.Id == id);
+            var foundTag = await _context.Tag.Where(t => t.Id == id && t.UserId == userId).FirstOrDefaultAsync();
 
             foundTag.ToDoItemNumber = _context.ToDoItemTag.Where(t => t.TagId == foundTag.Id).Count();
 
             return _mapper.Map<TagVo>(foundTag);
         }
 
-        public async Task<IEnumerable<TagVo>> GetAll()
+        public async Task<IEnumerable<TagVo>> GetAll(string userId)
         {
-            IEnumerable<TagDao> tagDaos = await _context.Tag.ToListAsync();
+            IEnumerable<TagDao> tagDaos = await _context.Tag.Where(t => t.UserId == userId).ToListAsync();
 
             foreach (TagDao tagDao in tagDaos)
             {
@@ -59,6 +59,7 @@ namespace ToDoApp.Business.Services.InDbProviders
         {
             TagDao tagDao = _mapper.Map<TagDao>(tag);
             _context.Update(tagDao);
+            _context.Entry(tagDao).Property("UserId").IsModified = false;
             await _context.SaveChangesAsync();
         }
 

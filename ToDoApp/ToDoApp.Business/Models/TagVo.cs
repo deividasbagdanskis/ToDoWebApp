@@ -8,6 +8,8 @@ namespace ToDoApp.Business.Models
 
         public string Name { get; set; }
 
+        public string UserId { get; set; }
+
         public int ToDoItemNumber { get; set; }
     }
 }

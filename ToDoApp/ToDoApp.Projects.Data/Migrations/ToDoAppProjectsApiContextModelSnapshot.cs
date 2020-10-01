@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ToDoApp.Projects.Data.Context;
 
 namespace ToDoApp.Projects.Data.Migrations
@@ -18,7 +19,7 @@ namespace ToDoApp.Projects.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("ToDoApp.Projects.Api.Models.Client", b =>
+            modelBuilder.Entity("ToDoApp.Projects.Data.Models.Client", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -28,12 +29,15 @@ namespace ToDoApp.Projects.Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Client");
                 });
 
-            modelBuilder.Entity("ToDoApp.Projects.Api.Models.Project", b =>
+            modelBuilder.Entity("ToDoApp.Projects.Data.Models.Project", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -52,6 +56,9 @@ namespace ToDoApp.Projects.Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ClientId");
@@ -59,9 +66,9 @@ namespace ToDoApp.Projects.Data.Migrations
                     b.ToTable("Project");
                 });
 
-            modelBuilder.Entity("ToDoApp.Projects.Api.Models.Project", b =>
+            modelBuilder.Entity("ToDoApp.Projects.Data.Models.Project", b =>
                 {
-                    b.HasOne("ToDoApp.Projects.Api.Models.Client", "Client")
+                    b.HasOne("ToDoApp.Projects.Data.Models.Client", "Client")
                         .WithMany("Projects")
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)

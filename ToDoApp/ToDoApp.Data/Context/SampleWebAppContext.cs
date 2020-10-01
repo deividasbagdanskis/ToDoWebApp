@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using ToDoApp.Data.Models;
 
 namespace ToDoApp.Data.Context
 {
-    public class SampleWebAppContext : DbContext
+    public class SampleWebAppContext : IdentityDbContext<User>
     {
         public SampleWebAppContext (DbContextOptions<SampleWebAppContext> options)
             : base(options)
@@ -12,6 +13,8 @@ namespace ToDoApp.Data.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<ToDoItemTagDao>().HasKey(tt => new { tt.ToDoItemId, tt.TagId });
 
             modelBuilder.Entity<ToDoItemTagDao>()
